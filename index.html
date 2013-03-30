@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html itemscope itemtype="http://schema.org/Article">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="description" content="Bullet physics simulation of a sand Catapult for the xkcd Time Cartoon implemented in JavaScript" />
+<meta name="google" content="notranslate" />
+<meta itemprop="name" content="xkcd Time Catapult">
+<meta itemprop="description" content="Bullet physics simulation of a sand Catapult for the xkcd Time Cartoon implemented in JavaScript">
+<meta itemprop="image" content="http://thred.github.com/xkcd-time-catapult/logo.png">
+<meta name="og:title" content="xkcd Time Catapult" />
+<meta name="og:type" content="game" />
+<meta name="og:image" content="http://thred.github.com/xkcd-time-catapult/logo.png" />
+<meta name="og:url" content="http://thred.github.com/xkcd-time-catapult/" />
+<meta name="og:site_name" content="xkcd Time Catapult" />
+<meta name="fb:admins" content="" />
+<title>xkcd Time Catapult</title>
+<style>
+	body {
+		font-size: 16px;
+		font-variant: small-caps;
+		font-family: Lucida,Helvetica,sans-serif;
+		color: #6e7b91;
+		
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
+	
+	div#content {
+		cursor:crosshair;
+	}
+	
+	div#placeholder {
+		border: 2px solid black;
+		border-radius: 2px;
+	}
+	
+	h1, div#sniffer, div#legal, div#content {
+		margin: 16px;
+	}
+	
+	canvas {
+		margin:2px;
+	}
+	
+	.fb-like {
+		height: 20px; 
+		width: 90px; 
+		display: inline-block; 
+		margin: 0px; 
+		padding: 0px; 
+		line-height: normal; 
+		font-size: 1px; 
+		vertical-align: baseline; 
+	}
+
+	.twitter-share-button {
+		margin-left: 30px;
+	}
+</style>
+<script src="time.js"></script>
+</head>
+<body onLoad="init()">
+	<div id="fb-root"></div>
+
+	<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+	</script>
+
+	<h1><span style="font-variant: normal;">xkcd</span> Time Catapult</h1>
+	
+	<div id="sniffer">
+		<div class="g-plusone" data-size="medium" data-width="450"></div>
+		<script type="text/javascript">
+		  (function() {
+		    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		    po.src = 'https://apis.google.com/js/plusone.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		  })();
+		</script>
+
+		<div class="fb-like" data-href="http://thred.github.com/xkcd-time-catapult/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
+
+		<a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+	</div>
+
+	<a href="https://github.com/thred/xkcd-time-catapult"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
+
+	<div id="content"></div>
+	<div id="message"></div>
+	
+	<div id="legal">
+		<a href="http://creativecommons.org/licenses/by-nc/2.5/"><img src="http://creativecommons.org/images/public/somerights20.png" alt="Creative Commons Attribution-NonCommercial 2.5 License"/></a>
+		The images are from <a href="http://xkcd.com/1190/">http://xkcd.com/1190/</a> licensed under a <a href="http://creativecommons.org/licenses/by-nc/2.5/">Creative Commons Attribution-NonCommercial 2.5 License</a>. 
+	</div>
+
+</body>
+</html>
