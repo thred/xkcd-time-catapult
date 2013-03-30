@@ -1,23 +1,5 @@
 <!DOCTYPE HTML>
 <html itemscope itemtype="http://schema.org/Article">
-<!--
-Copyright 2013 Manfred Hantschel
-
-This file is part of WebGL-Remembery.
-
-WebGL-Remembery is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-WebGL-Remembery is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with WebGL-Remembery. If not, see <http://www.gnu.org/licenses/>.
--->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta name="description" content="Bullet physics simulation of a sand Catapult for the xkcd Time Cartoon implemented in JavaScript" />
@@ -34,10 +16,21 @@ along with WebGL-Remembery. If not, see <http://www.gnu.org/licenses/>.
 <title>xkcd Time Catapult</title>
 <style>
 	body {
-		font-family: Verdana, sans-serif;
+		font-size: 16px;
+		font-variant: small-caps;
+		font-family: Lucida,Helvetica,sans-serif;
+		color: #6e7b91;
+		
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
 	}
 	
 	div#content {
+		cursor:crosshair;
 	}
 	
 	div#placeholder {
@@ -45,16 +38,32 @@ along with WebGL-Remembery. If not, see <http://www.gnu.org/licenses/>.
 		border-radius: 2px;
 	}
 	
+	h1, div#sniffer, div#legal, div#content {
+		margin: 16px;
+	}
+	
 	canvas {
 		margin:2px;
+	}
+	
+	.fb-like {
+		height: 20px; 
+		width: 90px; 
+		display: inline-block; 
+		margin: 0px; 
+		padding: 0px; 
+		line-height: normal; 
+		font-size: 1px; 
+		vertical-align: baseline; 
+	}
+
+	.twitter-share-button {
+		margin-left: 30px;
 	}
 </style>
 <script src="time.js"></script>
 </head>
 <body onLoad="init()">
-	<div id="content"></div>
-	<div id="message"></div>
-<!--
 	<div id="fb-root"></div>
 
 	<script>(function(d, s, id) {
@@ -65,8 +74,10 @@ along with WebGL-Remembery. If not, see <http://www.gnu.org/licenses/>.
 		  fjs.parentNode.insertBefore(js, fjs);
 		}(document, 'script', 'facebook-jssdk'));
 	</script>
+
+	<h1><span style="font-variant: normal;">xkcd</span> Time Catapult</h1>
 	
-	<div id="sniffer" style="display:none; visibility:hidden;">
+	<div id="sniffer">
 		<div class="g-plusone" data-size="medium" data-width="450"></div>
 		<script type="text/javascript">
 		  (function() {
@@ -76,16 +87,21 @@ along with WebGL-Remembery. If not, see <http://www.gnu.org/licenses/>.
 		  })();
 		</script>
 
-		<div class="fb-like" data-href="http://thred.github.com/webgl-remembery/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
+		<div class="fb-like" data-href="http://thred.github.com/xkcd-time-catapult/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
 
 		<a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
 		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 	</div>
-	-->
-	<div>
+
+	<a href="https://github.com/thred/xkcd-time-catapult"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
+
+	<div id="content"></div>
+	<div id="message"></div>
+	
+	<div id="legal">
 		<a href="http://creativecommons.org/licenses/by-nc/2.5/"><img src="http://creativecommons.org/images/public/somerights20.png" alt="Creative Commons Attribution-NonCommercial 2.5 License"/></a>
 		The images are from <a href="http://xkcd.com/1190/">http://xkcd.com/1190/</a> licensed under a <a href="http://creativecommons.org/licenses/by-nc/2.5/">Creative Commons Attribution-NonCommercial 2.5 License</a>. 
 	</div>
-	
+
 </body>
 </html>
