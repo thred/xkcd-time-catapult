@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html itemscope itemtype="http://schema.org/Article">
+<!--
+Copyright 2013 Manfred Hantschel
+
+This file is part of WebGL-Remembery.
+
+WebGL-Remembery is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+WebGL-Remembery is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with WebGL-Remembery. If not, see <http://www.gnu.org/licenses/>.
+-->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="description" content="Bullet physics simulation of a sand Catapult for the xkcd Time Cartoon implemented in JavaScript" />
+<meta name="google" content="notranslate" />
+<meta itemprop="name" content="xkcd Time Catapult">
+<meta itemprop="description" content="Bullet physics simulation of a sand Catapult for the xkcd Time Cartoon implemented in JavaScript">
+<meta itemprop="image" content="http://thred.github.com/xkcd-time-catapult/logo.png">
+<meta name="og:title" content="xkcd Time Catapult" />
+<meta name="og:type" content="game" />
+<meta name="og:image" content="http://thred.github.com/xkcd-time-catapult/logo.png" />
+<meta name="og:url" content="http://thred.github.com/xkcd-time-catapult/" />
+<meta name="og:site_name" content="xkcd Time Catapult" />
+<meta name="fb:admins" content="" />
+<title>xkcd Time Catapult</title>
+<style>
+	body {
+		font-family: Verdana, sans-serif;
+	}
+	
+	div#content {
+	}
+	
+	div#placeholder {
+		border: 2px solid black;
+		border-radius: 2px;
+	}
+	
+	canvas {
+		margin:2px;
+	}
+</style>
+<script src="time.js"></script>
+</head>
+<body onLoad="init()">
+	<div id="content"></div>
+	<div id="message"></div>
+<!--
+	<div id="fb-root"></div>
+
+	<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+	</script>
+	
+	<div id="sniffer" style="display:none; visibility:hidden;">
+		<div class="g-plusone" data-size="medium" data-width="450"></div>
+		<script type="text/javascript">
+		  (function() {
+		    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		    po.src = 'https://apis.google.com/js/plusone.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		  })();
+		</script>
+
+		<div class="fb-like" data-href="http://thred.github.com/webgl-remembery/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
+
+		<a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+	</div>
+	-->
+	<div>
+		<a href="http://creativecommons.org/licenses/by-nc/2.5/"><img src="http://creativecommons.org/images/public/somerights20.png" alt="Creative Commons Attribution-NonCommercial 2.5 License"/></a>
+		The images are from <a href="http://xkcd.com/1190/">http://xkcd.com/1190/</a> licensed under a <a href="http://creativecommons.org/licenses/by-nc/2.5/">Creative Commons Attribution-NonCommercial 2.5 License</a>. 
+	</div>
+	
+</body>
+</html>

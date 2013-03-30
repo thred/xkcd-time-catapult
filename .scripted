@@ -1,0 +1,8 @@
+{
+	"jshint": {
+		"options": {
+			"browser": true
+		},
+		"global": ["window", "console", "$", "THREE", "TWEEN", "createjs", "Detector", "Util", "requestAnimationFrame"]
+	}
+}
