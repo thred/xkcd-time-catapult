@@ -241,14 +241,14 @@ function init() {
 	canvas.width = WIDTH;
 	canvas.height = HEIGHT;
 	canvas.style.position = "absolute";
-	canvas.style.zIndex = 256;
+	canvas.style.zIndex = 1;
 
 	overlay = document.createElement("canvas");
 	overlay.id = "overlay";
 	overlay.width = WIDTH;
 	overlay.height = HEIGHT;
 	overlay.style.position = "absolute";
-	overlay.style.zIndex = 257;
+	overlay.style.zIndex = 2;
 
 	var content = document.getElementById("content");
 
