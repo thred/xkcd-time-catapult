@@ -1,7 +1,15 @@
-var G = 10000;
 var WIDTH = 800;
 var HEIGHT = 359;
-var INITIAL_PARTICLE_SIZE = 1;
+
+var INITIAL_PARTICLE_SIZE = 3;
+var MAX_PARTICLES = 1000;
+var PARTICLE_RADIUS = 3; // the image is 6x6
+
+var G = 12500;
+var AIR_FRICTION = 0.25;
+var BOUNCYNESS = 0.33;
+var PARTICLE_DIE_SIZE = 0.5;
+
 var IMAGE_NAMES = ["time121.png", "time174.png", "time181.png", "time211.png", "time231.png"];
 
 var canvas;
@@ -138,37 +146,58 @@ Particle.prototype = {
 	constructor: Particle,
 
 	move: function(duration) {
+		var update = false;
 		//canvasData = canvasContext.getImageData(0, 0, WIDTH, HEIGHT);
-		
+
+		// update the particles own rotation
 		this.rotation += this.rotationSpeed * duration;
 		this.rotationSpeed *= (1 - duration);
 
+		// apply gravity to particle
 		this.velocity.sub(0, 1 / 2 * G * duration * duration);
 
+		// apply air friction
+		this.velocity.multiplyScalar(1 - (AIR_FRICTION * duration));
+
+		// store the last position of the particle
 		this.lastPosition.set(this.position.x, this.position.y);
 
+		// calculate the movement of the particle
 		var vx = this.velocity.x * duration;
 		var vy = this.velocity.y * duration;
 
+		// set the new position
 		this.position.add(vx, - vy);
 
+		// check the path for impact
 		var length = Math.floor(Math.sqrt(vx * vx + vy * vy)) + 1;
-		var update = false;
 
 		for (var i = 0; i < length; i += 1) {
 			var x = Math.round(this.lastPosition.x + vx * i / length);
 			var y = Math.round(this.lastPosition.y - vy * i / length);
 
 			if (isSand(x, y)) {
-				this.position.set(x, y);
-				this.impact(x, y);
-				update = true;
+				if ((this.scale < PARTICLE_DIE_SIZE) || (this.velocity.length() < 10)) {
+					// the particle is one grain of sand, paint it on the screen and stop tracking
+					this.draw(canvasContext);
+					this.alive = false;
+				} else {
+					// there was an impact, update the particles position and calculate the impact
+					// the position is set to the location prior of impact
+					x = Math.round(this.lastPosition.x + vx * (i - 1) / length);
+					y = Math.round(this.lastPosition.y - vy * (i - 1) / length);
 
+					this.position.set(x, y);
+					this.impact(x, y);
+				}
+
+				update = true;
 				break;
 			}
 		}
 
-		if ((this.scale < 0.1) || (this.position.x < 0) || (this.position.x > WIDTH) || (this.position.y > HEIGHT)) {
+		if ((this.position.x < 0) || (this.position.x >= WIDTH) || (this.position.y >= HEIGHT)) {
+			// the particle has left the screen
 			this.alive = false;
 		}
 
@@ -176,13 +205,14 @@ Particle.prototype = {
 	},
 
 	impact: function(x, y) {
+		// calculate the vector for mirroring the movement of the particle
 		var mirror = new Vector(0, 0);
 
-		if ((!isSand(x - 1, y)) || (!isSand(x + 1, y))) {
+		if ((isSand(x - 1, y)) || (isSand(x + 1, y))) {
 			mirror.add(1, 0);
 		}
 
-		if ((!isSand(x, y - 1)) || (!isSand(x, y + 1))) {
+		if ((isSand(x, y - 1)) || (isSand(x, y + 1))) {
 			mirror.add(0, 1);
 		}
 
@@ -192,8 +222,8 @@ Particle.prototype = {
 
 		mirror.set(mirror.y, mirror.x).normalize();
 
+		// mirror the movement of the particle along the mirror vector
 		// v ' = 2 * (v . n) * n - v
-
 		var vx = this.velocity.x;
 		var vy = this.velocity.y;
 
@@ -203,11 +233,14 @@ Particle.prototype = {
 		this.velocity.y *= mirror.y;
 		this.velocity.x -= vx;
 		this.velocity.y -= vy;
-		this.velocity.multiplyScalar(0.3);
 
+		// slow the particle down
+		this.velocity.multiplyScalar(BOUNCYNESS);
+
+		// draw the impact
 		canvasContext.save();
 		canvasContext.strokeStyle = "white";
-		canvasContext.lineWidth = 6 * this.scale;
+		canvasContext.lineWidth = 1.5 * this.scale;
 		canvasContext.lineCap = "round";
 		canvasContext.beginPath();
 		canvasContext.moveTo(this.lastPosition.x, this.lastPosition.y);
@@ -215,22 +248,26 @@ Particle.prototype = {
 		canvasContext.stroke();
 		canvasContext.restore();
 
+		// reduce the size of the main particle and explode the rest
+		var exploding = this.scale * 0.5;
 		this.scale *= 0.5;
 
-		if (this.scale > 0.1) {
-			for (var i = 0; i < 5; i += 1) {
-				// for a cool effect make this > 1;
-				explode(this, this.scale * 0.2);
-			}
+		// calculate the volume
+		exploding = exploding * exploding * Math.PI;
+		while (exploding > PARTICLE_DIE_SIZE) {
+			var scale = Math.min(Math.max(Math.random() * exploding, PARTICLE_DIE_SIZE), this.scale);
+			explode(this, scale);
+			exploding -= scale;
 		}
 	},
 
 	draw: function(context) {
 		context.save();
 		context.translate(this.position.x, this.position.y);
-		context.scale(this.scale, this.scale);
+		var scale = Math.max(this.scale / PARTICLE_RADIUS, 0.5 / PARTICLE_RADIUS);
+		context.scale(scale, scale);
 		context.rotate(this.rotation);
-		context.drawImage(images.particle, - 3, - 3);
+		context.drawImage(images.particle, - PARTICLE_RADIUS, - PARTICLE_RADIUS);
 		context.restore();
 	}
 };
@@ -241,14 +278,14 @@ function init() {
 	canvas.width = WIDTH;
 	canvas.height = HEIGHT;
 	canvas.style.position = "absolute";
-	canvas.style.zIndex = 1;
+	canvas.style.zIndex = 256;
 
 	overlay = document.createElement("canvas");
 	overlay.id = "overlay";
 	overlay.width = WIDTH;
 	overlay.height = HEIGHT;
 	overlay.style.position = "absolute";
-	overlay.style.zIndex = 2;
+	overlay.style.zIndex = 257;
 
 	var content = document.getElementById("content");
 
@@ -290,7 +327,7 @@ function init() {
 
 		canvasData = canvasContext.getImageData(0, 0, WIDTH, HEIGHT);
 	};
-	
+
 	image.src = IMAGE_NAMES[parseInt(Math.random() * IMAGE_NAMES.length, 10)];
 
 	run();
@@ -309,13 +346,15 @@ function run() {
 	var duration = time - lastTime;
 
 	lastTime = time;
-	
+
 	if (duration > 0.1) {
 		duration = 0.1;
 	}
-	
+
 	activatePendingParticles();
 
+	message("Particles: " + particles.length);
+	
 	overlayContext.clearRect(0, 0, WIDTH, HEIGHT);
 	catapult.draw(overlayContext);
 	updateParticles(duration);
@@ -350,7 +389,7 @@ function addParticle(particle) {
 
 function activatePendingParticles() {
 	for (var i = 0; i < pendingParticles.length; i += 1) {
-		if (particles.length > 50) {
+		if (particles.length > MAX_PARTICLES) {
 			break;
 		}
 
@@ -361,14 +400,15 @@ function activatePendingParticles() {
 }
 
 function updateParticles(duration) {
+	var update = false;
+
 	for (var i = 0; i < particles.length; i += 1) {
-		var update = particles[i].move(duration);
-
-		if (update) {
-			canvasData = canvasContext.getImageData(0, 0, WIDTH, HEIGHT);
-		}
-
+		update |= particles[i].move(duration);
 		particles[i].draw(overlayContext);
+	}
+
+	if (update) {
+		canvasData = canvasContext.getImageData(0, 0, WIDTH, HEIGHT);
 	}
 }
 
@@ -386,7 +426,7 @@ function removeDeadParticles() {
 function fire() {
 	for (var i = 0; i < 10; i += 1) {
 		var direction = Math.random() * Math.PI * 2;
-		var distance = Math.random() * 4 * INITIAL_PARTICLE_SIZE;
+		var distance = Math.random() * INITIAL_PARTICLE_SIZE;
 		var position = catapult.position.clone();
 		position.add(Math.cos(direction) * distance, - Math.sin(direction) * distance);
 		var particle = new Particle(position, new Vector(-dragPos.x * 2, dragPos.y * 2), INITIAL_PARTICLE_SIZE);
@@ -403,7 +443,11 @@ function explode(particle, scale) {
 }
 
 function mouseDown(event) {
-	isMouseDown = true;
+	var v = new Vector(event.clientX - canvas.offsetLeft - catapult.position.x, event.clientY - canvas.offsetTop - catapult.position.y);
+
+	if (v.length() < 30) {
+		isMouseDown = true;
+	}
 }
 
 function mouseMove(event) {
@@ -417,7 +461,10 @@ function mouseMove(event) {
 }
 
 function mouseUp(event) {
-	fire();
+	if (isMouseDown) {
+		fire();
+	}
+
 	isMouseDown = false;
 	dragPos = null;
 }
