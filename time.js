@@ -184,8 +184,8 @@ Particle.prototype = {
 				} else {
 					// there was an impact, update the particles position and calculate the impact
 					// the position is set to the location prior of impact
-					x = Math.round(this.lastPosition.x + vx * (i - 1) / length);
-					y = Math.round(this.lastPosition.y - vy * (i - 1) / length);
+					//x = Math.round(this.lastPosition.x + vx * (i - 1) / length);
+					//y = Math.round(this.lastPosition.y - vy * (i - 1) / length);
 
 					this.position.set(x, y);
 					this.impact(x, y);
@@ -237,7 +237,9 @@ Particle.prototype = {
 		// slow the particle down
 		this.velocity.multiplyScalar(BOUNCYNESS);
 
+		toParticle(this.position.x, this.position.y, this.scale, this.velocity.length(), this.scale * 0.25);
 		// draw the impact
+		/*
 		canvasContext.save();
 		canvasContext.strokeStyle = "white";
 		canvasContext.lineWidth = 1.5 * this.scale;
@@ -250,7 +252,6 @@ Particle.prototype = {
 
 		// reduce the size of the main particle and explode the rest
 		var exploding = this.scale * 0.5;
-		this.scale *= 0.5;
 
 		// calculate the volume
 		exploding = exploding * exploding * Math.PI;
@@ -259,6 +260,9 @@ Particle.prototype = {
 			explode(this, scale);
 			exploding -= scale;
 		}
+		*/
+		
+		this.scale *= 0.5;
 	},
 
 	draw: function(context) {
@@ -354,7 +358,7 @@ function run() {
 	activatePendingParticles();
 
 	message("Particles: " + particles.length);
-	
+
 	overlayContext.clearRect(0, 0, WIDTH, HEIGHT);
 	catapult.draw(overlayContext);
 	updateParticles(duration);
@@ -380,7 +384,7 @@ function isSand(x, y) {
 		return false;
 	}
 
-	return canvasData.data[(x + y * WIDTH) * 4] < 128;
+	return canvasData.data[(x + y * WIDTH) * 4] < 248;
 }
 
 function addParticle(particle) {
@@ -433,6 +437,32 @@ function fire() {
 
 		addParticle(particle);
 	}
+}
+
+function toParticle(x, y, radius, velocity, scale) {
+	var update = false;
+	var maxDist = radius * radius;
+
+	for (var iy = -radius; iy <= radius; iy += 1) {
+		for (var ix = -radius; ix <= radius; ix += 1) {
+			if (ix * ix + iy * iy <= maxDist) {
+				if (isSand(x + ix, y + iy)) {
+					var particle = new Particle(new Vector(x + ix, y + iy), new Vector(velocity * 2 * (Math.random() - 0.5), velocity * 2 * (Math.random() - 0.5)), scale);
+
+					addParticle(particle);
+
+					canvasContext.save();
+					canvasContext.fillStyle = "white";
+					canvasContext.fillRect(x + ix, y + iy, 1, 1);
+					canvasContext.restore();
+
+					update = true;
+				}
+			}
+		}
+	}
+
+	return update;
 }
 
 function explode(particle, scale) {
