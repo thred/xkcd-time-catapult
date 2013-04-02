@@ -1,27 +1,31 @@
 var WIDTH = 800;
 var HEIGHT = 359;
 
-var INITIAL_PARTICLE_SIZE = 3;
-var MAX_PARTICLES = 1000;
+var INITIAL_PARTICLE_MASS = Math.PI * 10;
+var INITIAL_PARTICLE_COUNT = 1;
+var MAX_PARTICLES = 2000;
 var PARTICLE_RADIUS = 3; // the image is 6x6
+var DRAW_MOVEMENT = false;
 
 var G = 12500;
 var AIR_FRICTION = 0.25;
 var BOUNCYNESS = 0.33;
-var PARTICLE_DIE_SIZE = 0.5;
+var COMPACTNESS = 0.75;
+var PARTICLE_DIE_MASS = 0.5;
 
-var IMAGE_NAMES = ["time121.png", "time174.png", "time181.png", "time211.png", "time231.png"];
+var IMAGE_NAMES = ["time121.png", "time174.png", "time181.png", "time211.png", "time231.png", "timeUnknown1.png"];
 
 var canvas;
 var overlay;
 var canvasContext;
 var overlayContext;
-var canvasData;
+var sand;
 var catapult;
 var lastTime = new Date().getTime() / 1000;
 var images = {};
 var pendingParticles = [];
 var particles = [];
+var collapseCheck = [];
 var isMouseDown = false;
 var dragPos;
 var ready = true;
@@ -45,11 +49,15 @@ Vector.prototype = {
 	add: function(x, y) {
 		this.x += x;
 		this.y += y;
+
+		return this;
 	},
 
 	sub: function(x, y) {
 		this.x -= x;
 		this.y -= y;
+
+		return this;
 	},
 
 	multiplyScalar: function(s) {
@@ -72,13 +80,20 @@ Vector.prototype = {
 
 	direction: function() {
 		var v = this.clone().normalize();
+		var result = Math.atan(v.y / v.x);
 
-		return Math.tan(v.x / v.y);
+		if (v.x < 0) {
+			result += Math.PI;
+		}
+
+		return result;
 	},
 
 	setDirection: function(direction, length) {
 		this.x = Math.cos(direction) * length;
 		this.y = -Math.sin(direction) * length;
+
+		return this;
 	},
 
 	length: function() {
@@ -93,7 +108,6 @@ Vector.prototype = {
 		}
 
 		return this;
-
 	},
 
 	normalize: function() {
@@ -131,11 +145,11 @@ Catapult.prototype = {
 
 };
 
-var Particle = function(position, velocity, scale) {
+var Particle = function(position, movement, mass) {
 		this.position = position;
 		this.lastPosition = position.clone();
-		this.velocity = velocity;
-		this.scale = scale;
+		this.movement = movement;
+		this.mass = mass;
 		this.rotation = Math.random() * Math.PI * 2;
 		this.rotationSpeed = Math.random() * 20;
 		this.alive = true;
@@ -145,26 +159,31 @@ Particle.prototype = {
 
 	constructor: Particle,
 
-	move: function(duration) {
-		var update = false;
-		//canvasData = canvasContext.getImageData(0, 0, WIDTH, HEIGHT);
+	radius: function() {
+		return Math.sqrt(this.mass / Math.PI);
+	},
 
+	force: function() {
+		return this.mass * this.movement.length();
+	},
+
+	move: function(duration) {
 		// update the particles own rotation
 		this.rotation += this.rotationSpeed * duration;
 		this.rotationSpeed *= (1 - duration);
 
 		// apply gravity to particle
-		this.velocity.sub(0, 1 / 2 * G * duration * duration);
+		this.movement.sub(0, 1 / 2 * G * duration * duration);
 
 		// apply air friction
-		this.velocity.multiplyScalar(1 - (AIR_FRICTION * duration));
+		this.movement.multiplyScalar(1 - (AIR_FRICTION * duration));
 
 		// store the last position of the particle
 		this.lastPosition.set(this.position.x, this.position.y);
 
 		// calculate the movement of the particle
-		var vx = this.velocity.x * duration;
-		var vy = this.velocity.y * duration;
+		var vx = this.movement.x * duration;
+		var vy = this.movement.y * duration;
 
 		// set the new position
 		this.position.add(vx, - vy);
@@ -176,22 +195,15 @@ Particle.prototype = {
 			var x = Math.round(this.lastPosition.x + vx * i / length);
 			var y = Math.round(this.lastPosition.y - vy * i / length);
 
-			if (isSand(x, y)) {
-				if ((this.scale < PARTICLE_DIE_SIZE) || (this.velocity.length() < 10)) {
-					// the particle is one grain of sand, paint it on the screen and stop tracking
-					this.draw(canvasContext);
-					this.alive = false;
-				} else {
-					// there was an impact, update the particles position and calculate the impact
-					// the position is set to the location prior of impact
-					//x = Math.round(this.lastPosition.x + vx * (i - 1) / length);
-					//y = Math.round(this.lastPosition.y - vy * (i - 1) / length);
+			// check impact on path
+			if (sand.get(x, y) >= 0.5) {
+				// there was an impact, update the particles position and calculate the impact
+				// the position is set to the location prior of impact
+				x = Math.round(this.lastPosition.x + vx * (i - 1) / length);
+				y = Math.round(this.lastPosition.y - vy * (i - 1) / length);
 
-					this.position.set(x, y);
-					this.impact(x, y);
-				}
-
-				update = true;
+				this.position.set(x, y);
+				this.impact();
 				break;
 			}
 		}
@@ -200,19 +212,20 @@ Particle.prototype = {
 			// the particle has left the screen
 			this.alive = false;
 		}
-
-		return update;
 	},
 
-	impact: function(x, y) {
+	/**
+	 * particle had impact 
+	 */
+	impact: function() {
 		// calculate the vector for mirroring the movement of the particle
 		var mirror = new Vector(0, 0);
 
-		if ((isSand(x - 1, y)) || (isSand(x + 1, y))) {
+		if ((sand.get(this.position.x - 1, this.position.y) >= 0.5) || (sand.get(this.position.x + 1, this.position.y) >= 0.5)) {
 			mirror.add(1, 0);
 		}
 
-		if ((isSand(x, y - 1)) || (isSand(x, y + 1))) {
+		if ((sand.get(this.position.x, this.position.y - 1) >= 0.5) || (sand.get(this.position.x, this.position.y + 1) >= 0.5)) {
 			mirror.add(0, 1);
 		}
 
@@ -220,120 +233,337 @@ Particle.prototype = {
 			mirror.set(1, 0);
 		}
 
+		// mirror along the normal
 		mirror.set(mirror.y, mirror.x).normalize();
 
-		// mirror the movement of the particle along the mirror vector
-		// v ' = 2 * (v . n) * n - v
-		var vx = this.velocity.x;
-		var vy = this.velocity.y;
+		if (!this.explode()) {
+			// bounce off or die
+			if (this.suggestDeath()) {
+				return;
+			}
 
-		this.velocity.dot(mirror);
-		this.velocity.multiplyScalar(2);
-		this.velocity.x *= mirror.x;
-		this.velocity.y *= mirror.y;
-		this.velocity.x -= vx;
-		this.velocity.y -= vy;
+			// mirror the movement of the particle along the mirror vector
+			// v ' = 2 * (v . n) * n - v
+			var vx = this.movement.x;
+			var vy = this.movement.y;
 
-		// slow the particle down
-		this.velocity.multiplyScalar(BOUNCYNESS);
+			this.movement.dot(mirror);
+			this.movement.multiplyScalar(2);
+			this.movement.x *= mirror.x;
+			this.movement.y *= mirror.y;
+			this.movement.x -= vx;
+			this.movement.y -= vy;
 
-		toParticle(this.position.x, this.position.y, this.scale, this.velocity.length(), this.scale * 0.25);
-		// draw the impact
-		/*
-		canvasContext.save();
-		canvasContext.strokeStyle = "white";
-		canvasContext.lineWidth = 1.5 * this.scale;
-		canvasContext.lineCap = "round";
-		canvasContext.beginPath();
-		canvasContext.moveTo(this.lastPosition.x, this.lastPosition.y);
-		canvasContext.lineTo(this.position.x, this.position.y);
-		canvasContext.stroke();
-		canvasContext.restore();
-
-		// reduce the size of the main particle and explode the rest
-		var exploding = this.scale * 0.5;
-
-		// calculate the volume
-		exploding = exploding * exploding * Math.PI;
-		while (exploding > PARTICLE_DIE_SIZE) {
-			var scale = Math.min(Math.max(Math.random() * exploding, PARTICLE_DIE_SIZE), this.scale);
-			explode(this, scale);
-			exploding -= scale;
+			// slow the particle down
+			this.movement.multiplyScalar(BOUNCYNESS);
 		}
-		*/
+
+		this.mass *= 0.5;
+	},
+
+	explode: function() {
+		var radius = this.radius();
+		var maxDist = radius * radius;
+		var direction = this.movement.direction();
+		var velocity = this.movement.length();
+		var totalMass = 0;
+
+		for (var iy = -radius; iy <= radius; iy += 1) {
+			for (var ix = -radius; ix <= radius; ix += 1) {
+				if (ix * ix + iy * iy <= maxDist) {
+					totalMass = sand.get(this.position.x + ix, this.position.y + iy) * Math.PI;
+				}
+			}
+		}
+
+		if (totalMass <= 0) {
+			return false;
+		}
 		
-		this.scale *= 0.5;
+		var totalForce = this.mass;
+
+		if (totalForce <= totalMass) {
+			// not enough force to trigger explosion
+			return false;
+		}
+
+		for (var iy = -radius; iy <= radius; iy += 1) {
+			for (var ix = -radius; ix <= radius; ix += 1) {
+				if (ix * ix + iy * iy <= maxDist) {
+					var force = totalForce / totalMass * (sand.get(this.position.x + ix, this.position.y + iy) * Math.PI);
+
+					this.createParticle(this.position.x + ix, this.position.y + iy, direction + (Math.random() - 0.5) * (Math.PI / 2), force);
+				}
+			}
+		}
+	},
+
+	createParticle: function(x, y, direction, force, projected) {
+		if ((x < 0) || (y < 0) || (x >= WIDTH) || (y >= HEIGHT)) {
+			return false;
+		}
+
+		var grain = sand.get(x, y);
+
+		if (!grain) {
+			return false;
+		}
+
+		// track the particles path, it may project its force
+		var movement = new Vector().setDirection(direction, 1);
+		var position = new Vector(x, y).add(movement.x, movement.y);
+
+		if (sand.get(position.x, position.y) > 0) {
+			sand.draw(position.x, position.y, "orange");
+
+			if (force < Math.PI) {
+				return false;
+			}
+
+			var result = this.createParticle(position.x, position.y, direction, force * COMPACTNESS, true);
+
+			if (projected) {
+				return result;
+			}
+
+			// this was the initial call, the force could not be projected
+			direction += Math.PI;
+		}
+
+		movement.setLength(force / Math.PI);
+		position.set(x, y);
+
+		var particle = new Particle(position, movement, Math.PI);
+
+		addParticle(particle);
+		sand.add(position.x, position.y, 0.7, - 1);
+
+		return true;
+	},
+
+	suggestDeath: function() {
+		if (this.mass > Math.PI) {
+			return false;
+		}
+
+		// HELLO.
+		sand.add(this.position.x, this.position.y, this.radius(), this.mass);
+		this.alive = false;
+
+		return true;
 	},
 
 	draw: function(context) {
 		context.save();
 		context.translate(this.position.x, this.position.y);
-		var scale = Math.max(this.scale / PARTICLE_RADIUS, 0.5 / PARTICLE_RADIUS);
+
+		if (DRAW_MOVEMENT) {
+			// draw movement
+			context.strokeStyle = "#aaaaff";
+			context.beginPath();
+			context.moveTo(0, 0);
+			context.lineTo(this.movement.x, - this.movement.y);
+			context.stroke();
+		}
+
+		var scale = Math.max(this.radius() / PARTICLE_RADIUS, 0.5 / PARTICLE_RADIUS);
 		context.scale(scale, scale);
 		context.rotate(this.rotation);
 		context.drawImage(images.particle, - PARTICLE_RADIUS, - PARTICLE_RADIUS);
+
 		context.restore();
 	}
 };
 
+var Sand = function(data) {
+		this.sand = [];
+
+		for (var y = 0; y < HEIGHT; y += 1) {
+			for (var x = 0; x < WIDTH; x += 1) {
+				var pos = x + y * WIDTH;
+				this.sand[pos] = 1 - (data[pos * 4] / 255);
+			}
+		}
+
+		//this.draw();
+	};
+
+Sand.prototype = {
+	constructor: Sand,
+
+	get: function(x, y) {
+		x = Math.round(x);
+		y = Math.round(y);
+
+		if (x < 0) {
+			x = 0;
+		} else if (x >= WIDTH) {
+			x = WIDTH - 1;
+		}
+
+		if (y < 0) {
+			y = 0;
+		} else if (y >= HEIGHT) {
+			y = HEIGHT - 1;
+		}
+
+		return this.sand[x + y * WIDTH];
+	},
+
+	add: function(x, y, radius, value) {
+		var fade = radius * 0.5;
+		var innerRadius = radius - fade;
+		var outerRadius = radius + fade;
+		var inner = innerRadius * innerRadius;
+		var outer = outerRadius * outerRadius;
+
+		x = Math.round(x);
+		y = Math.round(y);
+
+		for (var iy = -Math.floor(outerRadius); iy <= Math.ceil(outerRadius); iy += 1) {
+			for (var ix = -Math.floor(outerRadius); ix <= Math.ceil(outerRadius); ix += 1) {
+				var posX = x + ix;
+				var posY = y + iy;
+
+				if ((posX >= 0) && (posY >= 0) && (posX < WIDTH) && (posY < HEIGHT)) {
+					var dist = ix * ix + iy * iy;
+
+					if (dist >= outer) {
+						continue;
+					}
+
+					var pos = posX + posY * WIDTH;
+					var v = 0;
+
+					if (dist < inner) {
+						v = value;
+					} else {
+						v = value - (value * (dist - inner) / (outer - inner));
+					}
+
+					this.sand[pos] = Math.max(0, Math.min(1, this.sand[pos] + v));
+					var col = toHex(255 - this.sand[pos] * 255, 2);
+
+					this.draw(posX, posY, "#" + col + col + col);
+				}
+			}
+		}
+	},
+
+	set: function(x, y, sand) {
+		this.add(x, y, 1, (!sand) ? -1 : sand);
+		/*
+		x = Math.round(x);
+		y = Math.round(y);
+
+		if ((x < 0) || (y < 0) || (x >= WIDTH) || (y >= HEIGHT)) {
+			return;
+		}
+
+		this.sand[x + y * WIDTH] = sand;
+
+		var value = parseInt(255 - sand * 255, 10);
+
+		canvasContext.save();
+		canvasContext.fillStyle = "#" + toHex(value) + toHex(value) + toHex(value);
+		canvasContext.fillRect(x, y, 1, 1);
+		canvasContext.restore();
+		*/
+	},
+
+	draw: function(x, y, style) {
+		canvasContext.save();
+		canvasContext.fillStyle = style;
+		canvasContext.fillRect(x, y, 1, 1);
+		canvasContext.restore();
+	}
+
+
+	/*,
+
+	draw: function() {
+		canvasContext.save();
+
+		for (var y = 0; y < HEIGHT; y += 1) {
+			for (var x = 0; x < WIDTH; x += 1) {
+				var value = toHex(255 - this.sand[x + y * WIDTH] * 255);
+
+				canvasContext.fillStyle = "#" + value + value + value;
+				canvasContext.fillRect(x, y, 1, 1);
+			}
+		}
+
+		canvasContext.restore();
+	}*/
+};
+
 function init() {
+	// create the canvas for the background (the sand)
 	canvas = document.createElement("canvas");
 	canvas.id = "canvas";
 	canvas.width = WIDTH;
 	canvas.height = HEIGHT;
 	canvas.style.position = "absolute";
 	canvas.style.zIndex = 256;
+	canvasContext = canvas.getContext("2d");
 
+	// create the canvas for the foreground (the flying particles)
 	overlay = document.createElement("canvas");
 	overlay.id = "overlay";
 	overlay.width = WIDTH;
 	overlay.height = HEIGHT;
 	overlay.style.position = "absolute";
 	overlay.style.zIndex = 257;
+	overlayContext = overlay.getContext("2d");
 
+	// put the canvases on the document and place the mouse listeners
 	var content = document.getElementById("content");
-
 	content.appendChild(canvas);
 	document.addEventListener("mousedown", mouseDown, false);
 	document.addEventListener("mousemove", mouseMove, false);
 	document.addEventListener("mouseup", mouseUp, false);
 	content.appendChild(overlay);
 
+	// the canvases are positioned absolute, add a div as placeholder	
 	var div = document.createElement("div");
 	div.id = "placeholder";
 	div.style.width = WIDTH + "px";
 	div.style.height = HEIGHT + "px";
 	content.appendChild(div);
 
+	// load the images
 	initImage("catapult");
 	initImage("arm");
 	initImage("particle");
 
-	canvasContext = canvas.getContext("2d");
-	overlayContext = overlay.getContext("2d");
-
+	// create the catapult
 	catapult = new Catapult();
 
+	// load the background image
 	var image = new Image();
 	image.onload = function(event) {
+		// make the background titanium white where the happy castle lives
 		canvasContext.fillStyle = "white";
 		canvasContext.fillRect(0, 0, WIDTH, HEIGHT);
 
+		// draw the castle
 		var x = WIDTH - 550;
 		canvasContext.drawImage(image, x, 0);
 		canvasContext.strokeStyle = "white";
 		canvasContext.lineWidth = 3;
 		canvasContext.strokeRect(x + 1, 1, 551, 393);
 
+		// add some place for the catapult on the left
 		var y = 270;
 		canvasContext.fillStyle = "black";
 		canvasContext.fillRect(0, y, x + 3, 395 - y);
 
-		canvasData = canvasContext.getImageData(0, 0, WIDTH, HEIGHT);
+		// init the sand
+		sand = new Sand(canvasContext.getImageData(0, 0, WIDTH, HEIGHT).data);
 	};
-
 	image.src = IMAGE_NAMES[parseInt(Math.random() * IMAGE_NAMES.length, 10)];
 
+	// start the animation loop
 	run();
 }
 
@@ -355,9 +585,10 @@ function run() {
 		duration = 0.1;
 	}
 
+	runCollapseCheck();
 	activatePendingParticles();
 
-	message("Particles: " + particles.length);
+	document.getElementById("particles").innerHTML = particles.length;
 
 	overlayContext.clearRect(0, 0, WIDTH, HEIGHT);
 	catapult.draw(overlayContext);
@@ -379,14 +610,6 @@ function run() {
 	}
 }
 
-function isSand(x, y) {
-	if ((x < 0) || (y < 0) || (x >= WIDTH) || (y >= HEIGHT)) {
-		return false;
-	}
-
-	return canvasData.data[(x + y * WIDTH) * 4] < 248;
-}
-
 function addParticle(particle) {
 	pendingParticles.push(particle);
 }
@@ -404,15 +627,9 @@ function activatePendingParticles() {
 }
 
 function updateParticles(duration) {
-	var update = false;
-
 	for (var i = 0; i < particles.length; i += 1) {
-		update |= particles[i].move(duration);
+		particles[i].move(duration);
 		particles[i].draw(overlayContext);
-	}
-
-	if (update) {
-		canvasData = canvasContext.getImageData(0, 0, WIDTH, HEIGHT);
 	}
 }
 
@@ -428,50 +645,79 @@ function removeDeadParticles() {
 }
 
 function fire() {
-	for (var i = 0; i < 10; i += 1) {
+	for (var i = 0; i < INITIAL_PARTICLE_COUNT; i += 1) {
 		var direction = Math.random() * Math.PI * 2;
-		var distance = Math.random() * INITIAL_PARTICLE_SIZE;
+		var distance = Math.random() * 3;
 		var position = catapult.position.clone();
 		position.add(Math.cos(direction) * distance, - Math.sin(direction) * distance);
-		var particle = new Particle(position, new Vector(-dragPos.x * 2, dragPos.y * 2), INITIAL_PARTICLE_SIZE);
+		var particle = new Particle(position, new Vector(-dragPos.x * 2, dragPos.y * 2), INITIAL_PARTICLE_MASS);
 
 		addParticle(particle);
 	}
 }
 
-function toParticle(x, y, radius, velocity, scale) {
-	var update = false;
-	var maxDist = radius * radius;
+function addCollapseCheck(x, y) {
+	x = Math.round(x);
+	y = Math.round(y) - 1;
 
-	for (var iy = -radius; iy <= radius; iy += 1) {
-		for (var ix = -radius; ix <= radius; ix += 1) {
-			if (ix * ix + iy * iy <= maxDist) {
-				if (isSand(x + ix, y + iy)) {
-					var particle = new Particle(new Vector(x + ix, y + iy), new Vector(velocity * 2 * (Math.random() - 0.5), velocity * 2 * (Math.random() - 0.5)), scale);
-
-					addParticle(particle);
-
-					canvasContext.save();
-					canvasContext.fillStyle = "white";
-					canvasContext.fillRect(x + ix, y + iy, 1, 1);
-					canvasContext.restore();
-
-					update = true;
-				}
-			}
-		}
+	if ((x < 0) || (y < 0) || (x >= WIDTH) || (y >= HEIGHT)) {
+		return false;
 	}
 
-	return update;
+	if ((sand.get(x, y)) && (!sand.get(x, y + 1))) {
+		var value = collapseCheck[x] || y;
+
+
+		if (y >= value) {
+			collapseCheck[x] = y;
+		}
+	}
 }
 
-function explode(particle, scale) {
-	var length = particle.velocity.length();
-	var velocity = new Vector(length * 2 * (Math.random() - 0.5), length * 2 * (Math.random() - 0.5));
+function runCollapseCheck() {
+	var lastCollapseCheck = collapseCheck;
 
-	addParticle(new Particle(particle.position.clone(), velocity, scale));
+	collapseCheck = [];
+	/*
+	for (var x = 0; x < WIDTH; x += 1) {
+		var y = lastCollapseCheck[x];
+
+		if (!y) {
+			continue;
+		}
+
+		if (Math.random() > 0.2) {
+			sand.get(x - 1, y - 1, 0);
+		}
+		if (Math.random() > 0.2) {
+			sand.get(x + 1, y - 1, 0);
+		}
+
+		while (y >= 0) {
+			if ((sand.get(x, y)) && (!sand.get(x, y + 1))) {
+				var position = new Vector(x, y);
+				var particle = new Particle(position, new Vector(), 1);
+
+				addParticle(particle);
+
+				sand.set(position.x, position.y, 0);
+				addCollapseCheck(position.x, position.y);
+			}
+
+			y -= 1;
+		}
+
+	}
+	*/
 }
+/*
+function explode(particle, mass) {
+	var length = particle.movement.length();
+	var movement = new Vector(length * 2 * (Math.random() - 0.5), length * 2 * (Math.random() - 0.5));
 
+	addParticle(new Particle(particle.position.clone(), movement, mass));
+}
+*/
 function mouseDown(event) {
 	var v = new Vector(event.clientX - canvas.offsetLeft - catapult.position.x, event.clientY - canvas.offsetTop - catapult.position.y);
 
@@ -501,6 +747,18 @@ function mouseUp(event) {
 
 function message(msg) {
 	document.getElementById("message").innerHTML = msg;
+}
+
+function toHex(d, padding) {
+	var hex = parseInt(d, 10).toString(16);
+
+	if (padding) {
+		while (hex.length < padding) {
+			hex = "0" + hex;
+		}
+	}
+
+	return hex;
 }
 
 // requestAnimationFrame polyfill by Erik Möller
