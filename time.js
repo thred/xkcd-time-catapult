@@ -164,7 +164,11 @@ Particle.prototype = {
 	},
 
 	force: function() {
-		return this.mass * this.movement.length();
+		return this.mass * this.velocity();
+	},
+
+	velocity: function() {
+		return this.movement.length();
 	},
 
 	move: function(duration) {
@@ -265,40 +269,58 @@ Particle.prototype = {
 		var radius = this.radius();
 		var maxDist = radius * radius;
 		var direction = this.movement.direction();
-		var velocity = this.movement.length();
+		var velocity = this.velocity();
 		var totalMass = 0;
-
+		
+		// calculate the force needed for the explosion
 		for (var iy = -radius; iy <= radius; iy += 1) {
 			for (var ix = -radius; ix <= radius; ix += 1) {
 				if (ix * ix + iy * iy <= maxDist) {
-					totalMass = sand.get(this.position.x + ix, this.position.y + iy) * Math.PI;
+					totalMass += sand.get(this.position.x + ix, this.position.y + iy) * Math.PI;
 				}
 			}
 		}
 
 		if (totalMass <= 0) {
+			// no mass!? abort
 			return false;
 		}
-		
-		var totalForce = this.mass;
 
-		if (totalForce <= totalMass) {
+		// the force of the impact
+		var impactForce = this.mass * velocity;
+		
+		if (impactForce <= totalMass) {
 			// not enough force to trigger explosion
 			return false;
 		}
-
+		
+		var remainingForce = impactForce;
+		
+		// project the force to all particless
 		for (var iy = -radius; iy <= radius; iy += 1) {
 			for (var ix = -radius; ix <= radius; ix += 1) {
 				if (ix * ix + iy * iy <= maxDist) {
-					var force = totalForce / totalMass * (sand.get(this.position.x + ix, this.position.y + iy) * Math.PI);
+					var force = impactForce / totalMass * (sand.get(this.position.x + ix, this.position.y + iy) * Math.PI);
 
-					this.createParticle(this.position.x + ix, this.position.y + iy, direction + (Math.random() - 0.5) * (Math.PI / 2), force);
+					if (this.project(this.position.x + ix, this.position.y + iy, direction + (Math.random() - 0.5) * (Math.PI / 2), force)) {
+						// the force was projected
+						remainingForce -= force;
+					}
 				}
 			}
 		}
+		
+		
+		if (remainingForce <= this.mass) {
+			return false;
+		}
+
+		this.movement.setLength(remainingForce / this.mass);
+		
+		return true;
 	},
 
-	createParticle: function(x, y, direction, force, projected) {
+	project: function(x, y, direction, force, projected) {
 		if ((x < 0) || (y < 0) || (x >= WIDTH) || (y >= HEIGHT)) {
 			return false;
 		}
@@ -314,26 +336,29 @@ Particle.prototype = {
 		var position = new Vector(x, y).add(movement.x, movement.y);
 
 		if (sand.get(position.x, position.y) > 0) {
-			sand.draw(position.x, position.y, "orange");
+			// there is a particle in the way, project the force
+			//sand.draw(position.x, position.y, "orange");
 
-			if (force < Math.PI) {
+			if (force / Math.PI < Math.PI) {
+				// not enough force, abort
 				return false;
 			}
 
-			var result = this.createParticle(position.x, position.y, direction, force * COMPACTNESS, true);
+			var result = this.project(position.x, position.y, direction, force * COMPACTNESS, true);
 
 			if (projected) {
 				return result;
 			}
 
 			// this was the initial call, the force could not be projected
-			direction += Math.PI;
 		}
 
-		movement.setLength(force / Math.PI);
+		var mass = Math.PI * grain;
+		
+		movement.setLength(force / mass);
 		position.set(x, y);
 
-		var particle = new Particle(position, movement, Math.PI);
+		var particle = new Particle(position, movement, mass);
 
 		addParticle(particle);
 		sand.add(position.x, position.y, 0.7, - 1);
@@ -342,7 +367,7 @@ Particle.prototype = {
 	},
 
 	suggestDeath: function() {
-		if (this.mass > Math.PI) {
+		if (this.force() > Math.PI * 2) {
 			return false;
 		}
 
