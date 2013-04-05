@@ -3,7 +3,7 @@ var HEIGHT = 359;
 
 var INITIAL_PARTICLE_MASS = Math.PI * 10;
 var INITIAL_PARTICLE_COUNT = 1;
-var MAX_PARTICLES = 2000;
+var MAX_PARTICLES = 2001;
 var PARTICLE_RADIUS = 3; // the image is 6x6
 var DRAW_MOVEMENT = false;
 
@@ -195,21 +195,29 @@ Particle.prototype = {
 		// check the path for impact
 		var length = Math.floor(Math.sqrt(vx * vx + vy * vy)) + 1;
 
+		var preImpactX = this.lastPosition.x;
+		var preImpactY = this.lastPosition.y;
+		
 		for (var i = 0; i < length; i += 1) {
-			var x = Math.round(this.lastPosition.x + vx * i / length);
-			var y = Math.round(this.lastPosition.y - vy * i / length);
+			// compute the impact position
+			var x = this.lastPosition.x + vx * i / length;
+			var y = this.lastPosition.y - vy * i / length;
 
 			// check impact on path
 			if (sand.get(x, y) >= 0.5) {
 				// there was an impact, update the particles position and calculate the impact
+				
 				// the position is set to the location prior of impact
-				x = Math.round(this.lastPosition.x + vx * (i - 1) / length);
-				y = Math.round(this.lastPosition.y - vy * (i - 1) / length);
-
-				this.position.set(x, y);
-				this.impact();
+				this.position.set(preImpactX, preImpactY);
+				
+				// compute the impact
+				this.impact(x, y);
+				
 				break;
 			}
+			
+			preImpactX = x;
+			preImpactY = y;
 		}
 
 		if ((this.position.x < 0) || (this.position.x >= WIDTH) || (this.position.y >= HEIGHT)) {
@@ -221,30 +229,30 @@ Particle.prototype = {
 	/**
 	 * particle had impact 
 	 */
-	impact: function() {
-		// calculate the vector for mirroring the movement of the particle
-		var mirror = new Vector(0, 0);
+	impact: function(x, y) {
+		var velocity = this.movement.length();
+		var force = velocity * this.mass;
+		var remainingForce = this.explode(x, y, this.movement.direction(), velocity, this.mass, this.radius())
+		
+		if (remainingForce < 0) {
+			// no explosion, bounce off
+			// calculate the vector for mirroring the movement of the particle
+			var mirror = new Vector(0, 0);
 
-		if ((sand.get(this.position.x - 1, this.position.y) >= 0.5) || (sand.get(this.position.x + 1, this.position.y) >= 0.5)) {
-			mirror.add(1, 0);
-		}
-
-		if ((sand.get(this.position.x, this.position.y - 1) >= 0.5) || (sand.get(this.position.x, this.position.y + 1) >= 0.5)) {
-			mirror.add(0, 1);
-		}
-
-		if ((mirror.x === 0) && (mirror.y === 0)) {
-			mirror.set(1, 0);
-		}
-
-		// mirror along the normal
-		mirror.set(mirror.y, mirror.x).normalize();
-
-		if (!this.explode()) {
-			// bounce off or die
-			if (this.suggestDeath()) {
-				return;
+			if ((sand.get(this.position.x - 1, this.position.y) >= 0.5) || (sand.get(this.position.x + 1, this.position.y) >= 0.5)) {
+				mirror.add(1, 0);
 			}
+
+			if ((sand.get(this.position.x, this.position.y - 1) >= 0.5) || (sand.get(this.position.x, this.position.y + 1) >= 0.5)) {
+				mirror.add(0, 1);
+			}
+
+			if ((mirror.x === 0) && (mirror.y === 0)) {
+				mirror.set(1, 0);
+			}
+
+			// mirror along the normal
+			mirror.set(mirror.y, mirror.x).normalize();
 
 			// mirror the movement of the particle along the mirror vector
 			// v ' = 2 * (v . n) * n - v
@@ -261,70 +269,72 @@ Particle.prototype = {
 			// slow the particle down
 			this.movement.multiplyScalar(BOUNCYNESS);
 		}
-
-		this.mass *= 0.5;
-	},
-
-	explode: function() {
-		var radius = this.radius();
-		var maxDist = radius * radius;
-		var direction = this.movement.direction();
-		var velocity = this.velocity();
-		var totalMass = 0;
+		else {
+	//		message("continue: " + remainingForce + ", " + this.mass);
+			
+			//this.movement.setLength(remainingForce / this.mass);
+			this.movement.setLength(remainingForce / this.mass);
+		}
 		
-		// calculate the force needed for the explosion
+		if (this.suggestDeath()) {
+			return;
+		}
+	},
+	
+	explode: function(x, y, direction, velocity, mass, radius) {
+		var maxDist = radius * radius;
+
+		// the force of the impact
+		var impactForce = mass * velocity;
+		var neededForce = 0;
+	
 		for (var iy = -radius; iy <= radius; iy += 1) {
 			for (var ix = -radius; ix <= radius; ix += 1) {
 				if (ix * ix + iy * iy <= maxDist) {
-					totalMass += sand.get(this.position.x + ix, this.position.y + iy) * Math.PI;
+					neededForce += sand.get(x + ix, y + iy) * Math.PI * velocity;
 				}
 			}
 		}
 
-		if (totalMass <= 0) {
-			// no mass!? abort
-			return false;
+		if (neededForce <= 0) {
+			// no distributors!? abort
+			return impactForce;
 		}
-
-		// the force of the impact
-		var impactForce = this.mass * velocity;
-		
-		if (impactForce <= totalMass) {
-			// not enough force to trigger explosion
-			return false;
+	
+		if (impactForce < neededForce) {
+			return -impactForce
 		}
-		
-		var remainingForce = impactForce;
 		
 		// project the force to all particless
 		for (var iy = -radius; iy <= radius; iy += 1) {
 			for (var ix = -radius; ix <= radius; ix += 1) {
 				if (ix * ix + iy * iy <= maxDist) {
-					var force = impactForce / totalMass * (sand.get(this.position.x + ix, this.position.y + iy) * Math.PI);
-
-					if (this.project(this.position.x + ix, this.position.y + iy, direction + (Math.random() - 0.5) * (Math.PI / 2), force)) {
-						// the force was projected
-						remainingForce -= force;
-					}
+					var force = impactForce / neededForce * (sand.get(x + ix, y + iy) * Math.PI);
+					this.projectForce(x + ix, y + iy, direction + (Math.random() - 0.5) * (Math.PI / 2), force);
 				}
 			}
 		}
 		
-		
-		if (remainingForce <= this.mass) {
-			return false;
+		return impactForce - neededForce;
+		/*
+		if (remainingForce > this.mass) {
+			this.movement.setLength(remainingForce / this.mass);
 		}
-
-		this.movement.setLength(remainingForce / this.mass);
-		
-		return true;
+		else {
+			this.movement.setLength(0);
+		}
+	
+		return true;*/
+		//return remainingForce;
+		//return true;
 	},
 
-	project: function(x, y, direction, force, projected) {
+	projectForce: function(x, y, direction, force, projected) {
+		/*
 		if ((x < 0) || (y < 0) || (x >= WIDTH) || (y >= HEIGHT)) {
 			return false;
 		}
-
+		*/
 		var grain = sand.get(x, y);
 
 		if (!grain) {
@@ -337,24 +347,22 @@ Particle.prototype = {
 
 		if (sand.get(position.x, position.y) > 0) {
 			// there is a particle in the way, project the force
-			//sand.draw(position.x, position.y, "orange");
+			sand.draw(position.x, position.y, "orange");
 
 			if (force / Math.PI < Math.PI) {
 				// not enough force, abort
 				return false;
 			}
 
-			var result = this.project(position.x, position.y, direction, force * COMPACTNESS, true);
+			var result = this.projectForce(position.x, position.y, direction, force * COMPACTNESS, true);
 
 			if (projected) {
 				return result;
 			}
-
-			// this was the initial call, the force could not be projected
 		}
 
 		var mass = Math.PI * grain;
-		
+	
 		movement.setLength(force / mass);
 		position.set(x, y);
 
@@ -367,11 +375,11 @@ Particle.prototype = {
 	},
 
 	suggestDeath: function() {
-		if (this.force() > Math.PI * 2) {
+		if (this.force() > Math.PI) {
 			return false;
 		}
 
-		// HELLO.
+		// HELLO. 
 		sand.add(this.position.x, this.position.y, this.radius(), this.mass);
 		this.alive = false;
 
@@ -641,7 +649,7 @@ function addParticle(particle) {
 
 function activatePendingParticles() {
 	for (var i = 0; i < pendingParticles.length; i += 1) {
-		if (particles.length > MAX_PARTICLES) {
+		if (particles.length >= MAX_PARTICLES) {
 			break;
 		}
 
