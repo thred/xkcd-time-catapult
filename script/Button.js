@@ -17,23 +17,41 @@
  * along with xkcd Time Catapult. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define("Catapult", ["Global", "Vector"], function(Global, Vector) {
-	function Catapult() {
-		this.particles = [];
-		this.position = new Vector();
-		this.theta = -Math.PI / 3;
+define("Button", [], function() {
+	function Button(name, values, selectedIndex, handler) {
+		this.name = name;
+		this.values = values;
+		this.selectedIndex = selectedIndex || 0;
+		this.handler = handler;
+
+		this.update();
 	}
 
-	Catapult.prototype = {
-		draw: function(context) {
-			context.save();
-			context.translate(this.position.x, this.position.y);
-			context.drawImage(Global.IMAGES.catapult, - 24, - 24);
-			context.rotate(this.theta);
-			context.drawImage(Global.IMAGES.arm, - 14, - 3);
-			context.restore();
+	Button.prototype = {
+		click: function() {
+			this.selectedIndex += 1;
+			this.selectedIndex %= this.values.length;
+			this.update();
+
+			if (this.handler) {
+				this.handler(this.value());
+			}
+		},
+
+		update: function() {
+			var element = document.getElementById(this.name);
+
+			if (!element) {
+				return;
+			}
+
+			element.src = this.values[this.selectedIndex].src;
+		},
+
+		value: function() {
+			return this.values[this.selectedIndex].value;
 		}
 	};
 
-	return Catapult;
+	return Button;
 });

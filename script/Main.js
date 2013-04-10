@@ -192,7 +192,7 @@ define("Main", ["Global", "Util", "Vector", "Catapult", "Sand", "Particle"], fun
 		},
 
 		step: function(time, duration) {
-			duration *= Global.SPEEDS[this.speedMultiplierIndex].multiplier;
+			duration *= Global.SPEED_BUTTON.value();
 
 			Util.messageTo("pendingParticles", Global.PENDING_PARTICLES.length);
 
@@ -222,30 +222,15 @@ define("Main", ["Global", "Util", "Vector", "Catapult", "Sand", "Particle"], fun
 		},
 
 		fire: function() {
-			for (var i = 0; i < Global.BOULDER_COUNTS[this.boulderCountIndex].count; i += 1) {
+			for (var i = 0; i < Global.BOULDER_COUNT_BUTTON.value(); i += 1) {
 				var direction = Math.random() * Math.PI * 2;
-				var distance = (i > 0) ? Math.random() * Global.BOULDER_SIZES[this.boulderSizeIndex].mass / Math.PI / Global.PARTICLE_RADIUS : 0;
+				var distance = (i > 0) ? Math.random() * Global.BOULDER_SIZE_BUTTON.value() / Math.PI / Global.PARTICLE_RADIUS : 0;
 				var position = this.catapult.position.clone();
 				position.add(Math.cos(direction) * distance, - Math.sin(direction) * distance);
-				var particle = new Particle(position, new Vector(-this.dragPos.x * 3, this.dragPos.y * 3), Global.BOULDER_SIZES[this.boulderSizeIndex].mass);
+				var particle = new Particle(position, new Vector(-this.dragPos.x * 3, this.dragPos.y * 3), Global.BOULDER_SIZE_BUTTON.value());
 
 				Global.addParticle(particle);
 			}
-		},
-
-		changeSpeed: function() {
-			this.speedMultiplierIndex = (this.speedMultiplierIndex + 1) % Global.SPEEDS.length;
-			document.getElementById("speed-button").src = Global.SPEEDS[this.speedMultiplierIndex].src;
-		},
-
-		changeBoulderSize: function() {
-			this.boulderSizeIndex = (this.boulderSizeIndex + 1) % Global.BOULDER_SIZES.length;
-			document.getElementById("boulder-size-button").src = Global.BOULDER_SIZES[this.boulderSizeIndex].src;
-		},
-
-		changeBoulderCount: function() {
-			this.boulderCountIndex = (this.boulderCountIndex + 1) % Global.BOULDER_COUNTS.length;
-			document.getElementById("boulder-count-button").src = Global.BOULDER_COUNTS[this.boulderCountIndex].src;
 		}
 	};
 });

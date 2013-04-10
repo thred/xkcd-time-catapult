@@ -17,19 +17,20 @@
  * along with xkcd Time Catapult. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define("Global", ["Vector"], function(Vector) {
+define("Global", ["Vector", "Button"], function(Vector, Button) {
 	return {
 		WIDTH: 800,
 		HEIGHT: 390,
 
 		MAX_PARTICLES: 2048,
 		PARTICLE_RADIUS: 3, // the image is 6x6
+		DRAW_PROJECTIONS: false,
 		DRAW_MOVEMENT: false,
 
 		G: 667.384,
 		N: 98.0665,
 		AIR_FRICTION: 0.25,
-		ABSORBSION: 0.08,
+		ABSORBSION: 0.02,
 		BOUNCYNESS: 0.80,
 		STICKYNESS: 0.50,
 		FRICTION: 1,
@@ -69,41 +70,61 @@ define("Global", ["Vector"], function(Vector) {
 		}],
 		//var IMAGE_NAMES = ["test.png"];
 
-		SPEEDS: [{
+		SPEED_BUTTON: new Button("speed-button", [{
 			src: "asset/button-normal.png",
-			multiplier: 1
+			value: 1
 		}, {
 			src: "asset/button-slow.png",
-			multiplier: 1 / 4
+			value: 1 / 4
 		}, {
 			src: "asset/button-slower.png",
-			multiplier: 1 / 10
+			value: 1 / 10
 		}, {
 			src: "asset/button-slowest.png",
-			multiplier: 1 / 60
-		}],
+			value: 1 / 60
+		}]),
 
-		BOULDER_SIZES: [{
+		BOULDER_SIZE_BUTTON: new Button("boulder-size-button", [{
 			src: "asset/button-boulder-small.png",
-			mass: Math.PI * 10
+			value: Math.PI * 10
 		}, {
 			src: "asset/button-boulder-medium.png",
-			mass: Math.PI * 20
+			value: Math.PI * 20
 		}, {
 			src: "asset/button-boulder-large.png",
-			mass: Math.PI * 40
-		}],
+			value: Math.PI * 40
+		}]),
 
-		BOULDER_COUNTS: [{
+		BOULDER_COUNT_BUTTON: new Button("boulder-count-button", [{
 			src: "asset/button-boulder-one.png",
-			count: 1
+			value: 1
 		}, {
 			src: "asset/button-boulder-few.png",
-			count: 3
+			value: 3
 		}, {
 			src: "asset/button-boulder-many.png",
-			count: 8
-		}],
+			value: 8
+		}], 1),
+
+		DRAW_MOVEMENT_BUTTON: new Button("draw-movement-button", [{
+			src: "asset/button-movement-off.png",
+			value: false
+		}, {
+			src: "asset/button-movement-on.png",
+			value: true
+		}], 0, function(value) {
+			require("Global").DRAW_MOVEMENT = value;
+		}),
+
+		DRAW_PROJECTIONS_BUTTON: new Button("draw-projections-button", [{
+			src: "asset/button-projections-off.png",
+			value: false
+		}, {
+			src: "asset/button-projections-on.png",
+			value: true
+		}], 0, function(value) {
+			require("Global").DRAW_PROJECTIONS = value;
+		}),
 
 
 		// Precalculated mirror vectors according to following schema (+ ist the impact location):
@@ -178,7 +199,7 @@ define("Global", ["Vector"], function(Vector) {
 		 */
 		removeDeadParticles: function() {
 			var i = 0;
-			
+
 			while (i < this.PARTICLES.length) {
 				if (!this.PARTICLES[i].alive) {
 					this.PARTICLES.splice(i, 1);
@@ -187,7 +208,7 @@ define("Global", ["Vector"], function(Vector) {
 				}
 			}
 		},
-		
+
 		/**
 		 * Removes all particles
 		 */

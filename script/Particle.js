@@ -231,7 +231,9 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 			var nextGrain = Global.SAND.get(position.x, position.y);
 
 			if (nextGrain > Global.THRESHOLD) {
-				//Global.SAND.draw(position.x, position.y, "red");
+				if (Global.DRAW_PROJECTIONS) {
+					Global.SAND.draw(position.x, position.y, "red");
+				}
 
 				// there is a particle in the way, project the momentum
 				momentum = this.projectMomentum(duration, position.x, position.y, direction + (Math.random() - 0.5) * Math.PI * 0.1, velocity, momentum, info, true);
@@ -327,7 +329,7 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 				context.strokeStyle = "#aaaaff";
 				context.beginPath();
 				context.moveTo(0, 0);
-				context.lineTo(this.movement.x, - this.movement.y);
+				context.lineTo(this.movement.x * 0.1, - this.movement.y * 0.1);
 				context.stroke();
 			}
 

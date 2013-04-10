@@ -66,10 +66,13 @@ along with xkcd Time Catapult. If not, see <http://www.gnu.org/licenses/>.
 		</div>
 		<div id="navigation" class="main">
 			<a class="button" href="javascript:require('Main').reload();" title="Reload"><img src="asset/button-reload.png" alt="Reload"/></a>			
-			<a class="button" href="javascript:require('Main').changeSpeed();" title="Speed"><img id="speed-button" src="asset/button-normal.png" alt="Speed"/></a>		
+			<a class="button" href="javascript:require('Global').SPEED_BUTTON.click();" title="Speed"><img id="speed-button" src="asset/button-normal.png" alt="Speed"/></a>		
 			<br/>
-			<a class="button" href="javascript:require('Main').changeBoulderSize();" title="Boulder Size"><img id="boulder-size-button" src="asset/button-boulder-small.png" alt="Boulder Size"/></a>			
-			<a class="button" href="javascript:require('Main').changeBoulderCount();" title="Boulder Count"><img id="boulder-count-button" src="asset/button-boulder-few.png" alt="Boulder Count"/></a>			
+			<a class="button" href="javascript:require('Global').BOULDER_SIZE_BUTTON.click();" title="Boulder Size"><img id="boulder-size-button" src="asset/button-boulder-small.png" alt="Boulder Size"/></a>			
+			<a class="button" href="javascript:require('Global').BOULDER_COUNT_BUTTON.click();" title="Boulder Count"><img id="boulder-count-button" src="asset/button-boulder-few.png" alt="Boulder Count"/></a>			
+			<br/>
+			<a class="button" href="javascript:require('Global').DRAW_MOVEMENT_BUTTON.click();" title="Draw Movement"><img id="draw-movement-button" src="asset/button-movement-off.png" alt="Draw Movement"/></a>			
+			<a class="button" href="javascript:require('Global').DRAW_PROJECTIONS_BUTTON.click();" title="Draw Projections"><img id="draw-projections-button" src="asset/button-projections-off.png" alt="Draw Projections"/></a>			
 			
 			<div id="statistics" class="main">
 				Particles: <span id="particles">0</span><br/>
@@ -139,6 +142,7 @@ along with xkcd Time Catapult. If not, see <http://www.gnu.org/licenses/>.
 		<h2>Changelog</h2>
 		<div id="changelog" class="main">
 			<ul>
+				<li>1.3 - Integrated RequireJS, splitted into multiple files</li>
 				<li>1.2 - Fixed physics and speeding issues, added buttons</li>
 				<li>1.1 - Updated layout, some fixes</li>
 				<li>1.0 - Initial version, basic physics</li>
