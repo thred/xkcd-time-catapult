@@ -19,7 +19,6 @@
  * The algorithm is based on http://www.dgp.toronto.edu/people/stam/reality/Research/pdf/GDC03.pdf
  */
 
-
 var Fluid = function(n) {
 
 		this.n = n;
