@@ -17,81 +17,88 @@
  * along with xkcd Time Catapult. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var Sand = function(data) {
-		this.sand = [WIDTH * HEIGHT];
+define("Sand", ["Global", "Util"], function(Global, Util) {
+	function Sand(context) {
+		this.context = context;
+		this.sand = [Global.WIDTH * Global.HEIGHT];
 
-		for (var y = 0; y < HEIGHT; y += 1) {
-			for (var x = 0; x < WIDTH; x += 1) {
-				var pos = x + y * WIDTH;
+		var data = context.getImageData(0, 0, Global.WIDTH, Global.HEIGHT).data;
+
+		for (var y = 0; y < Global.HEIGHT; y += 1) {
+			for (var x = 0; x < Global.WIDTH; x += 1) {
+				var pos = x + y * Global.WIDTH;
 				this.sand[pos] = 1 - (data[pos * 4] / 255);
 			}
 		}
-	};
-
-Sand.prototype = {
-	constructor: Sand,
-
-	get: function(x, y) {
-		x = Math.round(x);
-		y = Math.round(y);
-
-		if (x < 0) {
-			x = 0;
-		} else if (x >= WIDTH) {
-			x = WIDTH - 1;
-		}
-
-		if (y < 0) {
-			y = 0;
-		} else if (y >= HEIGHT) {
-			y = HEIGHT - 1;
-		}
-
-		return this.sand[x + y * WIDTH];
-	},
-
-	add: function(x, y, mass) {
-		if (mass <= 0) {
-			return;
-		}
-
-		this.set(x, y, mass + this.get(x, y));
-	},
-
-	remove: function(x, y, mass) {
-		if (mass <= 0) {
-			return;
-		}
-
-		this.set(x, y, - mass - this.get(x, y));
-	},
-
-	set: function(x, y, mass) {
-		var self = this;
-
-		if (mass === 0) {
-			return;
-		}
-
-		var radius = Math.sqrt(Math.abs(mass / Math.PI));
-		var grain = (mass < 0) ? Math.max(mass, - 1) : Math.min(mass, 1);
-
-		forEachPixelInCircle(x, y, radius, function(posX, posY, value) {
-			var pos = posX + posY * WIDTH;
-
-			self.sand[pos] = Math.max(0, Math.min(1, self.sand[pos] + grain * value));
-
-			// draw the new value onto the canvas
-			var col = toHex(255 - self.sand[pos] * 255, 2);
-
-			self.draw(posX, posY, "#" + col + col + col);
-		});
-	},
-
-	draw: function(x, y, style) {
-		canvasContext.save();
-		canvasContext.fillStyle = style;
-		canvasContext.fillRect(x, y, 1, 1);
-		canvasContext.restore();
 	}
-};
+
+	Sand.prototype = {
+		constructor: Sand,
+
+		get: function(x, y) {
+			x = Math.round(x);
+			y = Math.round(y);
+
+			if (x < 0) {
+				x = 0;
+			} else if (x >= Global.WIDTH) {
+				x = Global.WIDTH - 1;
+			}
+
+			if (y < 0) {
+				y = 0;
+			} else if (y >= Global.HEIGHT) {
+				y = Global.HEIGHT - 1;
+			}
+
+			return this.sand[x + y * Global.WIDTH];
+		},
+
+		add: function(x, y, mass) {
+			if (mass <= 0) {
+				return;
+			}
+
+			this.set(x, y, mass + this.get(x, y));
+		},
+
+		remove: function(x, y, mass) {
+			if (mass <= 0) {
+				return;
+			}
+
+			this.set(x, y, - mass - this.get(x, y));
+		},
+
+		set: function(x, y, mass) {
+			var self = this;
+
+			if (mass === 0) {
+				return;
+			}
+
+			var radius = Math.sqrt(Math.abs(mass / Math.PI));
+			var grain = (mass < 0) ? Math.max(mass, - 1) : Math.min(mass, 1);
+
+			Util.forEachPixelInCircle(x, y, radius, function(posX, posY, value) {
+				var pos = posX + posY * Global.WIDTH;
+
+				self.sand[pos] = Math.max(0, Math.min(1, self.sand[pos] + grain * value));
+
+				// draw the new value onto the canvas
+				var col = Util.toHex(255 - self.sand[pos] * 255, 2);
+
+				self.draw(posX, posY, "#" + col + col + col);
+			});
+		},
+
+		draw: function(x, y, style) {
+			this.context.save();
+			this.context.fillStyle = style;
+			this.context.fillRect(x, y, 1, 1);
+			this.context.restore();
+		}
+	};
+	
+	return Sand;
+});

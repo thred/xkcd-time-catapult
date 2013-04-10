@@ -17,23 +17,28 @@
  * along with xkcd Time Catapult. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var Catapult = function() {
+define("Catapult", ["Global", "Vector"], function(Global, Vector) {
+
+	function Catapult() {
 		this.particles = [];
 		this.position = new Vector();
 		this.theta = -Math.PI / 3;
-	};
-
-Catapult.prototype = {
-
-	constructor: Catapult,
-
-	draw: function(context) {
-		context.save();
-		context.translate(this.position.x, this.position.y);
-		context.drawImage(images.catapult, - 24, - 24);
-		context.rotate(this.theta);
-		context.drawImage(images.arm, - 14, - 3);
-		context.restore();
 	}
 
-};
+	Catapult.prototype = {
+
+		constructor: Catapult,
+
+		draw: function(context) {
+			context.save();
+			context.translate(this.position.x, this.position.y);
+			context.drawImage(Global.IMAGES.catapult, - 24, - 24);
+			context.rotate(this.theta);
+			context.drawImage(Global.IMAGES.arm, - 14, - 3);
+			context.restore();
+		}
+
+	};
+
+	return Catapult;
+});

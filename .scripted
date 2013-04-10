@@ -3,6 +3,6 @@
 		"options": {
 			"browser": true
 		},
-		"global": ["window", "console", "$", "THREE", "TWEEN", "createjs", "Detector", "Util", "requestAnimationFrame"]
+		"global": ["window", "console", "requestAnimationFrame", "define", "require", "exports", "start", "stop", "run"]
 	}
 }

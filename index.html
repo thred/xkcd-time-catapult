@@ -33,14 +33,9 @@ along with xkcd Time Catapult. If not, see <http://www.gnu.org/licenses/>.
 	<meta property="fb:admins" content="100005515154298" />
 	<title>xkcd Time Catapult</title>
 	<link href="asset/time.css" rel="stylesheet" type="text/css"></link>
-	<script src="script/Vector.js#V1.3"></script>
-	<script src="script/Fluid.js#V1.3"></script>
-	<script src="script/Particle.js#V1.3"></script>
-	<script src="script/Sand.js#V1.3"></script>
-	<script src="script/Catapult.js#V1.3"></script>
-	<script src="script/time.js#V1.3"></script>
+	<script data-main="script/time" src="script/require.js"></script>
 </head>
-<body onLoad="init()">
+<body>
 	<div id="fb-root"></div>
 
 	<script>(function(d, s, id) {
@@ -70,13 +65,12 @@ along with xkcd Time Catapult. If not, see <http://www.gnu.org/licenses/>.
 			</div>
 		</div>
 		<div id="navigation" class="main">
-			<a class="button" href="javascript:reload();" title="Reload"><img src="asset/button-reload.png" alt="Reload"/></a>			
-			<a class="button" href="javascript:changeSpeed();" title="Speed"><img id="speed-button" src="asset/button-normal.png" alt="Speed"/></a>		
+			<a class="button" href="javascript:require('Main').reload();" title="Reload"><img src="asset/button-reload.png" alt="Reload"/></a>			
+			<a class="button" href="javascript:require('Main').changeSpeed();" title="Speed"><img id="speed-button" src="asset/button-normal.png" alt="Speed"/></a>		
 			<br/>
-			<a class="button" href="javascript:changeBoulderSize();" title="Boulder Size"><img id="boulder-size-button" src="asset/button-boulder-small.png" alt="Boulder Size"/></a>			
-			<a class="button" href="javascript:changeBoulderCount();" title="Boulder Count"><img id="boulder-count-button" src="asset/button-boulder-few.png" alt="Boulder Count"/></a>			
+			<a class="button" href="javascript:require('Main').changeBoulderSize();" title="Boulder Size"><img id="boulder-size-button" src="asset/button-boulder-small.png" alt="Boulder Size"/></a>			
+			<a class="button" href="javascript:require('Main').changeBoulderCount();" title="Boulder Count"><img id="boulder-count-button" src="asset/button-boulder-few.png" alt="Boulder Count"/></a>			
 			
-			<div id="message" class="main"></div>
 			<div id="statistics" class="main">
 				Particles: <span id="particles">0</span><br/>
 				Pending: <span id="pendingParticles">0</span>
@@ -84,6 +78,8 @@ along with xkcd Time Catapult. If not, see <http://www.gnu.org/licenses/>.
 		</div>
 		
 		<div style="clear: both;"></div>
+
+		<div id="message" class="main"></div>
 		
 		<div id="sniffer" class="main">
 			<div class="g-plusone" data-size="medium" data-width="450"></div>
