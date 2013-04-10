@@ -1,0 +1,86 @@
+body {
+	font-size: 16px;
+	font-variant: small-caps;
+	font-family: Lucida,Helvetica,sans-serif;
+	color: #6e7b91;
+	/*background-color: #96a8c8;*/
+	background-color: #9cc896;
+	
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+image {
+	border: 0;
+}
+
+div.box {
+	background-color: white;
+	border: 1px solid black;
+	border-radius: 12px;
+	margin: 8px;
+	width: 1024px;
+	left: 50%;
+	margin-left: -512px;
+	position: relative;
+}
+
+h1, h2, h3, h4, div.main {
+	margin: 16px 26px;
+}
+
+a, a:visited, a:hover {
+	font-weight: bold;
+	color: #6e7b91
+}
+
+a.button {
+	display: inline-block;
+	border: 2px solid black;
+	border-radius: 2px;
+	margin: 0px 8px 8px 0px;
+	line-height: 0px;
+}
+
+a.button:hover {
+	background-color: #d3e7d1;
+}
+
+div#content {
+	cursor:crosshair;
+	float: left;
+}
+
+div#placeholder {
+	border: 2px solid black;
+	border-radius: 2px;
+	width: 800px;
+	height: 390px;
+	text-align: center;
+}
+
+div#navigation {
+}
+
+canvas {
+	margin:2px;
+}
+
+.fb-like {
+	height: 20px; 
+	width: 90px; 
+	display: inline-block; 
+	margin: 0px; 
+	padding: 0px; 
+	line-height: normal; 
+	font-size: 1px; 
+	vertical-align: baseline; 
+}
+
+.twitter-share-button {
+	margin-left: 30px;
+}
