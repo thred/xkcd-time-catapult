@@ -1,58 +1,51 @@
 <!DOCTYPE HTML>
 <html itemscope itemtype="http://schema.org/Article">
+<!--
+Copyright 2013 Manfred Hantschel
+
+This file is part of xkcd Time Catapult.
+
+xkcd Time Catapult is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+xkcd Time Catapult is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with xkcd Time Catapult. If not, see <http://www.gnu.org/licenses/>.
+-->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<meta name="description" content="Bullet physics simulation of a sand Catapult for the xkcd Time Cartoon implemented in JavaScript" />
-<meta name="google" content="notranslate" />
-<meta itemprop="name" content="xkcd Time Catapult">
-<meta itemprop="description" content="Bullet physics simulation of a sand Catapult for the xkcd Time Cartoon implemented in JavaScript">
-<meta itemprop="image" content="http://thred.github.com/xkcd-time-catapult/logo.png">
-<meta name="og:title" content="xkcd Time Catapult" />
-<meta name="og:type" content="game" />
-<meta name="og:image" content="http://thred.github.com/xkcd-time-catapult/logo.png" />
-<meta name="og:url" content="http://thred.github.com/xkcd-time-catapult/" />
-<meta name="og:site_name" content="xkcd Time Catapult" />
-<meta property="fb:admins" content="100005515154298" />
 <title>xkcd Time Catapult</title>
-<style>
-	body {
-		font-size: 16px;
-		font-variant: small-caps;
-		font-family: Lucida,Helvetica,sans-serif;
-		color: #6e7b91;
-		
-		-webkit-touch-callout: none;
-		-webkit-user-select: none;
-		-khtml-user-select: none;
-		-moz-user-select: none;
-		-ms-user-select: none;
-		user-select: none;
-	}
-	
-	div#content {
-		cursor:crosshair;
-	}
-	
-	div#placeholder {
-		border: 2px solid black;
-		border-radius: 2px;
-	}
-	
-	div#content, div#message, div#statistics {
-		margin: 16px;
-	}
-	
-	canvas {
-		margin:2px;
-	}
-</style>
-<script src="time.js#V1.1"></script>
+<link href="time.css" rel="stylesheet" type="text/css"></link>
+<script src="time.js#V1.2"></script>
 </head>
 <body onLoad="init()">
-	<div id="content"></div>
-	<div id="message"></div>
-	<div id="statistics">
-		Particles: <span id="particles">0</span>
+	<div class="box">
+		<div id="content" class="main">
+			<div id="placeholder">
+				Loading...
+			</div>
+		</div>
+		<div id="navigation" class="main">
+			<a class="button" href="javascript:reload();" title="Reload"><img src="asset/button-reload.png" alt="Reload"/></a>			
+			<a class="button" href="javascript:changeSpeed();" title="Speed"><img id="speed-button" src="asset/button-normal.png" alt="Speed"/></a>		
+			<br/>
+			<a class="button" href="javascript:changeBoulderSize();" title="Boulder Size"><img id="boulder-size-button" src="asset/button-boulder-small.png" alt="Boulder Size"/></a>			
+			<a class="button" href="javascript:changeBoulderCount();" title="Boulder Count"><img id="boulder-count-button" src="asset/button-boulder-few.png" alt="Boulder Count"/></a>			
+			
+			<div id="message" class="main"></div>
+			<div id="statistics" class="main">
+				Particles: <span id="particles">0</span><br/>
+				Pending: <span id="pendingParticles">0</span>
+			</div>
+		</div>
+		
+		<div style="clear: both;"></div>
 	</div>
 </body>
 </html>

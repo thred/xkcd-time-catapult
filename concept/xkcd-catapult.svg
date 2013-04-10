@@ -1,0 +1,906 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="xkcd-catapult.svg">
+  <defs
+     id="defs4">
+    <filter
+       id="filter3094"
+       height="1.3"
+       width="1.3"
+       y="-0.15"
+       x="-0.14999999999999999"
+       inkscape:menu-tooltip="Van Gogh painting effect for bitmaps"
+       inkscape:menu="Distort"
+       inkscape:label="Pixel smear"
+       color-interpolation-filters="sRGB">
+      <feMorphology
+         id="feMorphology3102"
+         operator="dilate"
+         radius="1.5 2"
+         result="result3" />
+      <feTurbulence
+         id="feTurbulence3104"
+         numOctaves="5"
+         baseFrequency="0.023529411764705882"
+         type="fractalNoise"
+         seed="100" />
+      <feGaussianBlur
+         id="feGaussianBlur3106"
+         stdDeviation="0.5"
+         result="result91" />
+      <feDisplacementMap
+         id="feDisplacementMap3108"
+         in="result3"
+         xChannelSelector="R"
+         yChannelSelector="G"
+         scale="8.5798816568047336"
+         result="result4" />
+      <feComposite
+         id="feComposite3110"
+         in2="result4"
+         in="result4"
+         k3="0.8"
+         k1="1.3"
+         result="result2"
+         operator="arithmetic" />
+      <feBlend
+         id="feBlend3112"
+         in2="result2"
+         mode="screen"
+         in="result2" />
+    </filter>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath3124">
+      <rect
+         y="380.36218"
+         x="400"
+         height="256"
+         width="320"
+         id="rect3126"
+         style="color:#000000;fill:#cccccc;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="130.45498"
+     inkscape:cy="116.21626"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:snap-bbox="true"
+     inkscape:window-width="1920"
+     inkscape:window-height="1018"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2985"
+       empspacing="4"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true"
+       spacingx="0.5px"
+       spacingy="0.5px" />
+    <inkscape:grid
+       type="xygrid"
+       id="grid3791"
+       empspacing="4"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="color:#000000;fill:#d45500;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3801"
+       width="24"
+       height="5"
+       x="240"
+       y="669.36218"
+       inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\arm.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <g
+       id="g3769"
+       inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\catapult.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <rect
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\catapult.png"
+         y="648.36218"
+         x="188"
+         height="48"
+         width="48"
+         id="rect3765"
+         style="color:#000000;fill:#ffffff;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <g
+         id="g3785">
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+           d="m 206,682.36218 12,0 -6,-10 z"
+           id="path3761"
+           inkscape:connector-curvature="0"
+           inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\catapult.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+        <path
+           sodipodi:type="arc"
+           style="color:#000000;fill:#ffffff;stroke:#000000;stroke-width:1.33333302000000000;stroke-miterlimit:4;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+           id="path2987"
+           sodipodi:cx="206"
+           sodipodi:cy="682.36218"
+           sodipodi:rx="2"
+           sodipodi:ry="2"
+           d="m 208,682.36218 a 2,2 0 1 1 -4,0 2,2 0 1 1 4,0 z"
+           transform="matrix(0.75000028,0,0,0.75000014,51.499941,170.59045)"
+           inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\catapult.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+        <path
+           transform="matrix(0.75000028,0,0,0.75000014,63.499942,170.59045)"
+           d="m 208,682.36218 a 2,2 0 1 1 -4,0 2,2 0 1 1 4,0 z"
+           sodipodi:ry="2"
+           sodipodi:rx="2"
+           sodipodi:cy="682.36218"
+           sodipodi:cx="206"
+           id="path3759"
+           style="color:#000000;fill:#ffffff;stroke:#000000;stroke-width:1.33333302000000000;stroke-miterlimit:4;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+           sodipodi:type="arc"
+           inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\catapult.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+           d="m 212,672.36218 0,10"
+           id="path3763"
+           inkscape:connector-curvature="0"
+           inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\catapult.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+      </g>
+    </g>
+    <g
+       id="g3797"
+       transform="translate(49.5,-13.5)"
+       inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\arm.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       style="fill:#aa0000;stroke:#aa0000">
+      <path
+         inkscape:connector-curvature="0"
+         id="path3793"
+         d="m 223.97618,672.36218 -20.95238,0"
+         style="fill:#000000;stroke:#000000;stroke-width:0.99999994000000003px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
+      <rect
+         y="670.36218"
+         x="222"
+         height="4"
+         width="4"
+         id="rect3795"
+         style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.99999994000000003;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    </g>
+    <path
+       style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+       d="m 254.95322,664.85718 c -0.82614,0.10927 -1.51274,0.82397 -2,1.5 -0.30817,0.42756 -0.70169,1.01307 -0.5,1.5 0.28524,0.68862 1.39534,0.56419 2,1 0.38242,0.27564 0.53468,1.07551 1,1 0.73573,-0.11939 0.66667,-1.33333 1,-2 0.33333,-0.66666 1.26489,-1.3033 1,-2 -0.31896,-0.83894 -1.61022,-1.11768 -2.5,-1 z"
+       id="path3805"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="aaaaaaaa"
+       inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\particle.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       style="color:#000000;fill:#999999;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3778"
+       width="2"
+       height="2"
+       x="304"
+       y="682.36218" />
+    <path
+       sodipodi:type="arc"
+       style="color:#000000;fill:#999999;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="path3780"
+       sodipodi:cx="309"
+       sodipodi:cy="683.36218"
+       sodipodi:rx="1"
+       sodipodi:ry="1"
+       d="m 310,683.36218 a 1,1 0 1 1 -2,0 1,1 0 1 1 2,0 z"
+       transform="matrix(1.5,0,0,1.5000022,-154.5,-341.68258)" />
+    <rect
+       style="color:#000000;fill:#f9f9f9;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3784"
+       width="64"
+       height="32"
+       x="252"
+       y="700.36218" />
+    <path
+       style="fill:#000000;stroke:none"
+       d="m 252,728.36218 c 8,1 12,-24 20,-24 l 24,0 c 8,0 12,24 20,24 l 0,4 -64,0 z"
+       id="path3786"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccccc" />
+    <g
+       id="g3013"
+       transform="translate(480,179)">
+      <rect
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\test.png"
+         y="577.36218"
+         x="360"
+         height="395"
+         width="553"
+         id="rect3788"
+         style="color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <rect
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\test.png"
+         y="900.36218"
+         x="360"
+         height="72"
+         width="553"
+         id="rect3790"
+         style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\test.png"
+         sodipodi:nodetypes="ccccccccccccccc"
+         inkscape:connector-curvature="0"
+         id="path3792"
+         d="m 432,812.36218 64,64 208,0 80,-80 0,-80 -96,-96 -136,0 -88,88 0,48 -32,0 0,-152 400,0 0,320 -400,0 z"
+         style="fill:#000000;stroke:none" />
+    </g>
+    <g
+       id="g3906"
+       inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\base.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\base.png"
+         id="g3898">
+        <rect
+           style="color:#000000;fill:#ffffff;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+           id="rect3011"
+           width="320"
+           height="256"
+           x="408"
+           y="188.36218"
+           inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\base.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+        <path
+           style="fill:#000000;stroke:none;filter:url(#filter3094)"
+           d="m 400,380.36218 c 14,8 22,24 40,24 8,0 32,-8 40,-8 8,0 24,8 32,8 16,0 32,16 48,16 16,0 32,0 48,0 24,8.00001 40,8 56,8 22,10e-6 24,8 56,12 l 16,-4 0,216 -352,0 0,-272 z"
+           id="path3018"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="ccccccccccccc"
+           clip-path="url(#clipPath3124)"
+           transform="translate(8,-192)"
+           inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\base.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+      </g>
+      <rect
+         y="244.36218"
+         x="408"
+         height="200"
+         width="320"
+         id="rect3902"
+         style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <rect
+         y="188.36218"
+         x="408"
+         height="256"
+         width="8"
+         id="rect3904"
+         style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    </g>
+    <rect
+       style="color:#000000;fill:#96a8c8;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3915"
+       width="112"
+       height="96"
+       x="32"
+       y="220.36218" />
+    <rect
+       y="316.36218"
+       x="32"
+       height="96"
+       width="112"
+       id="rect3917"
+       style="color:#000000;fill:#c896c0;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    <rect
+       style="color:#000000;fill:#f00000;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3919"
+       width="112"
+       height="96"
+       x="144"
+       y="220.36218" />
+    <rect
+       y="316.36218"
+       x="144"
+       height="96"
+       width="112"
+       id="rect3921"
+       style="color:#000000;fill:#c89696;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    <rect
+       style="color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3923"
+       width="127.50001"
+       height="96"
+       x="80"
+       y="268.36218"
+       ry="16"
+       rx="16" />
+    <g
+       id="g3959"
+       inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\button-reload.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       transform="matrix(0.75,0,0,0.75,4,211.09055)">
+      <rect
+         y="844.36218"
+         x="16"
+         height="64"
+         width="64"
+         id="rect3925"
+         style="color:#000000;fill:#ffffff;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <g
+         id="g3947">
+        <path
+           style="fill:#000000;stroke:none"
+           d="m 64,865.1725 -12,16.78454 6,0 c 0,11.18969 -13.32967,13.06487 -23,8.39227 10,19.58196 35,6.99356 35,-8.39227 l 6,0 z"
+           id="path3931"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="ccccccc" />
+        <path
+           sodipodi:nodetypes="ccccccc"
+           inkscape:connector-curvature="0"
+           id="path3933"
+           d="m 32,887.55188 12,-16.78454 -6,0 c 0,-11.18969 13.32967,-13.06487 23,-8.39226 -10,-19.58196 -35,-6.99356 -35,8.39226 l -6,0 z"
+           style="fill:#000000;stroke:none" />
+      </g>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Deutsch Gothic;-inkscape-font-specification:Deutsch Gothic"
+       x="92.494141"
+       y="881.20007"
+       id="text3983"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3985"
+         x="92.494141"
+         y="881.20007"
+         style="font-size:28px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas Bold" /></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text4082"
+       y="881.86804"
+       x="147.86523"
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Deutsch Gothic;-inkscape-font-specification:Deutsch Gothic"
+       xml:space="preserve"><tspan
+         style="font-size:28px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+         y="881.86804"
+         x="147.86523"
+         id="tspan4084"
+         sodipodi:role="line" /></text>
+    <g
+       id="g4194"
+       inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\button-slowest.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <rect
+         style="color:#000000;fill:#ececec;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         id="rect4102"
+         width="48"
+         height="48"
+         x="248"
+         y="844.36218" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text4104"
+         y="864.36218"
+         x="280"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Deutsch Gothic;-inkscape-font-specification:Deutsch Gothic"
+         xml:space="preserve"><tspan
+           style="font-size:22px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+           y="864.36218"
+           x="280"
+           id="tspan4106"
+           sodipodi:role="line">1</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Deutsch Gothic;-inkscape-font-specification:Deutsch Gothic"
+         x="280"
+         y="886.36218"
+         id="text4108"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4110"
+           x="280"
+           y="886.36218"
+           style="font-size:22px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas Bold">60</tspan></text>
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path4112"
+         d="m 270,868.36218 20,0"
+         style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <g
+         transform="matrix(1,0,0,0.86013674,1,121.33306)"
+         style="stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none"
+         id="g4142">
+        <path
+           style="fill:none;stroke:#000000;stroke-width:2.15648413;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           d="m 264,860.36218 -12,16"
+           id="path4138"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:2.15648413;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           d="m 252,860.36218 12,16"
+           id="path4140"
+           inkscape:connector-curvature="0" />
+      </g>
+    </g>
+    <g
+       id="g4183"
+       inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\button-slower.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <rect
+         y="844.36218"
+         x="192"
+         height="48"
+         width="48"
+         id="rect4086"
+         style="color:#000000;fill:#ececec;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Deutsch Gothic;-inkscape-font-specification:Deutsch Gothic"
+         x="224"
+         y="864.36218"
+         id="text4088"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4090"
+           x="224"
+           y="864.36218"
+           style="font-size:22px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas Bold">1</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text4092"
+         y="886.36218"
+         x="224"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Deutsch Gothic;-inkscape-font-specification:Deutsch Gothic"
+         xml:space="preserve"><tspan
+           style="font-size:22px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+           y="886.36218"
+           x="224"
+           id="tspan4094"
+           sodipodi:role="line">10</tspan></text>
+      <path
+         style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         d="m 214,868.36218 20,0"
+         id="path4096"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cc" />
+      <g
+         id="g4146"
+         style="stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none"
+         transform="matrix(1,0,0,0.86013674,-55,121.33306)">
+        <path
+           inkscape:connector-curvature="0"
+           id="path4148"
+           d="m 264,860.36218 -12,16"
+           style="fill:none;stroke:#000000;stroke-width:2.15648413;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+        <path
+           inkscape:connector-curvature="0"
+           id="path4150"
+           d="m 252,860.36218 12,16"
+           style="fill:none;stroke:#000000;stroke-width:2.15648413;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      </g>
+    </g>
+    <g
+       id="g4172"
+       inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\button-slow.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <rect
+         style="color:#000000;fill:#ececec;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         id="rect4062"
+         width="48"
+         height="48"
+         x="136"
+         y="844.36218" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text4068"
+         y="864.36218"
+         x="168"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Deutsch Gothic;-inkscape-font-specification:Deutsch Gothic"
+         xml:space="preserve"><tspan
+           style="font-size:22px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas Bold"
+           y="864.36218"
+           x="168"
+           id="tspan4070"
+           sodipodi:role="line">1</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Deutsch Gothic;-inkscape-font-specification:Deutsch Gothic"
+         x="168"
+         y="886.36218"
+         id="text4076"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4078"
+           x="168"
+           y="886.36218"
+           style="font-size:22px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas Bold">4</tspan></text>
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path4080"
+         d="m 160,868.36218 18,0"
+         style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <g
+         transform="matrix(1,0,0,0.86013674,-111,121.33306)"
+         style="stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none"
+         id="g4152">
+        <path
+           style="fill:none;stroke:#000000;stroke-width:2.15648413;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           d="m 264,860.36218 -12,16"
+           id="path4154"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:2.15648413;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           d="m 252,860.36218 12,16"
+           id="path4156"
+           inkscape:connector-curvature="0" />
+      </g>
+    </g>
+    <g
+       id="g4164"
+       inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\button-normal.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <rect
+         y="844.36218"
+         x="80"
+         height="48"
+         width="48"
+         id="rect3981"
+         style="color:#000000;fill:#ececec;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Deutsch Gothic;-inkscape-font-specification:Deutsch Gothic"
+         x="112"
+         y="880.36218"
+         id="text4058"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4060"
+           x="112"
+           y="880.36218"
+           style="font-size:36px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas Bold">1</tspan></text>
+      <g
+         id="g4158"
+         style="stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none"
+         transform="matrix(1,0,0,0.86013674,-167,121.33306)">
+        <path
+           inkscape:connector-curvature="0"
+           id="path4160"
+           d="m 264,860.36218 -12,16"
+           style="fill:none;stroke:#000000;stroke-width:2.15648413;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+        <path
+           inkscape:connector-curvature="0"
+           id="path4162"
+           d="m 252,860.36218 12,16"
+           style="fill:none;stroke:#000000;stroke-width:2.15648413;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      </g>
+    </g>
+    <g
+       id="g4223"
+       inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\button-boulder-small.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <rect
+         y="908.36218"
+         x="16"
+         height="48"
+         width="48"
+         id="rect4207"
+         style="color:#000000;fill:#cccccc;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:2;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\particle.png"
+         sodipodi:nodetypes="aaaaaaaa"
+         inkscape:connector-curvature="0"
+         id="path4209"
+         d="m 39.953215,929.88787 c -0.82614,0.10927 -1.51274,0.82397 -2,1.5 -0.30817,0.42756 -0.70169,1.01307 -0.5,1.5 0.28524,0.68862 1.39534,0.56419 2,1 0.38242,0.27564 0.53468,1.07551 1,1 0.73573,-0.11939 0.66667,-1.33333 1,-2 0.33333,-0.66666 1.26489,-1.3033 1,-2 -0.31896,-0.83894 -1.61022,-1.11768 -2.5,-1 z"
+         style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1" />
+    </g>
+    <g
+       id="g4227"
+       inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\button-boulder-medium.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <rect
+         style="color:#000000;fill:#cccccc;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:2;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         id="rect4211"
+         width="48"
+         height="48"
+         x="80"
+         y="908.36218" />
+      <path
+         style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+         d="m 103.95741,927.39821 c -1.65228,0.21854 -3.02548,1.64794 -4,3 -0.61636,0.85512 -1.40338,2.02614 -1,3 0.57048,1.37724 2.79068,1.12838 4,2 0.76484,0.55128 1.06936,2.15102 2,2 1.47146,-0.23878 1.33334,-2.66666 2,-4 0.66666,-1.33332 2.52978,-2.6066 2,-4 -0.63792,-1.67788 -3.22044,-2.23536 -5,-2 z"
+         id="path4213"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="aaaaaaaa"
+         inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\particle.png"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90" />
+    </g>
+    <g
+       id="g4231"
+       inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\button-boulder-large.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <rect
+         y="908.36218"
+         x="144"
+         height="48"
+         width="48"
+         id="rect4215"
+         style="color:#000000;fill:#cccccc;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:2;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\particle.png"
+         sodipodi:nodetypes="aaaaaaaa"
+         inkscape:connector-curvature="0"
+         id="path4217"
+         d="m 167.9658,922.41888 c -3.30456,0.43708 -6.05096,3.29588 -8,6 -1.23272,1.71024 -2.80676,4.05228 -2,6 1.14096,2.75448 5.58136,2.25676 8,4 1.52968,1.10256 2.13872,4.30204 4,4 2.94292,-0.47756 2.66668,-5.33332 4,-8 1.33332,-2.66664 5.05956,-5.2132 4,-8 -1.27584,-3.35576 -6.44088,-4.47072 -10,-4 z"
+         style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1" />
+    </g>
+    <g
+       id="g4303"
+       inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\button-boulder-one.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         transform="translate(-4,4)"
+         id="g4243">
+        <rect
+           y="968.36218"
+           x="20"
+           height="48"
+           width="48"
+           id="rect4237"
+           style="color:#000000;fill:#cccccc;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:2;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+        <path
+           inkscape:export-ydpi="90"
+           inkscape:export-xdpi="90"
+           inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\particle.png"
+           sodipodi:nodetypes="aaaaaaaa"
+           inkscape:connector-curvature="0"
+           id="path4239"
+           d="m 52.40643,987.85218 c -1.65228,0.21854 -3.02548,1.64794 -4,3 -0.61634,0.85512 -1.40338,2.02614 -1,3 0.57048,1.37724 2.79068,1.12838 4,2 0.76484,0.55128 1.06936,2.15102 2,2 1.47146,-0.23878 1.33334,-2.66666 2,-4 0.66666,-1.33332 2.52978,-2.6066 2,-4 -0.63792,-1.67788 -3.22044,-2.23536 -5,-2 z"
+           style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1" />
+      </g>
+      <text
+         sodipodi:linespacing="125%"
+         id="text4247"
+         y="1003.3622"
+         x="30"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Deutsch Gothic;-inkscape-font-specification:Deutsch Gothic"
+         xml:space="preserve"><tspan
+           style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas"
+           y="1003.3622"
+           x="30"
+           id="tspan4249"
+           sodipodi:role="line">1</tspan></text>
+    </g>
+    <g
+       id="g4310"
+       inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\button-boulder-few.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         id="g4263"
+         transform="translate(60,4)">
+        <rect
+           style="color:#000000;fill:#cccccc;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:2;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+           id="rect4265"
+           width="48"
+           height="48"
+           x="20"
+           y="968.36218" />
+        <path
+           style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+           d="m 52.40643,987.85218 c -1.65228,0.21854 -3.02548,1.64794 -4,3 -0.61634,0.85512 -1.40338,2.02614 -1,3 0.57048,1.37724 2.79068,1.12838 4,2 0.76484,0.55128 1.06936,2.15102 2,2 1.47146,-0.23878 1.33334,-2.66666 2,-4 0.66666,-1.33332 2.52978,-2.6066 2,-4 -0.63792,-1.67788 -3.22044,-2.23536 -5,-2 z"
+           id="path4267"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="aaaaaaaa"
+           inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\particle.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+        <path
+           inkscape:export-ydpi="90"
+           inkscape:export-xdpi="90"
+           inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\particle.png"
+           sodipodi:nodetypes="aaaaaaaa"
+           inkscape:connector-curvature="0"
+           id="path4283"
+           d="m 52.40643,973.85218 c -1.65228,0.21854 -3.02548,1.64794 -4,3 -0.61634,0.85512 -1.40338,2.02614 -1,3 0.57048,1.37724 2.79068,1.12838 4,2 0.76484,0.55128 1.06936,2.15102 2,2 1.47146,-0.23878 1.33334,-2.66666 2,-4 0.66666,-1.33332 2.52978,-2.6066 2,-4 -0.63792,-1.67788 -3.22044,-2.23536 -5,-2 z"
+           style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1" />
+        <path
+           style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+           d="m 52.40643,1001.8522 c -1.65228,0.2185 -3.02548,1.6479 -4,3 -0.61634,0.8551 -1.40338,2.0261 -1,3 0.57048,1.3772 2.79068,1.1284 4,2 0.76484,0.5513 1.06936,2.151 2,2 1.47146,-0.2388 1.33334,-2.6667 2,-4 0.66666,-1.3333 2.52978,-2.6066 2,-4 -0.63792,-1.6779 -3.22044,-2.2354 -5,-2 z"
+           id="path4285"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="aaaaaaaa"
+           inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\particle.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Deutsch Gothic;-inkscape-font-specification:Deutsch Gothic"
+         x="94"
+         y="1003.3622"
+         id="text4269"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4271"
+           x="94"
+           y="1003.3622"
+           style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas">3</tspan></text>
+    </g>
+    <g
+       id="g4319"
+       inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\button-boulder-many.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         transform="translate(124,4)"
+         id="g4273">
+        <rect
+           y="968.36218"
+           x="20"
+           height="48"
+           width="48"
+           id="rect4275"
+           style="color:#000000;fill:#cccccc;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:2;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+        <path
+           inkscape:export-ydpi="90"
+           inkscape:export-xdpi="90"
+           inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\particle.png"
+           sodipodi:nodetypes="aaaaaaaa"
+           inkscape:connector-curvature="0"
+           id="path4277"
+           d="m 30.40643,973.85218 c -1.65228,0.21854 -3.02548,1.64794 -4,3 -0.61634,0.85512 -1.40338,2.02614 -1,3 0.57048,1.37724 2.79068,1.12838 4,2 0.76484,0.55128 1.06936,2.15102 2,2 1.47146,-0.23878 1.33334,-2.66666 2,-4 0.66666,-1.33332 2.52978,-2.6066 2,-4 -0.63792,-1.67788 -3.22044,-2.23536 -5,-2 z"
+           style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1" />
+        <path
+           style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+           d="m 44.40643,973.85218 c -1.65228,0.21854 -3.02548,1.64794 -4,3 -0.61634,0.85512 -1.40338,2.02614 -1,3 0.57048,1.37724 2.79068,1.12838 4,2 0.76484,0.55128 1.06936,2.15102 2,2 1.47146,-0.23878 1.33334,-2.66666 2,-4 0.66666,-1.33332 2.52978,-2.6066 2,-4 -0.63792,-1.67788 -3.22044,-2.23536 -5,-2 z"
+           id="path4287"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="aaaaaaaa"
+           inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\particle.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+        <path
+           inkscape:export-ydpi="90"
+           inkscape:export-xdpi="90"
+           inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\particle.png"
+           sodipodi:nodetypes="aaaaaaaa"
+           inkscape:connector-curvature="0"
+           id="path4289"
+           d="m 58.40643,973.85218 c -1.65228,0.21854 -3.02548,1.64794 -4,3 -0.61634,0.85512 -1.40338,2.02614 -1,3 0.57048,1.37724 2.79068,1.12838 4,2 0.76484,0.55128 1.06936,2.15102 2,2 1.47146,-0.23878 1.33334,-2.66666 2,-4 0.66666,-1.33332 2.52978,-2.6066 2,-4 -0.63792,-1.67788 -3.22044,-2.23536 -5,-2 z"
+           style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1" />
+        <path
+           style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+           d="m 30.40643,987.85218 c -1.65228,0.21854 -3.02548,1.64794 -4,3 -0.61634,0.85512 -1.40338,2.02614 -1,3 0.57048,1.37724 2.79068,1.12838 4,2 0.76484,0.55128 1.06936,2.15102 2,2 1.47146,-0.23878 1.33334,-2.66666 2,-4 0.66666,-1.33332 2.52978,-2.6066 2,-4 -0.63792,-1.67788 -3.22044,-2.23536 -5,-2 z"
+           id="path4291"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="aaaaaaaa"
+           inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\particle.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+        <path
+           style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+           d="m 58.40643,987.85218 c -1.65228,0.21854 -3.02548,1.64794 -4,3 -0.61634,0.85512 -1.40338,2.02614 -1,3 0.57048,1.37724 2.79068,1.12838 4,2 0.76484,0.55128 1.06936,2.15102 2,2 1.47146,-0.23878 1.33334,-2.66666 2,-4 0.66666,-1.33332 2.52978,-2.6066 2,-4 -0.63792,-1.67788 -3.22044,-2.23536 -5,-2 z"
+           id="path4295"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="aaaaaaaa"
+           inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\particle.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+        <path
+           inkscape:export-ydpi="90"
+           inkscape:export-xdpi="90"
+           inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\particle.png"
+           sodipodi:nodetypes="aaaaaaaa"
+           inkscape:connector-curvature="0"
+           id="path4297"
+           d="m 30.40643,1001.8522 c -1.65228,0.2185 -3.02548,1.6479 -4,3 -0.61634,0.8551 -1.40338,2.0261 -1,3 0.57048,1.3772 2.79068,1.1284 4,2 0.76484,0.5513 1.06936,2.151 2,2 1.47146,-0.2388 1.33334,-2.6667 2,-4 0.66666,-1.3333 2.52978,-2.6066 2,-4 -0.63792,-1.6779 -3.22044,-2.2354 -5,-2 z"
+           style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1" />
+        <path
+           style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+           d="m 44.40643,1001.8522 c -1.65228,0.2185 -3.02548,1.6479 -4,3 -0.61634,0.8551 -1.40338,2.0261 -1,3 0.57048,1.3772 2.79068,1.1284 4,2 0.76484,0.5513 1.06936,2.151 2,2 1.47146,-0.2388 1.33334,-2.6667 2,-4 0.66666,-1.3333 2.52978,-2.6066 2,-4 -0.63792,-1.6779 -3.22044,-2.2354 -5,-2 z"
+           id="path4299"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="aaaaaaaa"
+           inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\particle.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+        <path
+           inkscape:export-ydpi="90"
+           inkscape:export-xdpi="90"
+           inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\particle.png"
+           sodipodi:nodetypes="aaaaaaaa"
+           inkscape:connector-curvature="0"
+           id="path4301"
+           d="m 58.40643,1001.8522 c -1.65228,0.2185 -3.02548,1.6479 -4,3 -0.61634,0.8551 -1.40338,2.0261 -1,3 0.57048,1.3772 2.79068,1.1284 4,2 0.76484,0.5513 1.06936,2.151 2,2 1.47146,-0.2388 1.33334,-2.6667 2,-4 0.66666,-1.3333 2.52978,-2.6066 2,-4 -0.63792,-1.6779 -3.22044,-2.2354 -5,-2 z"
+           style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1" />
+      </g>
+      <text
+         sodipodi:linespacing="125%"
+         id="text4279"
+         y="1003.3622"
+         x="169"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Deutsch Gothic;-inkscape-font-specification:Deutsch Gothic"
+         xml:space="preserve"><tspan
+           style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas"
+           y="1003.3622"
+           x="169"
+           id="tspan4281"
+           sodipodi:role="line">8</tspan></text>
+    </g>
+  </g>
+</svg>
