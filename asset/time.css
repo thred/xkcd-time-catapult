@@ -23,7 +23,7 @@ div.box {
 	border: 1px solid black;
 	border-radius: 12px;
 	margin: 8px;
-	width: 1024px;
+	width: 1008px;
 	left: 50%;
 	margin-left: -512px;
 	position: relative;
@@ -63,7 +63,16 @@ div#placeholder {
 	text-align: center;
 }
 
-div#navigation {
+div#statistics {
+	font-size: 60%;
+}
+
+div#statistics span {
+	font-weight: bold;
+}
+
+div#statistics span.unit {
+	font-variant: normal;
 }
 
 canvas {

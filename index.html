@@ -49,41 +49,13 @@ along with xkcd Time Catapult. If not, see <http://www.gnu.org/licenses/>.
 
 	<div class="box">
 		<div class="main" style="float: right">
- 			Version 1.2
+ 			Version 1.4
  		</div>
 		<h1><span style="font-variant: normal;">xkcd</span> Time Catapult</h1>
 		<div class="main">
 			A physics simulation of a <a href="http://en.wikipedia.org/wiki/Trebuchet" target="_blank">trebuchet</a> based
 			on the <a href="http://xkcd.com/1190/" target="_blank">&quot;Time&quot; comic</a> at xkcd.
 		</div>
-	</div>
-
-	<div class="box">
-		<div id="content" class="main">
-			<div id="placeholder">
-				Loading...
-			</div>
-		</div>
-		<div id="navigation" class="main">
-			<a class="button" href="javascript:require('Main').reload();" title="Reload"><img src="asset/button-reload.png" alt="Reload"/></a>			
-			<a class="button" href="javascript:require('Global').SPEED_BUTTON.click();" title="Speed"><img id="speed-button" src="asset/button-normal.png" alt="Speed"/></a>		
-			<br/>
-			<a class="button" href="javascript:require('Global').BOULDER_SIZE_BUTTON.click();" title="Boulder Size"><img id="boulder-size-button" src="asset/button-boulder-small.png" alt="Boulder Size"/></a>			
-			<a class="button" href="javascript:require('Global').BOULDER_COUNT_BUTTON.click();" title="Boulder Count"><img id="boulder-count-button" src="asset/button-boulder-few.png" alt="Boulder Count"/></a>			
-			<br/>
-			<a class="button" href="javascript:require('Global').DRAW_MOVEMENT_BUTTON.click();" title="Draw Movement"><img id="draw-movement-button" src="asset/button-movement-off.png" alt="Draw Movement"/></a>			
-			<a class="button" href="javascript:require('Global').DRAW_PROJECTIONS_BUTTON.click();" title="Draw Projections"><img id="draw-projections-button" src="asset/button-projections-off.png" alt="Draw Projections"/></a>			
-			
-			<div id="statistics" class="main">
-				Particles: <span id="particles">0</span><br/>
-				Pending: <span id="pendingParticles">0</span>
-			</div>
-		</div>
-		
-		<div style="clear: both;"></div>
-
-		<div id="message" class="main"></div>
-		
 		<div id="sniffer" class="main">
 			<div class="g-plusone" data-size="medium" data-width="450"></div>
 			<script type="text/javascript">
@@ -109,6 +81,47 @@ along with xkcd Time Catapult. If not, see <http://www.gnu.org/licenses/>.
 			  ga('send', 'pageview');
 			</script>
 		</div>
+	</div>
+
+	<div class="box">
+		<div id="content" class="main">
+			<div id="placeholder">
+				Loading...
+			</div>
+		</div>
+		<div id="navigation" class="main">
+			<a class="button" href="javascript:require('Global').BUTTONS.reload.click();" title="Reload"><img id="reload-button" src="asset/button.png" alt="Reload"/></a>			
+			<a class="button" href="javascript:require('Global').BUTTONS.speed.click();" title="Speed"><img id="speed-button" src="asset/button.png" alt="Speed"/></a>		
+			<br/>
+			<a class="button" href="javascript:require('Global').BUTTONS.boulderSize.click();" title="Boulder Size"><img id="boulder-size-button" src="asset/button.png" alt="Boulder Size"/></a>			
+			<a class="button" href="javascript:require('Global').BUTTONS.boulderCount.click();" title="Boulder Count"><img id="boulder-count-button" src="asset/button.png" alt="Boulder Count"/></a>			
+			<br/>
+			<a class="button" href="javascript:require('Global').BUTTONS.drawMovement.click();" title="Draw Movement"><img id="draw-movement-button" src="asset/button.png" alt="Draw Movement"/></a>			
+			<a class="button" href="javascript:require('Global').BUTTONS.drawProjections.click();" title="Draw Projections"><img id="draw-projections-button" src="asset/button.png" alt="Draw Projections"/></a>			
+			
+			<div id="statistics">
+				Particle Count: <span id="particles">0</span><br/>
+				Pending Particles: <span id="pendingParticles">0</span><br/>
+				<br/>
+				Launch Mass: <span id="launchMass">0.0</span> <span class="unit">kg</span><br/>
+				Moving Mass: <span id="movingMass">0.0</span> <span class="unit">kg</span><br/>
+				max. Velocity: <span id="maxVelocity">0.0</span> <span class="unit">m/s</span><br/>
+				<br/>
+				g: <span id="g">0.00</span> <span class="unit">m/s&sup2;</span><br/>
+				Density: <span id="particle_density">0</span> <span class="unit">kg/m&sup3;</span><br/>
+				Size of Pixel: <span id="size_of_pixel">0.00</span> <span class="unit">cm</span><br/>
+				Mass/Pixel: <span id="mass_per_pixel">0.00</span> <span class="unit">kg</span><br/>
+				Friction: <span id="particle_friction">0.00</span> <span class="unit">&micro;<sub>s</sub></span><br/>
+				Absorbsion: <span id="particle_absorbsion">0</span> <span class="unit">%</span><br/>
+				Bouncyness: <span id="particle_bouncyness">0</span> <span class="unit">%</span><br/>
+				<br/>
+				FPS: <span id="fps">0</span><br/>
+			</div>
+		</div>
+		
+		<div style="clear: both;"></div>
+
+		<div id="message" class="main"></div>
 	</div>
 	
 	<div class="box">
@@ -142,6 +155,7 @@ along with xkcd Time Catapult. If not, see <http://www.gnu.org/licenses/>.
 		<h2>Changelog</h2>
 		<div id="changelog" class="main">
 			<ul>
+				<li>1.4 - Added visual sugar, physics now use real world values</li>
 				<li>1.3 - Integrated RequireJS, splitted into multiple files</li>
 				<li>1.2 - Fixed physics and speeding issues, added buttons</li>
 				<li>1.1 - Updated layout, some fixes</li>

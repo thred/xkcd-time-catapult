@@ -17,7 +17,73 @@
  * along with xkcd Time Catapult. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define("Main", ["Global", "Util", "Vector", "Catapult", "Sand", "Particle"], function(Global, Util, Vector, Catapult, Sand, Particle) {
+define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Particle"], function(Global, Util, Button, Vector, Catapult, Sand, Particle) {
+	Global.BUTTONS = {
+		reload: new Button("reload-button", [{
+			src: "asset/button-reload.png",
+			value: 0
+		}],
+		0, function(value) {
+			require("Main").reload();
+		}),
+
+		speed: new Button("speed-button", [{
+			src: "asset/button-normal.png",
+			value: 1
+		}, {
+			src: "asset/button-slow.png",
+			value: 1 / 4
+		}, {
+			src: "asset/button-slower.png",
+			value: 1 / 10
+		}, {
+			src: "asset/button-slowest.png",
+			value: 1 / 60
+		}]),
+
+		boulderSize: new Button("boulder-size-button", [{
+			src: "asset/button-boulder-small.png",
+			value: 2
+		}, {
+			src: "asset/button-boulder-medium.png",
+			value: 4
+		}, {
+			src: "asset/button-boulder-large.png",
+			value: 6
+		}], 1),
+
+		boulderCount: new Button("boulder-count-button", [{
+			src: "asset/button-boulder-one.png",
+			value: 1
+		}, {
+			src: "asset/button-boulder-few.png",
+			value: 3
+		}, {
+			src: "asset/button-boulder-many.png",
+			value: 8
+		}], 0),
+
+		drawMovement: new Button("draw-movement-button", [{
+			src: "asset/button-movement-off.png",
+			value: false
+		}, {
+			src: "asset/button-movement-on.png",
+			value: true
+		}], 0, function(value) {
+			require("Global").DRAW_MOVEMENT = value;
+		}),
+
+		drawProjections: new Button("draw-projections-button", [{
+			src: "asset/button-projections-off.png",
+			value: false
+		}, {
+			src: "asset/button-projections-on.png",
+			value: true
+		}], 0, function(value) {
+			require("Global").DRAW_PROJECTIONS = value;
+		})
+	};
+
 	return {
 		canvas: null,
 		overlay: null,
@@ -25,18 +91,16 @@ define("Main", ["Global", "Util", "Vector", "Catapult", "Sand", "Particle"], fun
 		overlayContext: null,
 		catapult: null,
 		collapseCheck: [],
-		isMouseDown: false,
-		dragPos: null,
+		mouseVector: null,
 		imageLoading: 0,
 		imageReady: 0,
 
-		speedMultiplierIndex: 0,
-		boulderSizeIndex: 0,
-		boulderCountIndex: 1,
+		fpsAverage: 0,
+		fpsTime: Math.floor(new Date().getTime() / 100),
 
 		init: function() {
 			var self = this;
-			
+
 			// the canvases are positioned absolute, add a div as placeholder	
 			var placeholder = document.getElementById("placeholder");
 			placeholder.style.width = Global.WIDTH + "px";
@@ -44,35 +108,27 @@ define("Main", ["Global", "Util", "Vector", "Catapult", "Sand", "Particle"], fun
 
 			document.addEventListener("mousedown", function(event) {
 				var offset = Util.getOffset(self.canvas);
-				var left = event.clientX - offset.left;
-				var top = event.clientY - offset.top;
-				var v = new Vector(left - self.catapult.position.x, top - self.catapult.position.y);
+				var vector = new Vector(event.clientX - offset.left - self.catapult.position.x, event.clientY - offset.top - self.catapult.position.y);
 
-				if (v.length() < 30) {
-					self.isMouseDown = true;
+				if (vector.length() < 30) {
+					self.mouseVector = vector;
 				}
 			}, false);
 			document.addEventListener("mousemove", function(event) {
-				if (self.isMouseDown) {
-					event.preventDefault();
-
+				if (self.mouseVector) {
 					var offset = Util.getOffset(self.canvas);
-					var left = event.clientX - offset.left;
-					var top = event.clientY - offset.top;
 
-					self.dragPos = {
-						x: left - self.catapult.position.x,
-						y: top - self.catapult.position.y
-					};
+					event.preventDefault();
+					self.mouseVector.set(event.clientX - offset.left - self.catapult.position.x, event.clientY - offset.top - self.catapult.position.y);
 				}
 			}, false);
 			document.addEventListener("mouseup", function(event) {
-				if (self.isMouseDown) {
-					self.fire();
+				if (self.mouseVector) {
+					event.preventDefault();
+					self.catapult.fire(self.mouseVector);
 				}
 
-				self.isMouseDown = false;
-				self.dragPos = null;
+				self.mouseVector = null;
 			}, false);
 
 			// create the catapult
@@ -83,13 +139,17 @@ define("Main", ["Global", "Util", "Vector", "Catapult", "Sand", "Particle"], fun
 			this.initImage("arm");
 			this.initImage("particle");
 			this.initImage("base");
+
+			for (var name in Global.BUTTONS) {
+				Global.BUTTONS[name].update();
+			}
 		},
 
 		reload: function() {
 			stop();
 
 			Global.clearParticles();
-			
+
 			this.isMouseDown = false;
 			this.dragPos = null;
 
@@ -126,7 +186,12 @@ define("Main", ["Global", "Util", "Vector", "Catapult", "Sand", "Particle"], fun
 			content.insertBefore(this.overlay, placeholder);
 			content.insertBefore(this.canvas, placeholder);
 
-			this.initImage("xkcd", Global.XKCD_IMAGES[parseInt(Math.random() * Global.XKCD_IMAGES.length, 10)].src);
+			var xkcdImage = Global.XKCD_IMAGES[parseInt(Math.random() * Global.XKCD_IMAGES.length, 10)];
+
+			Global.setupParticleConstants(xkcdImage.sizeOfPixel);
+			this.catapult.launchVelocityPerPixel = xkcdImage.launchVelocityPerPixel;
+
+			this.initImage("xkcd", xkcdImage.src);
 		},
 
 		initImage: function(name, src) {
@@ -160,6 +225,35 @@ define("Main", ["Global", "Util", "Vector", "Catapult", "Sand", "Particle"], fun
 			this.canvasContext.lineWidth = 3;
 			this.canvasContext.strokeRect(x + 1, 1, 551, 393);
 
+			var oneMeter = 1 / Global.PARTICLE_SIZE_OF_PIXEL;
+
+			// draw the scale
+			this.canvasContext.save();
+			this.canvasContext.translate(Global.WIDTH - 32 - oneMeter * 10, Global.HEIGHT - 32);
+			this.canvasContext.strokeStyle = "gray";
+			this.canvasContext.lineWidth = 1;
+			this.canvasContext.lineCap = "round";
+			this.canvasContext.beginPath();
+			this.canvasContext.moveTo(0, 0);
+			this.canvasContext.lineTo(oneMeter * 10, 0);
+			this.canvasContext.stroke();
+
+			for (var i = 0; i <= 10; i += 1) {
+				var h = ((i === 0) || (i === 10)) ? 8 : (i === 5) ? 4 : 2;
+				this.canvasContext.beginPath();
+				this.canvasContext.moveTo(i * oneMeter, - h);
+				this.canvasContext.lineTo(i * oneMeter, h);
+				this.canvasContext.stroke();
+			}
+			
+			this.canvasContext.font = "normal 10px Lucida,Helvetica,sans-serif";
+			this.canvasContext.textAlign = "center";
+			this.canvasContext.fillStyle = "gray";
+			this.canvasContext.fillText('0 m', 0, 20);
+			this.canvasContext.fillText('5 m', oneMeter * 5, 20);
+			this.canvasContext.fillText('10 m', oneMeter * 10, 20);
+			this.canvasContext.restore();
+
 			// find the height for the base
 			var y = this.findBase(x + 3);
 
@@ -192,7 +286,14 @@ define("Main", ["Global", "Util", "Vector", "Catapult", "Sand", "Particle"], fun
 		},
 
 		step: function(time, duration) {
-			duration *= Global.SPEED_BUTTON.value();
+			this.fpsAverage = (this.fpsAverage * 3 + duration) / 4;
+
+			if (Math.floor(time * 10) !== this.fpsTime) {
+				Util.messageTo("fps", (1 / this.fpsAverage).toFixed(1));
+				this.fpsTime = Math.floor(time * 10);
+			}
+
+			duration *= Global.BUTTONS.speed.value();
 
 			Util.messageTo("pendingParticles", Global.PENDING_PARTICLES.length);
 
@@ -201,36 +302,16 @@ define("Main", ["Global", "Util", "Vector", "Catapult", "Sand", "Particle"], fun
 			Util.messageTo("particles", Global.PARTICLES.length);
 
 			this.overlayContext.clearRect(0, 0, Global.WIDTH, Global.HEIGHT);
+			this.catapult.aim(this.mouseVector);
 			this.catapult.draw(this.overlayContext);
-			
-			Global.updateParticles(duration, this.overlayContext);
+
+			var statistics = Global.updateParticles(duration, this.overlayContext);
+
+			Util.messageTo("movingMass", statistics.movingMass.toFixed(1));
+			Util.messageTo("maxVelocity", statistics.maxVelocity.toFixed(1));
+
 			Global.removeDeadParticles();
 
-			var drag = this.dragPos;
-
-			if (drag) {
-				this.overlayContext.save();
-				this.overlayContext.strokeStyle = "#884422";
-				this.overlayContext.lineWidth = 3;
-				this.overlayContext.translate(this.catapult.position.x, this.catapult.position.y);
-				this.overlayContext.beginPath();
-				this.overlayContext.moveTo(0, 0);
-				this.overlayContext.lineTo(drag.x, drag.y);
-				this.overlayContext.stroke();
-				this.overlayContext.restore();
-			}
-		},
-
-		fire: function() {
-			for (var i = 0; i < Global.BOULDER_COUNT_BUTTON.value(); i += 1) {
-				var direction = Math.random() * Math.PI * 2;
-				var distance = (i > 0) ? Math.random() * Global.BOULDER_SIZE_BUTTON.value() / Math.PI / Global.PARTICLE_RADIUS : 0;
-				var position = this.catapult.position.clone();
-				position.add(Math.cos(direction) * distance, - Math.sin(direction) * distance);
-				var particle = new Particle(position, new Vector(-this.dragPos.x * 3, this.dragPos.y * 3), Global.BOULDER_SIZE_BUTTON.value());
-
-				Global.addParticle(particle);
-			}
 		}
 	};
 });

@@ -19,13 +19,68 @@
 
 define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) {
 
+	Global.PARTICLE_RADIUS = 6; // the image is 12x12
+
+	Global.PARTICLE_IMPACT_SPREAD = Math.PI;
+	Global.PARTICLE_PROJECTION_DEFLECTION = Math.PI * 0.2;
+
+	Global.setupParticleConstants = function(sizeOfPixel) {
+		Global.G = 9.81, // Earth
+		Global.PARTICLE_SIZE_OF_PIXEL = sizeOfPixel; // 1.8 / 34; // 34 pixel are 1.8m, this may differ per image
+		Global.PARTICLE_DENSITY = 2000; // density of sand in kg/m³
+		Global.PARTICLE_MASS_PER_PIXEL = Math.pow(Global.PARTICLE_SIZE_OF_PIXEL, 3) * Global.PARTICLE_DENSITY; // in kg
+		Global.PARTICLE_FRICTION = 0.4; // Brick Masonry on sand, in µ
+		Global.PARTICLE_THRESHOLD = 0.1; // when a pixel is considered (0 is white, 0.5 is gray, 1 is black)
+
+		// these two variables define the absorbsion and bouncyness of the sand
+		// these values are incorrect. Sand absorbes a lot of momentum, and does not bounce. But wheres the fun?
+		Global.PARTICLE_ABSORBSION = 5 / 100; // momentum absorbed on impact in %
+		Global.PARTICLE_BOUNCYNESS = 50 / 100; // momentum bouncing back on impact in %.
+		
+
+		Util.messageTo("g", Global.G.toFixed(2));		
+		Util.messageTo("particle_density", Math.round(Global.PARTICLE_DENSITY));		
+		Util.messageTo("size_of_pixel", (Global.PARTICLE_SIZE_OF_PIXEL * 100).toFixed(2));		
+		Util.messageTo("mass_per_pixel", Global.PARTICLE_MASS_PER_PIXEL.toFixed(2));		
+		Util.messageTo("particle_friction", Global.PARTICLE_FRICTION.toFixed(2));		
+		Util.messageTo("particle_absorbsion", Math.round(Global.PARTICLE_ABSORBSION * 100));		
+		Util.messageTo("particle_bouncyness", Math.round(Global.PARTICLE_BOUNCYNESS * 100));		
+	};
+
+	// Precalculated mirror vectors according to following schema (+ ist the impact location):
+	//     y
+	//     ^   
+	//     |
+	//     1
+	// --8-+-2--> x
+	//     4
+	//     |
+	// If bit is set, there is sand!
+	Global.PARTICLE_MIRROR_NORMALS = [
+	new Vector(0, - 1).normalize(), // 0
+	new Vector(0, - 1).normalize(), // 1
+	new Vector(-1, 0).normalize(), // 2
+	new Vector(-1, - 1).normalize(), // 3
+	new Vector(0, 1).normalize(), // 4
+	new Vector(0, 1).normalize(), // 5
+	new Vector(-1, 1).normalize(), // 6
+	new Vector(-1, 0).normalize(), // 7
+	new Vector(1, 0).normalize(), // 8
+	new Vector(1, - 1).normalize(), // 9
+	new Vector(0, 1).normalize(), // 10
+	new Vector(0, - 1).normalize(), // 11
+	new Vector(1, 1).normalize(), // 12
+	new Vector(1, 0).normalize(), // 13
+	new Vector(0, - 1).normalize(), // 14
+	new Vector(1, 0).normalize()]; // 15
+
 	function Particle(position, movement, mass) {
 		this.position = position;
 		this.movement = movement;
 		this.mass = mass;
 		this.rotation = Math.random() * Math.PI * 2;
 		this.rotationSpeed = Math.random() * 20;
-		this.stuckDuration = 0;
+		this.stuckDT = 0;
 		this.alive = true;
 	}
 
@@ -33,34 +88,45 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 
 		constructor: Particle,
 
+		/**
+		 * Returns the radius in m
+		 */
 		radius: function() {
-			return Math.sqrt(this.mass / Math.PI);
+			return 0.751501 * Math.pow(this.mass / Global.PARTICLE_DENSITY, 1 / 3);
 		},
 
-		momentum: function() {
-			return this.mass * this.velocity();
+		direction: function() {
+			return this.movement.direction();
 		},
 
+		/**
+		 * Returns the velocity in m/s
+		 */
 		velocity: function() {
-			return this.movement.length();
+			return this.movement.length() * Global.PARTICLE_SIZE_OF_PIXEL;
 		},
 
-		move: function(duration) {
+		setVelocity: function(value) {
+			this.movement.setLength(value / Global.PARTICLE_SIZE_OF_PIXEL);
+		},
+
+		move: function(dt) {
 			// update the particles own rotation
-			this.rotation += this.rotationSpeed * duration;
-			this.rotationSpeed *= (1 - duration);
+			this.rotation += this.rotationSpeed * dt;
 
 			// apply gravity to particle
-			this.movement.sub(0, 0.5 * 667.384 * duration);
+			this.movement.add(0, - Global.G / Global.PARTICLE_SIZE_OF_PIXEL * dt);
 
-			// apply air friction
-			this.movement.multiplyScalar(1 - (Global.AIR_FRICTION * duration));
+			// apply air drag
+			// the drag of a ball (Cw=0.45) in air (density=1.2041 kg/m³, at 20°C)
+			var drag = 0.5 * 0.45 * 1.2041 * (Math.pow(this.radius(), 2) * Math.PI);
+			this.setVelocity(1 / ((drag / this.mass) * dt + 1 / this.velocity()));
 
 			// calculate the movement of the particle
 			var startX = this.position.x;
 			var startY = this.position.y;
-			var vx = this.movement.x * duration;
-			var vy = this.movement.y * duration;
+			var vx = this.movement.x * dt;
+			var vy = this.movement.y * dt;
 
 			// check the path for impact
 			var length = Math.ceil(Math.max(Math.abs(vx), Math.abs(vy)));
@@ -71,9 +137,9 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 				var y = startY - vy * i / length;
 
 				// check impact on path
-				if (Global.SAND.get(x, y) > Global.THRESHOLD) {
+				if (Global.SAND.get(x, y) > Global.PARTICLE_THRESHOLD) {
 					// there was an impact
-					this.impact(duration, x, y);
+					this.impact(dt, x, y);
 					break;
 				}
 
@@ -84,26 +150,38 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 			// check for stuck particles
 			if ((startX == this.position.x) && (startY == this.position.y)) {
 				// stuck, increase counter
-				this.stuckDuration += duration;
+				this.stuckDT += dt;
 			} else {
 				// the particle isn't stuck
-				this.stuckDuration = 0;
+				this.stuckDT = 0;
 			}
 
 			if ((this.position.x < 0) || (this.position.x >= Global.WIDTH) || (this.position.y >= Global.HEIGHT)) {
 				// the particle has left the screen, kill it
 				this.alive = false;
 			}
+			
+			// sand is not stable, maybe it splits
+			if ((this.alive) && (Math.random() < dt) && (this.radius() / Global.PARTICLE_SIZE_OF_PIXEL > 1.5)) {
+				var loose = this.mass * 0.25 + Math.random() * this.mass * 0.5;
+
+				var offset = new Vector(this.radius() / Global.PARTICLE_SIZE_OF_PIXEL, 0).setDirection(Math.random() * Math.PI * 2);
+				var position = this.position.clone().add(offset);
+				
+				this.mass -= loose;
+				
+				Global.addParticle(new Particle(this.position.clone(), this.movement.clone(), loose), true);
+			}
 		},
 
 		/**
 		 * particle had impact 
 		 */
-		impact: function(duration, x, y) {
+		impact: function(dt, x, y) {
 			var self = this;
-			var direction = this.movement.direction();
+			var direction = this.direction();
 			var velocity = this.velocity();
-			var radius = this.radius();
+			var radiusInPixel = this.radius() / Global.PARTICLE_SIZE_OF_PIXEL;
 
 			// calculate the vector for mirroring the movement of the particle
 			// this must be done before the explosion, otherwise there is no sand for calculating the mirror anymore
@@ -117,51 +195,54 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 			// If bit is set, there is sand!
 			var index = 0;
 
-			index |= (Global.SAND.get(this.position.x - 1, this.position.y - 1) > Global.THRESHOLD) ? 9 : 0;
-			index |= (Global.SAND.get(this.position.x, this.position.y - 1) > Global.THRESHOLD) ? 1 : 0;
-			index |= (Global.SAND.get(this.position.x + 1, this.position.y - 1) > Global.THRESHOLD) ? 3 : 0;
-			index |= (Global.SAND.get(this.position.x + 1, this.position.y) > Global.THRESHOLD) ? 2 : 0;
-			index |= (Global.SAND.get(this.position.x + 1, this.position.y + 1) > Global.THRESHOLD) ? 6 : 0;
-			index |= (Global.SAND.get(this.position.x, this.position.y + 1) > Global.THRESHOLD) ? 4 : 0;
-			index |= (Global.SAND.get(this.position.x - 1, this.position.y + 1) > Global.THRESHOLD) ? 12 : 0;
-			index |= (Global.SAND.get(this.position.x - 1, this.position.y) > Global.THRESHOLD) ? 8 : 0;
+			index |= (Global.SAND.get(this.position.x - 1, this.position.y - 1) > Global.PARTICLE_THRESHOLD) ? 9 : 0;
+			index |= (Global.SAND.get(this.position.x, this.position.y - 1) > Global.PARTICLE_THRESHOLD) ? 1 : 0;
+			index |= (Global.SAND.get(this.position.x + 1, this.position.y - 1) > Global.PARTICLE_THRESHOLD) ? 3 : 0;
+			index |= (Global.SAND.get(this.position.x + 1, this.position.y) > Global.PARTICLE_THRESHOLD) ? 2 : 0;
+			index |= (Global.SAND.get(this.position.x + 1, this.position.y + 1) > Global.PARTICLE_THRESHOLD) ? 6 : 0;
+			index |= (Global.SAND.get(this.position.x, this.position.y + 1) > Global.PARTICLE_THRESHOLD) ? 4 : 0;
+			index |= (Global.SAND.get(this.position.x - 1, this.position.y + 1) > Global.PARTICLE_THRESHOLD) ? 12 : 0;
+			index |= (Global.SAND.get(this.position.x - 1, this.position.y) > Global.PARTICLE_THRESHOLD) ? 8 : 0;
 
-			var mirrorNormal = Global.MIRROR_NORMALS[index];
+			var mirrorNormal = Global.PARTICLE_MIRROR_NORMALS[index];
 
 			// trigger the explosion
-			var maxDist = radius * radius;
 			var remainingMomentum = 0;
 			var usedMomentum = 0;
 			var unusedMomentum = 0;
 			var lostMass = 0;
 
-			// find the multiplication factor (the forEachPixelInCircle isn't very accurate)
+			// find the multiplication factor (the forEachPixelInCircle isn't very accurate, squaring the circle is hard to do)
 			var factor = 0;
 
-			Util.forEachPixelInCircle(x, y, radius, function(posX, posY, value) {
+			Util.forEachPixelInCircle(x, y, radiusInPixel, function(posX, posY, value) {
 				factor += value;
 			});
 
-			factor = this.mass / factor;
+			var volume = Math.PI * Math.pow(radiusInPixel, 2);
+			factor = volume / factor;
 
-			//alert(velocity * this.mass);
 			// project the impact momentum to all particles
-			Util.forEachPixelInCircle(x, y, radius, function(posX, posY, value) {
-				var grain = Global.SAND.get(posX, posY) * value * factor;
+			Util.forEachPixelInCircle(x, y, radiusInPixel, function(posX, posY, value) {
+				var grainMass = Global.SAND.get(posX, posY) * Global.PARTICLE_MASS_PER_PIXEL * value * factor;
 
-				// calculate the approximate mass of the part, that hit the grain, which always happens to be 1 or less
-				var mass = Math.min(value * factor, self.mass);
+				// calculate the approximate mass of the part, that hit the grain
+				// actually a cylinder is crashing into the sand ;)
+				var mass = self.mass / volume * value * factor;
 				var momentum = mass * velocity;
 
-				if (grain) {
+				if (grainMass) {
 					usedMomentum += momentum;
 
-					// project the mass and the momentum (the direction varies a bit)
 					var info = {
 						additionalMass: mass
 					};
 
-					remainingMomentum += self.projectMomentum(duration, posX, posY, direction + (Math.random() - 0.5) * (Math.PI / 2), velocity, momentum, info, false);
+					// the force spreads out
+					var spread = (Math.random() - 0.5) * Global.PARTICLE_IMPACT_SPREAD;
+
+					// project the mass and the momentum (the direction varies a bit)
+					remainingMomentum += self.projectMomentum(dt, posX, posY, direction + spread, velocity, momentum, info, false);
 
 					// the impacting particle looses the mass (it is merged with the grain)
 					if (info.additionalMassUsed) {
@@ -179,11 +260,11 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 				if (momentum > 0) {
 					// the particle continues it's path
 					// adjust the velocity to the momentum, but do not speed up
-					this.movement.setLength(Math.min(momentum / this.mass, this.velocity()));
+					this.setVelocity(Math.min(momentum / this.mass, this.velocity()));
 				} else if (momentum < 0) {
 					// the particle bounces back
 					// adjust the velocity to the momentum, but do not speed up
-					this.movement.setLength(Math.min(Math.abs(momentum) * Global.BOUNCYNESS / this.mass, this.velocity()));
+					this.setVelocity(Math.min(Math.abs(momentum) * Global.PARTICLE_BOUNCYNESS / this.mass, this.velocity()));
 
 					// mirror the movement of the particle along the mirror vector
 					this.movement.mirror(mirrorNormal);
@@ -195,7 +276,7 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 				this.mass -= lostMass;
 			}
 
-			if (this.suggestDeath(duration)) {
+			if (this.suggestDeath(dt)) {
 				return;
 			}
 		},
@@ -205,7 +286,7 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 		 *
 		 * @return the remaining momentum
 		 */
-		projectMomentum: function(duration, x, y, direction, velocity, momentum, info, projected) {
+		projectMomentum: function(dt, x, y, direction, velocity, momentum, info, projected) {
 			var grain = Global.SAND.get(x, y);
 
 			if (!grain) {
@@ -213,14 +294,16 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 				return momentum;
 			}
 
+			var mass = grain * Global.PARTICLE_MASS_PER_PIXEL;
+
 			// there is fricion, it absorbes momentum, too, if it should get a particle moving
-			var friction = grain * Global.FRICTION * Global.N * Global.BOUNCYNESS;
+			var frictionMomentum = mass * Global.PARTICLE_FRICTION * Global.G;
 
 			// some of the momentum is beeing absorbed on each projection cycle
-			var absorbedMomentum = momentum * Global.ABSORBSION;
+			var absorbedMomentum = momentum * Global.PARTICLE_ABSORBSION;
 			momentum -= absorbedMomentum;
 
-			if (momentum < friction) {
+			if (momentum < frictionMomentum) {
 				// not enough momentum to do anything, bounce back
 				return -momentum;
 			}
@@ -230,16 +313,20 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 			var position = new Vector(x, y).add(movement.x, movement.y);
 			var nextGrain = Global.SAND.get(position.x, position.y);
 
-			if (nextGrain > Global.THRESHOLD) {
+			if (nextGrain > Global.PARTICLE_THRESHOLD) {
 				if (Global.DRAW_PROJECTIONS) {
 					Global.SAND.draw(position.x, position.y, "red");
 				}
 
 				// there is a particle in the way, project the momentum
-				momentum = this.projectMomentum(duration, position.x, position.y, direction + (Math.random() - 0.5) * Math.PI * 0.1, velocity, momentum, info, true);
+				// This is where science ends. The sand is basically a liquid with density and so on.
+				// Your computer is not powerful enough to compute this. 
+				// Instead random projections are used.
+				var deflection = (Math.random() - 0.5) * Global.PARTICLE_PROJECTION_DEFLECTION;
+				momentum = this.projectMomentum(dt, position.x, position.y, direction + deflection, velocity, momentum, info, true);
 
 				// when bouncing back, some of the absorbed momentum is freed again (in the opposite direction)
-				momentum -= absorbedMomentum * Global.BOUNCYNESS;
+				momentum -= absorbedMomentum * Global.PARTICLE_BOUNCYNESS;
 			}
 
 			// the momentum may be positive here, which indicates a forward movement
@@ -257,7 +344,7 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 				return momentum;
 			}
 
-			var mass = grain;
+			mass = grain * Global.PARTICLE_MASS_PER_PIXEL;
 
 			if (!projected) {
 				// add the additional mass if it is initial call
@@ -265,8 +352,9 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 				info.additionalMassUsed = true;
 			}
 
+			// how much mementum is consumed, how much bounces back
 			var consumedMomentum = Math.min(mass * velocity, Math.abs(momentum));
-			var useableMomentum = consumedMomentum * Global.BOUNCYNESS - friction;
+			var useableMomentum = consumedMomentum * (1 - Global.PARTICLE_BOUNCYNESS) - frictionMomentum;
 
 			if (momentum <= 0) {
 				momentum += consumedMomentum;
@@ -274,36 +362,34 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 				momentum -= consumedMomentum;
 			}
 
-			movement.setLength(Math.max(useableMomentum / mass, 0));
-
 			position.set(x, y);
 
 			var particle = new Particle(position, movement, mass);
 
+			particle.setVelocity(Math.max(useableMomentum / mass, 0));
 			Global.addParticle(particle);
-			Global.SAND.remove(position.x, position.y, grain);
 
 			return momentum;
 		},
 
-		suggestDeath: function(duration) {
+		suggestDeath: function(dt) {
 			if (this.mass <= 0) {
 				// the particle has no mass anymore, DBA
 				this.alive = false;
 				return true;
 			}
 
-			if (this.stuckDuration > 0.25) {
+			if (this.stuckDT > 0.25) {
 				// the particle is stuck, that happens sometimes
 				return this.kill();
 			}
 
-			if (Global.SAND.get(this.position.x, this.position.y + 1) <= Global.THRESHOLD) {
+			if (Global.SAND.get(this.position.x, this.position.y + 1) <= Global.PARTICLE_THRESHOLD) {
 				// there is no sand below the particle
 				return false;
 			}
 
-			if (this.movement.length() > Global.G * duration) {
+			if (this.movement.length() > Global.G * dt) {
 				// the particle has too much speed, it won't rest here
 				return false;
 			}
@@ -313,7 +399,7 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 		},
 
 		kill: function() {
-			// HELLO. PLEASE, FOLLOW ME...
+			// HELLO SANDGRAIN. THOU SHALT REST!
 			Global.SAND.add(this.position.x, this.position.y, this.mass);
 			this.alive = false;
 
@@ -325,7 +411,6 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 			context.translate(this.position.x, this.position.y);
 
 			if (Global.DRAW_MOVEMENT) {
-				// draw movement
 				context.strokeStyle = "#aaaaff";
 				context.beginPath();
 				context.moveTo(0, 0);
@@ -333,7 +418,7 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 				context.stroke();
 			}
 
-			var scale = Math.max(this.radius(), 0.7) / Global.PARTICLE_RADIUS;
+			var scale = Math.max(this.radius() / Global.PARTICLE_SIZE_OF_PIXEL, 0.7) / Global.PARTICLE_RADIUS;
 			context.scale(scale, scale);
 			context.rotate(this.rotation);
 			context.drawImage(Global.IMAGES.particle, - Global.PARTICLE_RADIUS, - Global.PARTICLE_RADIUS);
