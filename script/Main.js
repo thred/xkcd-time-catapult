@@ -17,7 +17,73 @@
  * along with xkcd Time Catapult. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define("Main", ["Global", "Util", "Vector", "Catapult", "Sand", "Particle"], function(Global, Util, Vector, Catapult, Sand, Particle) {
+define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Particle"], function(Global, Util, Button, Vector, Catapult, Sand, Particle) {
+	Global.BUTTONS = {
+		reload: new Button("reload-button", [{
+			src: "asset/button-reload.png",
+			value: 0
+		}],
+		0, function(value) {
+			require("Main").reload();
+		}),
+
+		speed: new Button("speed-button", [{
+			src: "asset/button-normal.png",
+			value: 1
+		}, {
+			src: "asset/button-slow.png",
+			value: 1 / 4
+		}, {
+			src: "asset/button-slower.png",
+			value: 1 / 10
+		}, {
+			src: "asset/button-slowest.png",
+			value: 1 / 60
+		}]),
+
+		boulderSize: new Button("boulder-size-button", [{
+			src: "asset/button-boulder-small.png",
+			value: Math.PI * 10
+		}, {
+			src: "asset/button-boulder-medium.png",
+			value: Math.PI * 20
+		}, {
+			src: "asset/button-boulder-large.png",
+			value: Math.PI * 40
+		}], 1),
+
+		boulderCount: new Button("boulder-count-button", [{
+			src: "asset/button-boulder-one.png",
+			value: 1
+		}, {
+			src: "asset/button-boulder-few.png",
+			value: 3
+		}, {
+			src: "asset/button-boulder-many.png",
+			value: 8
+		}], 0),
+
+		drawMovement: new Button("draw-movement-button", [{
+			src: "asset/button-movement-off.png",
+			value: false
+		}, {
+			src: "asset/button-movement-on.png",
+			value: true
+		}], 0, function(value) {
+			require("Global").DRAW_MOVEMENT = value;
+		}),
+
+		drawProjections: new Button("draw-projections-button", [{
+			src: "asset/button-projections-off.png",
+			value: false
+		}, {
+			src: "asset/button-projections-on.png",
+			value: true
+		}], 0, function(value) {
+			require("Global").DRAW_PROJECTIONS = value;
+		})
+	};
+
 	return {
 		canvas: null,
 		overlay: null,
@@ -30,13 +96,12 @@ define("Main", ["Global", "Util", "Vector", "Catapult", "Sand", "Particle"], fun
 		imageLoading: 0,
 		imageReady: 0,
 
-		speedMultiplierIndex: 0,
-		boulderSizeIndex: 0,
-		boulderCountIndex: 1,
+		fpsAverage: 0,
+		fpsTime: Math.floor(new Date().getTime() / 100),
 
 		init: function() {
 			var self = this;
-			
+
 			// the canvases are positioned absolute, add a div as placeholder	
 			var placeholder = document.getElementById("placeholder");
 			placeholder.style.width = Global.WIDTH + "px";
@@ -83,13 +148,17 @@ define("Main", ["Global", "Util", "Vector", "Catapult", "Sand", "Particle"], fun
 			this.initImage("arm");
 			this.initImage("particle");
 			this.initImage("base");
+
+			for (var name in Global.BUTTONS) {
+				Global.BUTTONS[name].update();
+			}
 		},
 
 		reload: function() {
 			stop();
 
 			Global.clearParticles();
-			
+
 			this.isMouseDown = false;
 			this.dragPos = null;
 
@@ -192,7 +261,14 @@ define("Main", ["Global", "Util", "Vector", "Catapult", "Sand", "Particle"], fun
 		},
 
 		step: function(time, duration) {
-			duration *= Global.SPEED_BUTTON.value();
+			this.fpsAverage = (this.fpsAverage * 3 + duration) / 4;
+
+			if (Math.floor(time * 10) !== this.fpsTime) {
+				Util.messageTo("fps", (1 / this.fpsAverage).toFixed(1));
+				this.fpsTime = Math.floor(time * 10);
+			}
+
+			duration *= Global.BUTTONS.speed.value();
 
 			Util.messageTo("pendingParticles", Global.PENDING_PARTICLES.length);
 
@@ -202,7 +278,7 @@ define("Main", ["Global", "Util", "Vector", "Catapult", "Sand", "Particle"], fun
 
 			this.overlayContext.clearRect(0, 0, Global.WIDTH, Global.HEIGHT);
 			this.catapult.draw(this.overlayContext);
-			
+
 			Global.updateParticles(duration, this.overlayContext);
 			Global.removeDeadParticles();
 
@@ -222,14 +298,14 @@ define("Main", ["Global", "Util", "Vector", "Catapult", "Sand", "Particle"], fun
 		},
 
 		fire: function() {
-			for (var i = 0; i < Global.BOULDER_COUNT_BUTTON.value(); i += 1) {
+			for (var i = 0; i < Global.BUTTONS.boulderCount.value(); i += 1) {
 				var direction = Math.random() * Math.PI * 2;
-				var distance = (i > 0) ? Math.random() * Global.BOULDER_SIZE_BUTTON.value() / Math.PI / Global.PARTICLE_RADIUS : 0;
+				var distance = (i > 0) ? Math.random() * Global.BUTTONS.boulderSize.value() / Math.PI / Global.PARTICLE_RADIUS : 0;
 				var position = this.catapult.position.clone();
 				position.add(Math.cos(direction) * distance, - Math.sin(direction) * distance);
-				var particle = new Particle(position, new Vector(-this.dragPos.x * 3, this.dragPos.y * 3), Global.BOULDER_SIZE_BUTTON.value());
+				var particle = new Particle(position, new Vector(-this.dragPos.x * 3, this.dragPos.y * 3), Global.BUTTONS.boulderSize.value());
 
-				Global.addParticle(particle);
+				Global.addParticle(particle, true);
 			}
 		}
 	};

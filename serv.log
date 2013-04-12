@@ -5,3 +5,6 @@ Shutting down...
 Arguments: node,C:\home\apps\scripted\node_modules\serv\static-server.js,8000,C:/home/dev/github/xkcd-time-catapult
 Serving files from C:/home/dev/github/xkcd-time-catapult at 127.0.0.1:8000
 LiveReload server listening on port 35729.
+Arguments: node,C:\home\apps\scripted\node_modules\serv\static-server.js,8000,C:/home/dev/github/xkcd-time-catapult
+Serving files from C:/home/dev/github/xkcd-time-catapult at 127.0.0.1:8000
+LiveReload server listening on port 35729.

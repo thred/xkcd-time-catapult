@@ -17,13 +17,12 @@
  * along with xkcd Time Catapult. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define("Global", ["Vector", "Button"], function(Vector, Button) {
+define("Global", [], function() {
 	return {
 		WIDTH: 800,
 		HEIGHT: 390,
 
 		MAX_PARTICLES: 2048,
-		PARTICLE_RADIUS: 3, // the image is 6x6
 		DRAW_PROJECTIONS: false,
 		DRAW_MOVEMENT: false,
 
@@ -33,7 +32,7 @@ define("Global", ["Vector", "Button"], function(Vector, Button) {
 		ABSORBSION: 0.02,
 		BOUNCYNESS: 0.80,
 		STICKYNESS: 0.50,
-		FRICTION: 1,
+		FRICTION: 2,
 		THRESHOLD: 0.50,
 		PARTICLE_DIE_MASS: 0.5,
 
@@ -67,92 +66,10 @@ define("Global", ["Vector", "Button"], function(Vector, Button) {
 			src: "asset/6d1b782354540b035cc732c214b8b47a442fcd1e6d9565699d24ec2b13b8e652.png"
 		}, {
 			src: "asset/840355510c22bac0a6e52ec0945997b670d8ad1053465d1929d4320ca4150488.png"
+		}, {
+			src: "asset/27994b77661281b2d0301e93c53a49f348ec3b417ffc0da4aeab57d9703ed1fe.png"
 		}],
 		//var IMAGE_NAMES = ["test.png"];
-
-		SPEED_BUTTON: new Button("speed-button", [{
-			src: "asset/button-normal.png",
-			value: 1
-		}, {
-			src: "asset/button-slow.png",
-			value: 1 / 4
-		}, {
-			src: "asset/button-slower.png",
-			value: 1 / 10
-		}, {
-			src: "asset/button-slowest.png",
-			value: 1 / 60
-		}]),
-
-		BOULDER_SIZE_BUTTON: new Button("boulder-size-button", [{
-			src: "asset/button-boulder-small.png",
-			value: Math.PI * 10
-		}, {
-			src: "asset/button-boulder-medium.png",
-			value: Math.PI * 20
-		}, {
-			src: "asset/button-boulder-large.png",
-			value: Math.PI * 40
-		}]),
-
-		BOULDER_COUNT_BUTTON: new Button("boulder-count-button", [{
-			src: "asset/button-boulder-one.png",
-			value: 1
-		}, {
-			src: "asset/button-boulder-few.png",
-			value: 3
-		}, {
-			src: "asset/button-boulder-many.png",
-			value: 8
-		}], 1),
-
-		DRAW_MOVEMENT_BUTTON: new Button("draw-movement-button", [{
-			src: "asset/button-movement-off.png",
-			value: false
-		}, {
-			src: "asset/button-movement-on.png",
-			value: true
-		}], 0, function(value) {
-			require("Global").DRAW_MOVEMENT = value;
-		}),
-
-		DRAW_PROJECTIONS_BUTTON: new Button("draw-projections-button", [{
-			src: "asset/button-projections-off.png",
-			value: false
-		}, {
-			src: "asset/button-projections-on.png",
-			value: true
-		}], 0, function(value) {
-			require("Global").DRAW_PROJECTIONS = value;
-		}),
-
-
-		// Precalculated mirror vectors according to following schema (+ ist the impact location):
-		//     y
-		//     ^   
-		//     |
-		//     1
-		// --8-+-2--> x
-		//     4
-		//     |
-		// If bit is set, there is sand!
-		MIRROR_NORMALS: [
-		new Vector(0, - 1).normalize(), // 0
-		new Vector(0, - 1).normalize(), // 1
-		new Vector(-1, 0).normalize(), // 2
-		new Vector(-1, - 1).normalize(), // 3
-		new Vector(0, 1).normalize(), // 4
-		new Vector(0, 1).normalize(), // 5
-		new Vector(-1, 1).normalize(), // 6
-		new Vector(-1, 0).normalize(), // 7
-		new Vector(1, 0).normalize(), // 8
-		new Vector(1, - 1).normalize(), // 9
-		new Vector(0, 1).normalize(), // 10
-		new Vector(0, - 1).normalize(), // 11
-		new Vector(1, 1).normalize(), // 12
-		new Vector(1, 0).normalize(), // 13
-		new Vector(0, - 1).normalize(), // 14
-		new Vector(1, 0).normalize()], // 15
 
 		IMAGES: [],
 		SAND: null,
@@ -162,8 +79,13 @@ define("Global", ["Vector", "Button"], function(Vector, Button) {
 		/**
 		 * Add a particle to the pending particles 
 		 */
-		addParticle: function(particle) {
-			this.PENDING_PARTICLES.push(particle);
+		addParticle: function(particle, important) {
+			if (important) {
+				this.PENDING_PARTICLES.splice(0, 0, particle);
+			}
+			else {
+				this.PENDING_PARTICLES.push(particle);
+			}
 		},
 
 		/**
@@ -177,7 +99,10 @@ define("Global", ["Vector", "Button"], function(Vector, Button) {
 				}
 
 				// create particle
-				this.PARTICLES.push(this.PENDING_PARTICLES[i]);
+				var particle = this.PENDING_PARTICLES[i];
+				
+				this.PARTICLES.push(particle);
+				this.SAND.remove(particle.position.x, particle.position.y, particle.mass);
 			}
 
 			// remove executed particles

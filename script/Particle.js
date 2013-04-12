@@ -19,13 +19,45 @@
 
 define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) {
 
+	Global.PARTICLE_RADIUS = 6; // the image is 12x12
+
+	Global.PARTICLE_IMPACT_SPREAD = Math.PI;
+	Global.PARTICLE_PROJECTION_DEFLECTION = Math.PI * 0.05;
+
+	// Precalculated mirror vectors according to following schema (+ ist the impact location):
+	//     y
+	//     ^   
+	//     |
+	//     1
+	// --8-+-2--> x
+	//     4
+	//     |
+	// If bit is set, there is sand!
+	Global.PARTICLE_MIRROR_NORMALS = [
+	new Vector(0, - 1).normalize(), // 0
+	new Vector(0, - 1).normalize(), // 1
+	new Vector(-1, 0).normalize(), // 2
+	new Vector(-1, - 1).normalize(), // 3
+	new Vector(0, 1).normalize(), // 4
+	new Vector(0, 1).normalize(), // 5
+	new Vector(-1, 1).normalize(), // 6
+	new Vector(-1, 0).normalize(), // 7
+	new Vector(1, 0).normalize(), // 8
+	new Vector(1, - 1).normalize(), // 9
+	new Vector(0, 1).normalize(), // 10
+	new Vector(0, - 1).normalize(), // 11
+	new Vector(1, 1).normalize(), // 12
+	new Vector(1, 0).normalize(), // 13
+	new Vector(0, - 1).normalize(), // 14
+	new Vector(1, 0).normalize()]; // 15
+
 	function Particle(position, movement, mass) {
 		this.position = position;
 		this.movement = movement;
 		this.mass = mass;
 		this.rotation = Math.random() * Math.PI * 2;
 		this.rotationSpeed = Math.random() * 20;
-		this.stuckDuration = 0;
+		this.stuckDT = 0;
 		this.alive = true;
 	}
 
@@ -37,30 +69,40 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 			return Math.sqrt(this.mass / Math.PI);
 		},
 
-		momentum: function() {
-			return this.mass * this.velocity();
+		direction: function() {
+			return this.movement.direction();
 		},
 
 		velocity: function() {
 			return this.movement.length();
 		},
 
-		move: function(duration) {
+		move: function(dt) {
 			// update the particles own rotation
-			this.rotation += this.rotationSpeed * duration;
-			this.rotationSpeed *= (1 - duration);
+			this.rotation += this.rotationSpeed * dt;
+			//this.rotationSpeed *= (1 - dt);
 
 			// apply gravity to particle
-			this.movement.sub(0, 0.5 * 667.384 * duration);
+			this.movement.sub(0, 0.5 * 667.384 * dt);
 
-			// apply air friction
-			this.movement.multiplyScalar(1 - (Global.AIR_FRICTION * duration));
+			// apply air drag
+			// the size of one grain: 0.01m
+			// the drag of a ball (Cw=0.45) air (density=1.2041)
+			//var drag = 0.45 * this.mass * 0.5 * 1.2041 * (this.velocity() * this.velocity());
+			//var acceleration = drag / this.mass;
+
+			// the mementum of the particle
+			//var momentum = this.mass * this.velocity();
+
+			//Util.message(this.velocity().toFixed(3) + ", " + (acceleration).toFixed(3));
+			this.movement.multiplyScalar(1 - (Global.AIR_FRICTION * dt));
+			//this.movement.setLength(this.velocity() - acceleration*dt);
 
 			// calculate the movement of the particle
 			var startX = this.position.x;
 			var startY = this.position.y;
-			var vx = this.movement.x * duration;
-			var vy = this.movement.y * duration;
+			var vx = this.movement.x * dt;
+			var vy = this.movement.y * dt;
 
 			// check the path for impact
 			var length = Math.ceil(Math.max(Math.abs(vx), Math.abs(vy)));
@@ -73,7 +115,7 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 				// check impact on path
 				if (Global.SAND.get(x, y) > Global.THRESHOLD) {
 					// there was an impact
-					this.impact(duration, x, y);
+					this.impact(dt, x, y);
 					break;
 				}
 
@@ -84,24 +126,34 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 			// check for stuck particles
 			if ((startX == this.position.x) && (startY == this.position.y)) {
 				// stuck, increase counter
-				this.stuckDuration += duration;
+				this.stuckDT += dt;
 			} else {
 				// the particle isn't stuck
-				this.stuckDuration = 0;
+				this.stuckDT = 0;
 			}
 
 			if ((this.position.x < 0) || (this.position.x >= Global.WIDTH) || (this.position.y >= Global.HEIGHT)) {
 				// the particle has left the screen, kill it
 				this.alive = false;
 			}
+			/*
+			if ((this.alive) && (Math.random() < dt * 5) && (this.mass > Math.PI)) {
+				var loose = Math.random() * this.mass * 0.5;
+				
+				this.mass -= loose;
+				
+				console.log(this.mass + ", " + loose);
+				Global.addParticle(new Particle(this.position.clone(), this.movement.clone(), loose), true);
+			}
+			*/
 		},
 
 		/**
 		 * particle had impact 
 		 */
-		impact: function(duration, x, y) {
+		impact: function(dt, x, y) {
 			var self = this;
-			var direction = this.movement.direction();
+			var direction = this.direction();
 			var velocity = this.velocity();
 			var radius = this.radius();
 
@@ -126,7 +178,7 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 			index |= (Global.SAND.get(this.position.x - 1, this.position.y + 1) > Global.THRESHOLD) ? 12 : 0;
 			index |= (Global.SAND.get(this.position.x - 1, this.position.y) > Global.THRESHOLD) ? 8 : 0;
 
-			var mirrorNormal = Global.MIRROR_NORMALS[index];
+			var mirrorNormal = Global.PARTICLE_MIRROR_NORMALS[index];
 
 			// trigger the explosion
 			var maxDist = radius * radius;
@@ -161,7 +213,10 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 						additionalMass: mass
 					};
 
-					remainingMomentum += self.projectMomentum(duration, posX, posY, direction + (Math.random() - 0.5) * (Math.PI / 2), velocity, momentum, info, false);
+					// the force spreads out
+					var spread = (Math.random() - 0.5) * Global.PARTICLE_IMPACT_SPREAD;
+
+					remainingMomentum += self.projectMomentum(dt, posX, posY, direction + spread, velocity, momentum, info, false);
 
 					// the impacting particle looses the mass (it is merged with the grain)
 					if (info.additionalMassUsed) {
@@ -195,7 +250,7 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 				this.mass -= lostMass;
 			}
 
-			if (this.suggestDeath(duration)) {
+			if (this.suggestDeath(dt)) {
 				return;
 			}
 		},
@@ -205,7 +260,7 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 		 *
 		 * @return the remaining momentum
 		 */
-		projectMomentum: function(duration, x, y, direction, velocity, momentum, info, projected) {
+		projectMomentum: function(dt, x, y, direction, velocity, momentum, info, projected) {
 			var grain = Global.SAND.get(x, y);
 
 			if (!grain) {
@@ -236,7 +291,8 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 				}
 
 				// there is a particle in the way, project the momentum
-				momentum = this.projectMomentum(duration, position.x, position.y, direction + (Math.random() - 0.5) * Math.PI * 0.1, velocity, momentum, info, true);
+				var deflection = (Math.random() - 0.5) * Global.PARTICLE_PROJECTION_DEFLECTION;
+				momentum = this.projectMomentum(dt, position.x, position.y, direction + deflection, velocity, momentum, info, true);
 
 				// when bouncing back, some of the absorbed momentum is freed again (in the opposite direction)
 				momentum -= absorbedMomentum * Global.BOUNCYNESS;
@@ -281,19 +337,19 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 			var particle = new Particle(position, movement, mass);
 
 			Global.addParticle(particle);
-			Global.SAND.remove(position.x, position.y, grain);
+			//Global.SAND.remove(position.x, position.y, grain);
 
 			return momentum;
 		},
 
-		suggestDeath: function(duration) {
+		suggestDeath: function(dt) {
 			if (this.mass <= 0) {
 				// the particle has no mass anymore, DBA
 				this.alive = false;
 				return true;
 			}
 
-			if (this.stuckDuration > 0.25) {
+			if (this.stuckDT > 0.25) {
 				// the particle is stuck, that happens sometimes
 				return this.kill();
 			}
@@ -303,7 +359,7 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 				return false;
 			}
 
-			if (this.movement.length() > Global.G * duration) {
+			if (this.movement.length() > Global.G * dt) {
 				// the particle has too much speed, it won't rest here
 				return false;
 			}
@@ -325,7 +381,6 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 			context.translate(this.position.x, this.position.y);
 
 			if (Global.DRAW_MOVEMENT) {
-				// draw movement
 				context.strokeStyle = "#aaaaff";
 				context.beginPath();
 				context.moveTo(0, 0);
