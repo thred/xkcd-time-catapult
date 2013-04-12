@@ -60,20 +60,16 @@ function stop() {
 }
 
 function run() {
-	if (!this.running) {
+	if (!running) {
 		return;
 	}
 
 	requestAnimationFrame(run);
-	
+
 	var time = new Date().getTime() / 1000;
-	var duration = time - this.lastTime;
+	var duration = time - lastTime;
 
 	lastTime = time;
-	
-	if (duration > 0.1) {
-		duration = 0.1;
-	}
 
 	var Main = require("Main");
 	Main.step.call(Main, time, duration);
