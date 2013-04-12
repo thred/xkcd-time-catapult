@@ -36,15 +36,15 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 		// these values are incorrect. Sand absorbes a lot of momentum, and does not bounce. But wheres the fun?
 		Global.PARTICLE_ABSORBSION = 5 / 100; // momentum absorbed on impact in %
 		Global.PARTICLE_BOUNCYNESS = 50 / 100; // momentum bouncing back on impact in %.
-		
 
-		Util.messageTo("g", Global.G.toFixed(2));		
-		Util.messageTo("particle_density", Math.round(Global.PARTICLE_DENSITY));		
-		Util.messageTo("size_of_pixel", (Global.PARTICLE_SIZE_OF_PIXEL * 100).toFixed(2));		
-		Util.messageTo("mass_per_pixel", Global.PARTICLE_MASS_PER_PIXEL.toFixed(2));		
-		Util.messageTo("particle_friction", Global.PARTICLE_FRICTION.toFixed(2));		
-		Util.messageTo("particle_absorbsion", Math.round(Global.PARTICLE_ABSORBSION * 100));		
-		Util.messageTo("particle_bouncyness", Math.round(Global.PARTICLE_BOUNCYNESS * 100));		
+
+		Util.messageTo("g", Global.G.toFixed(2));
+		Util.messageTo("particle_density", Math.round(Global.PARTICLE_DENSITY));
+		Util.messageTo("size_of_pixel", (Global.PARTICLE_SIZE_OF_PIXEL * 100).toFixed(2));
+		Util.messageTo("mass_per_pixel", Global.PARTICLE_MASS_PER_PIXEL.toFixed(2));
+		Util.messageTo("particle_friction", Global.PARTICLE_FRICTION.toFixed(2));
+		Util.messageTo("particle_absorbsion", Math.round(Global.PARTICLE_ABSORBSION * 100));
+		Util.messageTo("particle_bouncyness", Math.round(Global.PARTICLE_BOUNCYNESS * 100));
 	};
 
 	// Precalculated mirror vectors according to following schema (+ ist the impact location):
@@ -160,18 +160,19 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 				// the particle has left the screen, kill it
 				this.alive = false;
 			}
-			
+
 			// sand is not stable, maybe it splits
-			if ((this.alive) && (Math.random() < dt) && (this.radius() / Global.PARTICLE_SIZE_OF_PIXEL > 1.5)) {
+			/*
+			if ((this.alive) && (Math.random() < dt * 0.5) && (this.radius() / Global.PARTICLE_SIZE_OF_PIXEL > 1.5)) {
 				var loose = this.mass * 0.25 + Math.random() * this.mass * 0.5;
 
-				var offset = new Vector(this.radius() / Global.PARTICLE_SIZE_OF_PIXEL, 0).setDirection(Math.random() * Math.PI * 2);
-				var position = this.position.clone().add(offset);
-				
 				this.mass -= loose;
 				
-				Global.addParticle(new Particle(this.position.clone(), this.movement.clone(), loose), true);
+				var movement = this.movement.clone().setLength(this.movement.length() - this.movement.length() * 0.05 * Math.random());
+
+				Global.addParticle(new Particle(this.position.clone(), movement, loose), true);
 			}
+			*/
 		},
 
 		/**
