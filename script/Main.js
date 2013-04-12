@@ -311,7 +311,6 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 			Util.messageTo("maxVelocity", statistics.maxVelocity.toFixed(1));
 
 			Global.removeDeadParticles();
-
 		}
 	};
 });

@@ -28,8 +28,8 @@ define("Catapult", ["Global", "Util", "Vector", "Particle"], function(Global, Ut
 		aim: function(vector) {
 			this.fireVector = vector;
 
-			if (this.fireVector) {
-				this.computeVelocity(this.fireVector);
+			if (vector) {
+				this.computeVelocity(vector);
 			}
 		},
 
@@ -51,9 +51,10 @@ define("Catapult", ["Global", "Util", "Vector", "Particle"], function(Global, Ut
 
 				position.add(Math.cos(direction) * distance, - Math.sin(direction) * distance);
 
-				var movement = new Vector(-this.fireVector.x, this.fireVector.y);
+				var movement = new Vector(-vector.x, vector.y);
 
-				movement.setLength(this.computeVelocity(this.fireVector) / Global.PARTICLE_SIZE_OF_PIXEL);
+				movement.setLength(this.computeVelocity(vector) / Global.PARTICLE_SIZE_OF_PIXEL);
+
 				var particle = new Particle(position, movement, mass);
 
 				Global.addParticle(particle, true);
