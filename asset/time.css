@@ -63,7 +63,16 @@ div#placeholder {
 	text-align: center;
 }
 
-div#navigation {
+div#statistics {
+	font-size: 60%;
+}
+
+div#statistics span {
+	font-weight: bold;
+}
+
+div#statistics span.unit {
+	font-variant: normal;
 }
 
 canvas {

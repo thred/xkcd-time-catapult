@@ -26,48 +26,70 @@ define("Global", [], function() {
 		DRAW_PROJECTIONS: false,
 		DRAW_MOVEMENT: false,
 
-		G: 667.384,
-		N: 98.0665,
-		AIR_FRICTION: 0.25,
-		ABSORBSION: 0.02,
-		BOUNCYNESS: 0.80,
-		STICKYNESS: 0.50,
-		FRICTION: 2,
-		THRESHOLD: 0.50,
-		PARTICLE_DIE_MASS: 0.5,
-
 		XKCD_IMAGES: [{
-			src: "asset/a228595caf108b46e53f4fe276ebac8fa1545928b650742b0812298d5dfde441.png"
+			src: "asset/a228595caf108b46e53f4fe276ebac8fa1545928b650742b0812298d5dfde441.png",
+			sizeOfPixel: 1.8 / 64, // 64 pixel are one m
+			launchVelocityPerPixel: 0.067
 		}, {
-			src: "asset/c918850ed18afe2c3f3acbeef9c799aba5b10a8efeb45a2f026565383f0a72bc.png"
+			src: "asset/c918850ed18afe2c3f3acbeef9c799aba5b10a8efeb45a2f026565383f0a72bc.png",
+			sizeOfPixel: 1.8 / 64, // 64 pixel are one m
+			launchVelocityPerPixel: 0.067
 		}, {
-			src: "asset/05457c91f50c216f6071ae194b4d1822770e1792b0c73eb0fba3cbbdeb616ec2.png"
+			src: "asset/05457c91f50c216f6071ae194b4d1822770e1792b0c73eb0fba3cbbdeb616ec2.png",
+			sizeOfPixel: 1.8 / 42, // 42 pixel are one m
+			launchVelocityPerPixel: 0.0825
 		}, {
-			src: "asset/dcbe928012a06ae5118d4cd3850a4f1bcc0a7e4e86b2c04751fe79370cbb35bc.png"
+			src: "asset/dcbe928012a06ae5118d4cd3850a4f1bcc0a7e4e86b2c04751fe79370cbb35bc.png",
+			sizeOfPixel: 1.8 / 35, // 35 pixel are one m
+			launchVelocityPerPixel: 0.0905
 		}, {
-			src: "asset/9996f99ec0e08c63b8f50c9900c73ba37417fdeef2a17888748cc0c078370b82.png"
+			src: "asset/9996f99ec0e08c63b8f50c9900c73ba37417fdeef2a17888748cc0c078370b82.png",
+			sizeOfPixel: 1.8 / 33, // 33 pixel are one m
+			launchVelocityPerPixel: 0.094
 		}, {
-			src: "asset/37eba4d7ce0239d5d8b8aac659f464569debe088399ec70f6ac54036a82640a5.png"
+			src: "asset/37eba4d7ce0239d5d8b8aac659f464569debe088399ec70f6ac54036a82640a5.png",
+			sizeOfPixel: 1.8 / 33, // 33 pixel are one m
+			launchVelocityPerPixel: 0.094
 		}, {
-			src: "asset/8beeb30463e7b617e56403c7d7cf8b907e9e9425b230c3d548111efc661e3704.png"
+			src: "asset/8beeb30463e7b617e56403c7d7cf8b907e9e9425b230c3d548111efc661e3704.png",
+			sizeOfPixel: 1.8 / 33, // 33 pixel are one m
+			launchVelocityPerPixel: 0.094
 		}, {
-			src: "asset/f70e2db46c301161eaf42922b0cec40ca1f31c21a9fddbfd6fb9998c897e8eb8.png"
+			src: "asset/f70e2db46c301161eaf42922b0cec40ca1f31c21a9fddbfd6fb9998c897e8eb8.png",
+			sizeOfPixel: 1.8 / 33, // 33 pixel are one m
+			launchVelocityPerPixel: 0.094
 		}, {
-			src: "asset/0493eb220532c578eb97448040f2814ec73d0ef2ec69de9f63453f14c2cf08fb.png"
+			src: "asset/0493eb220532c578eb97448040f2814ec73d0ef2ec69de9f63453f14c2cf08fb.png",
+			sizeOfPixel: 1.8 / 33, // 33 pixel are one m
+			launchVelocityPerPixel: 0.094
 		}, {
-			src: "asset/8c2c62dc515a4feaaaaea1e726ba169144ef890d0c740ac753e9e8e235a1961d.png"
+			src: "asset/8c2c62dc515a4feaaaaea1e726ba169144ef890d0c740ac753e9e8e235a1961d.png",
+			sizeOfPixel: 1.8 / 33, // 33 pixel are one m
+			launchVelocityPerPixel: 0.094
 		}, {
-			src: "asset/37b57969648828672b05f3b5662138f2150c9f4af17230b51ca6455991a1a319.png"
+			src: "asset/37b57969648828672b05f3b5662138f2150c9f4af17230b51ca6455991a1a319.png",
+			sizeOfPixel: 1.8 / 33, // 33 pixel are one m
+			launchVelocityPerPixel: 0.094
 		}, {
-			src: "asset/0fbc49c2fe5d22f935d437e0049aa969bedc831b8445e064ee2b4da85baa1d70.png"
+			src: "asset/0fbc49c2fe5d22f935d437e0049aa969bedc831b8445e064ee2b4da85baa1d70.png",
+			sizeOfPixel: 1.8 / 33, // 33 pixel are one m
+			launchVelocityPerPixel: 0.094
 		}, {
-			src: "asset/c80a91d3fe5695c4040e63f675d1063f0578e849c0c5969a0414348e78601d5a.png"
+			src: "asset/c80a91d3fe5695c4040e63f675d1063f0578e849c0c5969a0414348e78601d5a.png",
+			sizeOfPixel: 1.8 / 33, // 33 pixel are one m
+			launchVelocityPerPixel: 0.094
 		}, {
-			src: "asset/6d1b782354540b035cc732c214b8b47a442fcd1e6d9565699d24ec2b13b8e652.png"
+			src: "asset/6d1b782354540b035cc732c214b8b47a442fcd1e6d9565699d24ec2b13b8e652.png",
+			sizeOfPixel: 1.8 / 33, // 33 pixel are one m
+			launchVelocityPerPixel: 0.094
 		}, {
-			src: "asset/840355510c22bac0a6e52ec0945997b670d8ad1053465d1929d4320ca4150488.png"
+			src: "asset/840355510c22bac0a6e52ec0945997b670d8ad1053465d1929d4320ca4150488.png",
+			sizeOfPixel: 1.8 / 33, // 33 pixel are one m
+			launchVelocityPerPixel: 0.094
 		}, {
-			src: "asset/27994b77661281b2d0301e93c53a49f348ec3b417ffc0da4aeab57d9703ed1fe.png"
+			src: "asset/27994b77661281b2d0301e93c53a49f348ec3b417ffc0da4aeab57d9703ed1fe.png",
+			sizeOfPixel: 1.8 / 33, // 33 pixel are one m
+			launchVelocityPerPixel: 0.094
 		}],
 		//var IMAGE_NAMES = ["test.png"];
 
@@ -113,10 +135,25 @@ define("Global", [], function() {
 		 * Update and draw the particles
 		 */
 		updateParticles: function(duration, context) {
+			var totalMovingMass = 0;
+			var totalMaxVelocity = 0;
+			
 			for (var i = 0; i < this.PARTICLES.length; i += 1) {
-				this.PARTICLES[i].move(duration);
-				this.PARTICLES[i].draw(context);
+				var particle = this.PARTICLES[i];
+				
+				particle.move(duration);
+
+				totalMovingMass += particle.mass;
+				totalMaxVelocity = Math.max(totalMaxVelocity, particle.velocity());
+
+				particle.draw(context);
+
 			}
+			
+			return {
+				movingMass : totalMovingMass,
+				maxVelocity : totalMaxVelocity
+			};
 		},
 
 		/**

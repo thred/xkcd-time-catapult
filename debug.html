@@ -42,9 +42,20 @@ along with xkcd Time Catapult. If not, see <http://www.gnu.org/licenses/>.
 			<a class="button" href="javascript:require('Global').BUTTONS.drawProjections.click();" title="Draw Projections"><img id="draw-projections-button" src="asset/button.png" alt="Draw Projections"/></a>			
 			
 			<div id="statistics">
-				Particles: <span id="particles">0</span><br/>
-				Pending: <span id="pendingParticles">0</span>
+				Particle Count: <span id="particles">0</span><br/>
+				Pending Particles: <span id="pendingParticles">0</span><br/>
 				<br/>
+				Launch Mass: <span id="launchMass">0.0</span> <span class="unit">kg</span><br/>
+				Moving Mass: <span id="movingMass">0.0</span> <span class="unit">kg</span><br/>
+				max. Velocity: <span id="maxVelocity">0.0</span> <span class="unit">m/s</span><br/>
+				<br/>
+				g: <span id="g">0.00</span> <span class="unit">m/s&sup2;</span><br/>
+				Density: <span id="particle_density">0</span> <span class="unit">kg/m&sup3;</span><br/>
+				Size of Pixel: <span id="size_of_pixel">0.00</span> <span class="unit">cm</span><br/>
+				Mass/Pixel: <span id="mass_per_pixel">0.00</span> <span class="unit">kg</span><br/>
+				Friction: <span id="particle_friction">0.00</span> <span class="unit">&micro;<sub>s</sub></span><br/>
+				Absorbsion: <span id="particle_absorbsion">0</span> <span class="unit">%</span><br/>
+				Bouncyness: <span id="particle_bouncyness">0</span> <span class="unit">%</span><br/>
 				<br/>
 				FPS: <span id="fps">0</span><br/>
 			</div>

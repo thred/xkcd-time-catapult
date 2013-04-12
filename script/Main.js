@@ -43,13 +43,13 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 
 		boulderSize: new Button("boulder-size-button", [{
 			src: "asset/button-boulder-small.png",
-			value: Math.PI * 10
+			value: 2
 		}, {
 			src: "asset/button-boulder-medium.png",
-			value: Math.PI * 20
+			value: 4
 		}, {
 			src: "asset/button-boulder-large.png",
-			value: Math.PI * 40
+			value: 6
 		}], 1),
 
 		boulderCount: new Button("boulder-count-button", [{
@@ -91,8 +91,7 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 		overlayContext: null,
 		catapult: null,
 		collapseCheck: [],
-		isMouseDown: false,
-		dragPos: null,
+		mouseVector: null,
 		imageLoading: 0,
 		imageReady: 0,
 
@@ -109,35 +108,27 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 
 			document.addEventListener("mousedown", function(event) {
 				var offset = Util.getOffset(self.canvas);
-				var left = event.clientX - offset.left;
-				var top = event.clientY - offset.top;
-				var v = new Vector(left - self.catapult.position.x, top - self.catapult.position.y);
+				var vector = new Vector(event.clientX - offset.left - self.catapult.position.x, event.clientY - offset.top - self.catapult.position.y);
 
-				if (v.length() < 30) {
-					self.isMouseDown = true;
+				if (vector.length() < 30) {
+					self.mouseVector = vector;
 				}
 			}, false);
 			document.addEventListener("mousemove", function(event) {
-				if (self.isMouseDown) {
-					event.preventDefault();
-
+				if (self.mouseVector) {
 					var offset = Util.getOffset(self.canvas);
-					var left = event.clientX - offset.left;
-					var top = event.clientY - offset.top;
 
-					self.dragPos = {
-						x: left - self.catapult.position.x,
-						y: top - self.catapult.position.y
-					};
+					event.preventDefault();
+					self.mouseVector.set(event.clientX - offset.left - self.catapult.position.x, event.clientY - offset.top - self.catapult.position.y);
 				}
 			}, false);
 			document.addEventListener("mouseup", function(event) {
-				if (self.isMouseDown) {
-					self.fire();
+				if (self.mouseVector) {
+					event.preventDefault();
+					self.catapult.fire(self.mouseVector);
 				}
 
-				self.isMouseDown = false;
-				self.dragPos = null;
+				self.mouseVector = null;
 			}, false);
 
 			// create the catapult
@@ -195,7 +186,12 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 			content.insertBefore(this.overlay, placeholder);
 			content.insertBefore(this.canvas, placeholder);
 
-			this.initImage("xkcd", Global.XKCD_IMAGES[parseInt(Math.random() * Global.XKCD_IMAGES.length, 10)].src);
+			var xkcdImage = Global.XKCD_IMAGES[parseInt(Math.random() * Global.XKCD_IMAGES.length, 10)];
+
+			Global.setupParticleConstants(xkcdImage.sizeOfPixel);
+			this.catapult.launchVelocityPerPixel = xkcdImage.launchVelocityPerPixel;
+
+			this.initImage("xkcd", xkcdImage.src);
 		},
 
 		initImage: function(name, src) {
@@ -228,6 +224,35 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 			this.canvasContext.strokeStyle = "white";
 			this.canvasContext.lineWidth = 3;
 			this.canvasContext.strokeRect(x + 1, 1, 551, 393);
+
+			var oneMeter = 1 / Global.PARTICLE_SIZE_OF_PIXEL;
+
+			// draw the scale
+			this.canvasContext.save();
+			this.canvasContext.translate(Global.WIDTH - 32 - oneMeter * 10, Global.HEIGHT - 32);
+			this.canvasContext.strokeStyle = "gray";
+			this.canvasContext.lineWidth = 1;
+			this.canvasContext.lineCap = "round";
+			this.canvasContext.beginPath();
+			this.canvasContext.moveTo(0, 0);
+			this.canvasContext.lineTo(oneMeter * 10, 0);
+			this.canvasContext.stroke();
+
+			for (var i = 0; i <= 10; i += 1) {
+				var h = ((i === 0) || (i === 10)) ? 8 : (i === 5) ? 4 : 2;
+				this.canvasContext.beginPath();
+				this.canvasContext.moveTo(i * oneMeter, - h);
+				this.canvasContext.lineTo(i * oneMeter, h);
+				this.canvasContext.stroke();
+			}
+			
+			this.canvasContext.font = "normal 10px Lucida,Helvetica,sans-serif";
+			this.canvasContext.textAlign = "center";
+			this.canvasContext.fillStyle = "gray";
+			this.canvasContext.fillText('0 m', 0, 20);
+			this.canvasContext.fillText('5 m', oneMeter * 5, 20);
+			this.canvasContext.fillText('10 m', oneMeter * 10, 20);
+			this.canvasContext.restore();
 
 			// find the height for the base
 			var y = this.findBase(x + 3);
@@ -277,36 +302,16 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 			Util.messageTo("particles", Global.PARTICLES.length);
 
 			this.overlayContext.clearRect(0, 0, Global.WIDTH, Global.HEIGHT);
+			this.catapult.aim(this.mouseVector);
 			this.catapult.draw(this.overlayContext);
 
-			Global.updateParticles(duration, this.overlayContext);
+			var statistics = Global.updateParticles(duration, this.overlayContext);
+
+			Util.messageTo("movingMass", statistics.movingMass.toFixed(1));
+			Util.messageTo("maxVelocity", statistics.maxVelocity.toFixed(1));
+
 			Global.removeDeadParticles();
 
-			var drag = this.dragPos;
-
-			if (drag) {
-				this.overlayContext.save();
-				this.overlayContext.strokeStyle = "#884422";
-				this.overlayContext.lineWidth = 3;
-				this.overlayContext.translate(this.catapult.position.x, this.catapult.position.y);
-				this.overlayContext.beginPath();
-				this.overlayContext.moveTo(0, 0);
-				this.overlayContext.lineTo(drag.x, drag.y);
-				this.overlayContext.stroke();
-				this.overlayContext.restore();
-			}
-		},
-
-		fire: function() {
-			for (var i = 0; i < Global.BUTTONS.boulderCount.value(); i += 1) {
-				var direction = Math.random() * Math.PI * 2;
-				var distance = (i > 0) ? Math.random() * Global.BUTTONS.boulderSize.value() / Math.PI / Global.PARTICLE_RADIUS : 0;
-				var position = this.catapult.position.clone();
-				position.add(Math.cos(direction) * distance, - Math.sin(direction) * distance);
-				var particle = new Particle(position, new Vector(-this.dragPos.x * 3, this.dragPos.y * 3), Global.BUTTONS.boulderSize.value());
-
-				Global.addParticle(particle, true);
-			}
 		}
 	};
 });
