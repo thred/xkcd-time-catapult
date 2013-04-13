@@ -22,7 +22,7 @@ define("Global", [], function() {
 		WIDTH: 800,
 		HEIGHT: 390,
 
-		MAX_PARTICLES: 2048,
+		MAX_PARTICLES: 1024,
 		DRAW_PROJECTIONS: false,
 		DRAW_MOVEMENT: false,
 
@@ -90,12 +90,17 @@ define("Global", [], function() {
 			src: "asset/27994b77661281b2d0301e93c53a49f348ec3b417ffc0da4aeab57d9703ed1fe.png",
 			sizeOfPixel: 1.8 / 33, // 33 pixel are one m
 			launchVelocityPerPixel: 0.094
+		}, {
+			src: "asset/6d28391eaa775cd8f1f3814a58369483c2933dc21ca94c27d8fdbc4b29574bbc.png",
+			sizeOfPixel: 1.8 / 33, // 33 pixel are one m
+			launchVelocityPerPixel: 0.094
 		}],
 		//var IMAGE_NAMES = ["test.png"];
 
 		IMAGES: [],
 		SAND: null,
 		PARTICLES: [],
+		PREPARED_PARTICLES: [],
 		PENDING_PARTICLES: [],
 
 		/**
@@ -109,11 +114,45 @@ define("Global", [], function() {
 				this.PENDING_PARTICLES.push(particle);
 			}
 		},
+		
+		/**
+		 * Add a particle per location (mutiple particles are merged)
+		 */
+		prepareParticle: function(particle) {
+			var x = Math.round(particle.position.x);
+			var y = Math.round(particle.position.y);
+			
+			if ((x < 0) || (y < 0) || (x >= this.WIDTH) || (y >= this.HEIGHT)) {
+				return;
+			}
+			
+			var pos = x + y * this.WIDTH;
+			var existing = this.PREPARED_PARTICLES[pos];
+			
+			if (!existing) {
+				this.PREPARED_PARTICLES[pos] = particle;
+				return;
+			}
+			
+			existing.position.average(particle.position.x, particle.position.y);
+			existing.movement.average(particle.movement.x, particle.movement.y);
+			existing.mass += particle.mass;
+		},
 
 		/**
 		 * Activates pending particles 
 		 */
 		activatePendingParticles: function() {
+			for (var idx in this.PREPARED_PARTICLES) {
+				var particle = this.PREPARED_PARTICLES[idx];
+				
+				particle.mass += this.SAND.get(particle.position.x, particle.position.y) * this.PARTICLE_MASS_PER_PIXEL;
+				
+				this.PENDING_PARTICLES.push(particle);
+			}
+
+			this.PREPARED_PARTICLES = [];
+		
 			for (var i = 0; i < this.PENDING_PARTICLES.length; i += 1) {
 				if (this.PARTICLES.length >= this.MAX_PARTICLES) {
 					// maximum particles reached, save the rest for later
@@ -176,6 +215,7 @@ define("Global", [], function() {
 		 */
 		clearParticles: function() {
 			this.PARTICLES = [];
+			this.PREPARED_PARTICLES = [];
 			this.PENDING_PARTICLES = [];
 		}
 	};

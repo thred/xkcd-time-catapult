@@ -293,6 +293,10 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 				this.fpsTime = Math.floor(time * 10);
 			}
 
+			if (duration > 0.1) {
+				duration = 0.1;
+			}
+			
 			duration *= Global.BUTTONS.speed.value();
 
 			Util.messageTo("pendingParticles", Global.PENDING_PARTICLES.length);

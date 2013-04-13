@@ -364,11 +364,12 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 			}
 
 			position.set(x, y);
-
-			var particle = new Particle(position, movement, mass);
+			
+			// prepare the particle (the grain will be added on creation)
+			var particle = new Particle(position, movement, (!projected) ? info.additionalMass : 0);
 
 			particle.setVelocity(Math.max(useableMomentum / mass, 0));
-			Global.addParticle(particle);
+			Global.prepareParticle(particle);
 
 			return momentum;
 		},
