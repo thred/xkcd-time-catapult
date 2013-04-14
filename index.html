@@ -93,34 +93,86 @@ along with xkcd Time Catapult. If not, see <http://www.gnu.org/licenses/>.
 			<a class="button" href="javascript:require('Global').BUTTONS.reload.click();" title="Reload"><img id="reload-button" src="asset/button.png" alt="Reload"/></a>			
 			<a class="button" href="javascript:require('Global').BUTTONS.speed.click();" title="Speed"><img id="speed-button" src="asset/button.png" alt="Speed"/></a>		
 			<br/>
+			<a class="button" href="javascript:require('Global').BUTTONS.gravity.click();" title="Gravity and Atmosphere"><img id="gravity-button" src="asset/button.png" alt="Gravity and Atmosphere"/></a>			
+			<a class="button" href="javascript:require('Global').BUTTONS.collapsing.click();" title="Collapsing"><img id="collapsing-button" src="asset/button.png" alt="Collapsing"/></a>			
+			<br/>
 			<a class="button" href="javascript:require('Global').BUTTONS.boulderSize.click();" title="Boulder Size"><img id="boulder-size-button" src="asset/button.png" alt="Boulder Size"/></a>			
 			<a class="button" href="javascript:require('Global').BUTTONS.boulderCount.click();" title="Boulder Count"><img id="boulder-count-button" src="asset/button.png" alt="Boulder Count"/></a>			
 			<br/>
 			<a class="button" href="javascript:require('Global').BUTTONS.drawMovement.click();" title="Draw Movement"><img id="draw-movement-button" src="asset/button.png" alt="Draw Movement"/></a>			
 			<a class="button" href="javascript:require('Global').BUTTONS.drawProjections.click();" title="Draw Projections"><img id="draw-projections-button" src="asset/button.png" alt="Draw Projections"/></a>			
 			
-			<div id="statistics">
-				Particle Count: <span id="particles">0</span><br/>
-				Pending Particles: <span id="pendingParticles">0</span><br/>
-				<br/>
-				Launch Mass: <span id="launchMass">0.0</span> <span class="unit">kg</span><br/>
-				Moving Mass: <span id="movingMass">0.0</span> <span class="unit">kg</span><br/>
-				max. Velocity: <span id="maxVelocity">0.0</span> <span class="unit">m/s</span><br/>
-				<br/>
-				g: <span id="g">0.00</span> <span class="unit">m/s&sup2;</span><br/>
-				Density: <span id="particle_density">0</span> <span class="unit">kg/m&sup3;</span><br/>
-				Size of Pixel: <span id="size_of_pixel">0.00</span> <span class="unit">cm</span><br/>
-				Mass/Pixel: <span id="mass_per_pixel">0.00</span> <span class="unit">kg</span><br/>
-				Friction: <span id="particle_friction">0.00</span> <span class="unit">&micro;<sub>s</sub></span><br/>
-				Absorbsion: <span id="particle_absorbsion">0</span> <span class="unit">%</span><br/>
-				Bouncyness: <span id="particle_bouncyness">0</span> <span class="unit">%</span><br/>
-				<br/>
-				FPS: <span id="fps">0</span><br/>
-			</div>
+			<table class="statistics small-table">
+				<tbody>
+					<tr>
+						<th>Planet:</th>
+						<td><span id="planet"></span></td>
+					</tr>
+					
+					<tr>
+						<th>g:</th>
+						<td><span id="g">0.00</span> <span class="unit">m/s&sup2;</span></td>
+					</tr>
+					
+					<tr>
+						<th>Density:</th>
+						<td><span id="particle_density">0</span> <span class="unit">kg/m&sup3;</span></td>
+					</tr>
+					
+					<tr>
+						<th>Friction:</th>
+						<td><span id="particle_friction">0.00</span> <span class="unit">&micro;<sub>s</sub></span></td>
+					</tr>
+					
+					<tr>
+						<th>Absorbsion:</th>
+						<td><span id="particle_absorbsion">0</span> <span class="unit">%</span></td>
+					</tr>
+					
+					<tr>
+						<th>Bouncyness:</th>
+						<td><span id="particle_bouncyness">0</span> <span class="unit">%</span></td>
+					</tr>
+					
+					<tr>
+						<th>FPS:</th>
+						<td><span id="fps">0</span></td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 		
-		<div style="clear: both;"></div>
-
+		<table class="statistics main" style="clear: both;">
+			<tbody>
+				<tr>
+					<th>Particle Count:</th>
+					<td style="width: 7em;"><span id="particles">0</span></td>
+					
+					<th>Launch Mass:</th>
+					<td style="width: 7em;"><span id="launchMass">0.0</span> <span class="unit">kg</span></td>
+					
+					<th>max. Velocity:</th>
+					<td style="width: 7em;"><span id="maxVelocity">0.0</span> <span class="unit">m/s</span></td>
+					
+					<th>Size of Pixel:</th>
+					<td style="width: 7em;"><span id="size_of_pixel">0.00</span> <span class="unit">cm</span></td>
+				</tr>
+				<tr>
+					<th>Pending Particles:</th>
+					<td style="width: 7em;"><span id="pendingParticles">0</span></td>
+					
+					<th>Moving Mass:</th>
+					<td style="width: 7em;"><span id="movingMass">0.0</span> <span class="unit">kg</span></td>
+					
+					<th></th>
+					<td style="width: 7em;"></td>
+					
+					<th>Mass/Pixel:</th>
+					<td style="width: 7em;"><span id="mass_per_pixel">0.00</span> <span class="unit">kg</span></td>
+				</tr>
+			</tbody>
+		</table>
+		
 		<div id="message" class="main"></div>
 	</div>
 	

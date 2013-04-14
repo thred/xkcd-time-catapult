@@ -41,6 +41,50 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 			value: 1 / 60
 		}]),
 
+		gravity: new Button("gravity-button", [{
+			src: "asset/button-gravity-earth.png",
+			value: {
+				name: "Earth",
+				g: 9.81
+			}
+		}, {
+			src: "asset/button-gravity-moon.png",
+			value: {
+				name: "Luna",
+				g: 1.62
+			}
+		}, {
+			src: "asset/button-gravity-mars.png",
+			value: {
+				name: "Mars",
+				g: 3.69
+			}
+		}, {
+			src: "asset/button-gravity-venus.png",
+			value: {
+				name: "Venus",
+				g: 8.87
+			}
+		}, {
+			src: "asset/button-gravity-jupiter.png",
+			value: {
+				name: "Jupiter",
+				g: 24.79
+			}
+		}], 0, function(value) {
+			require("Global").setupParticleConstants(require("Main").xkcdImage.sizeOfPixel, Global.BUTTONS.gravity.value());
+		}),
+
+		collapsing: new Button("collapsing-button", [{
+			src: "asset/button-collapsing-on.png",
+			value: true
+		}, {
+			src: "asset/button-collapsing-off.png",
+			value: false
+		}], 0, function(value) {
+			require("Global").COLLAPSING = value;
+		}),
+
 		boulderSize: new Button("boulder-size-button", [{
 			src: "asset/button-boulder-small.png",
 			value: 2
@@ -138,7 +182,6 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 			this.initImage("catapult");
 			this.initImage("arm");
 			this.initImage("particle");
-			this.initImage("base");
 
 			for (var name in Global.BUTTONS) {
 				Global.BUTTONS[name].update();
@@ -186,12 +229,13 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 			content.insertBefore(this.overlay, placeholder);
 			content.insertBefore(this.canvas, placeholder);
 
-			var xkcdImage = Global.XKCD_IMAGES[parseInt(Math.random() * Global.XKCD_IMAGES.length, 10)];
+			this.xkcdImage = Global.XKCD_IMAGES[parseInt(Math.random() * Global.XKCD_IMAGES.length, 10)];
 
-			Global.setupParticleConstants(xkcdImage.sizeOfPixel);
-			this.catapult.launchVelocityPerPixel = xkcdImage.launchVelocityPerPixel;
+			Global.setupParticleConstants(this.xkcdImage.sizeOfPixel, Global.BUTTONS.gravity.value());
+			this.catapult.launchVelocityPerPixel = this.xkcdImage.launchVelocityPerPixel;
 
-			this.initImage("xkcd", xkcdImage.src);
+			this.initImage("base", this.xkcdImage.base.src);
+			this.initImage("xkcd", this.xkcdImage.src);
 		},
 
 		initImage: function(name, src) {
@@ -226,44 +270,56 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 			this.canvasContext.strokeRect(x + 1, 1, 551, 393);
 
 			var oneMeter = 1 / Global.PARTICLE_SIZE_OF_PIXEL;
+			var toDraw = (oneMeter > 50) ? 1 : (oneMeter > 30) ? 5 : 10;
 
 			// draw the scale
 			this.canvasContext.save();
-			this.canvasContext.translate(Global.WIDTH - 32 - oneMeter * 10, Global.HEIGHT - 32);
+			this.canvasContext.translate(Global.WIDTH - 80 - oneMeter * toDraw, Global.HEIGHT - 32);
+			this.canvasContext.font = "normal 10px Lucida,Helvetica,sans-serif";
+			this.canvasContext.textAlign = "center";
+			this.canvasContext.fillStyle = "gray";
 			this.canvasContext.strokeStyle = "gray";
 			this.canvasContext.lineWidth = 1;
 			this.canvasContext.lineCap = "round";
 			this.canvasContext.beginPath();
 			this.canvasContext.moveTo(0, 0);
-			this.canvasContext.lineTo(oneMeter * 10, 0);
+			this.canvasContext.lineTo(oneMeter * toDraw, 0);
 			this.canvasContext.stroke();
 
-			for (var i = 0; i <= 10; i += 1) {
-				var h = ((i === 0) || (i === 10)) ? 8 : (i === 5) ? 4 : 2;
+			for (var i = 0; i <= toDraw; i += 1) {
 				this.canvasContext.beginPath();
-				this.canvasContext.moveTo(i * oneMeter, - h);
-				this.canvasContext.lineTo(i * oneMeter, h);
+				this.canvasContext.moveTo(i * oneMeter, - 2);
+				this.canvasContext.lineTo(i * oneMeter, 2);
 				this.canvasContext.stroke();
 			}
-			
-			this.canvasContext.font = "normal 10px Lucida,Helvetica,sans-serif";
-			this.canvasContext.textAlign = "center";
-			this.canvasContext.fillStyle = "gray";
-			this.canvasContext.fillText('0 m', 0, 20);
-			this.canvasContext.fillText('5 m', oneMeter * 5, 20);
-			this.canvasContext.fillText('10 m', oneMeter * 10, 20);
+
+			for (i = 0; i <= 1; i += 1) {
+				this.canvasContext.beginPath();
+				this.canvasContext.moveTo(i * oneMeter * toDraw, - 8);
+				this.canvasContext.lineTo(i * oneMeter * toDraw, 8);
+				this.canvasContext.stroke();
+				this.canvasContext.fillText((i * toDraw) + " m", i * oneMeter * toDraw, 20);
+			}
+
+			if (toDraw !== 5) {
+				this.canvasContext.beginPath();
+				this.canvasContext.moveTo(0.5 * oneMeter * toDraw, - 4);
+				this.canvasContext.lineTo(0.5 * oneMeter * toDraw, 4);
+				this.canvasContext.stroke();
+			}
+
 			this.canvasContext.restore();
 
-			// find the height for the base
-			var y = this.findBase(x + 3);
+			var y = this.xkcdImage.baseOffsetY;
 
+			// Util.message(Global.XKCD_IMAGES.indexOf(this.xkcdImage) + ", " + this.findBlack(x + 3) + ", " + this.findWhite(x + 3));
 			// add the base for the catapult
 			x -= Global.IMAGES.base.width - 3;
-			this.canvasContext.drawImage(Global.IMAGES.base, x, y - 56);
+			this.canvasContext.drawImage(Global.IMAGES.base, x, y + this.xkcdImage.base.yOffset);
 
 			// place the catapult
 			x = 132;
-			y = this.findBase(x);
+			y = this.findBlack(x);
 
 			this.catapult.position.set(x, y - 12);
 
@@ -274,12 +330,23 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 			start();
 		},
 
-		findBase: function(x) {
+		findWhite: function(x) {
 			var data = this.canvasContext.getImageData(x, 0, 1, Global.HEIGHT).data;
 			var y = Global.HEIGHT - 1;
 
 			while (data[(y - 1) * 4] < 128) {
 				y -= 1;
+			}
+
+			return y;
+		},
+
+		findBlack: function(x) {
+			var data = this.canvasContext.getImageData(x, 0, 1, Global.HEIGHT).data;
+			var y = 5;
+
+			while (data[(y - 1) * 4] > 128) {
+				y += 1;
 			}
 
 			return y;
@@ -296,7 +363,7 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 			if (duration > 0.1) {
 				duration = 0.1;
 			}
-			
+
 			duration *= Global.BUTTONS.speed.value();
 
 			Util.messageTo("pendingParticles", Global.PENDING_PARTICLES.length);

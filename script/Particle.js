@@ -24,8 +24,8 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 	Global.PARTICLE_IMPACT_SPREAD = Math.PI;
 	Global.PARTICLE_PROJECTION_DEFLECTION = Math.PI * 0.2;
 
-	Global.setupParticleConstants = function(sizeOfPixel) {
-		Global.G = 9.81, // Earth
+	Global.setupParticleConstants = function(sizeOfPixel, planet) {
+		Global.G = planet.g;
 		Global.PARTICLE_SIZE_OF_PIXEL = sizeOfPixel; // 1.8 / 34; // 34 pixel are 1.8m, this may differ per image
 		Global.PARTICLE_DENSITY = 2000; // density of sand in kg/m³
 		Global.PARTICLE_MASS_PER_PIXEL = Math.pow(Global.PARTICLE_SIZE_OF_PIXEL, 3) * Global.PARTICLE_DENSITY; // in kg
@@ -37,7 +37,7 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 		Global.PARTICLE_ABSORBSION = 5 / 100; // momentum absorbed on impact in %
 		Global.PARTICLE_BOUNCYNESS = 50 / 100; // momentum bouncing back on impact in %.
 
-
+		Util.messageTo("planet", planet.name);
 		Util.messageTo("g", Global.G.toFixed(2));
 		Util.messageTo("particle_density", Math.round(Global.PARTICLE_DENSITY));
 		Util.messageTo("size_of_pixel", (Global.PARTICLE_SIZE_OF_PIXEL * 100).toFixed(2));
@@ -403,8 +403,9 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 		kill: function() {
 			// HELLO SANDGRAIN. THOU SHALT REST!
 			Global.SAND.add(this.position.x, this.position.y, this.mass);
+			Global.unstableParticle(this.position.x, this.position.y);
+			
 			this.alive = false;
-
 			return true;
 		},
 
