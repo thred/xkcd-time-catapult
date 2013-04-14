@@ -84,9 +84,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.5"
-     inkscape:cx="668.55686"
-     inkscape:cy="484.78869"
+     inkscape:zoom="0.99999999"
+     inkscape:cx="532.16801"
+     inkscape:cy="343.24412"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -95,7 +95,9 @@
      inkscape:window-height="1018"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
-     inkscape:window-maximized="1">
+     inkscape:window-maximized="1"
+     showborder="false"
+     inkscape:showpageshadow="false">
     <inkscape:grid
        type="xygrid"
        id="grid2985"
@@ -134,8 +136,8 @@
        id="rect3900"
        width="352"
        height="312"
-       x="832"
-       y="396.36218" />
+       x="432"
+       y="140.36218" />
     <rect
        style="color:#000000;fill:#d45500;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3801"
@@ -227,36 +229,6 @@
          id="rect3795"
          style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.99999994000000003;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
     </g>
-    <rect
-       style="color:#000000;fill:#999999;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="rect3778"
-       width="2"
-       height="2"
-       x="304"
-       y="682.36218" />
-    <path
-       sodipodi:type="arc"
-       style="color:#000000;fill:#999999;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="path3780"
-       sodipodi:cx="309"
-       sodipodi:cy="683.36218"
-       sodipodi:rx="1"
-       sodipodi:ry="1"
-       d="m 310,683.36218 a 1,1 0 1 1 -2,0 1,1 0 1 1 2,0 z"
-       transform="matrix(1.5,0,0,1.5000022,-154.5,-341.68258)" />
-    <rect
-       style="color:#000000;fill:#f9f9f9;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="rect3784"
-       width="64"
-       height="32"
-       x="252"
-       y="700.36218" />
-    <path
-       style="fill:#000000;stroke:none"
-       d="m 252,728.36218 c 8,1 12,-24 20,-24 l 24,0 c 8,0 12,24 20,24 l 0,4 -64,0 z"
-       id="path3786"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccccc" />
     <g
        id="g3013"
        transform="translate(480,179)">
@@ -294,7 +266,8 @@
        id="g3906"
        inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\base.png"
        inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90">
+       inkscape:export-ydpi="90"
+       transform="translate(-368,0)">
       <g
          inkscape:export-ydpi="90"
          inkscape:export-xdpi="90"
@@ -337,43 +310,6 @@
          id="rect3904"
          style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
     </g>
-    <rect
-       style="color:#000000;fill:#96a8c8;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="rect3915"
-       width="112"
-       height="96"
-       x="32"
-       y="220.36218" />
-    <rect
-       y="316.36218"
-       x="32"
-       height="96"
-       width="112"
-       id="rect3917"
-       style="color:#000000;fill:#c896c0;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
-    <rect
-       style="color:#000000;fill:#f00000;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="rect3919"
-       width="112"
-       height="96"
-       x="144"
-       y="220.36218" />
-    <rect
-       y="316.36218"
-       x="144"
-       height="96"
-       width="112"
-       id="rect3921"
-       style="color:#000000;fill:#c89696;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
-    <rect
-       style="color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="rect3923"
-       width="127.50001"
-       height="96"
-       x="80"
-       y="268.36218"
-       ry="16"
-       rx="16" />
     <g
        id="g3959"
        inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\button-reload.png"
@@ -925,14 +861,15 @@
        id="g3922"
        inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\asset\megan.png"
        inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90">
+       inkscape:export-ydpi="90"
+       transform="translate(-400,-256)">
       <rect
          y="412.36218"
          x="848"
          height="280"
          width="320"
          id="rect3920"
-         style="color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:6.50000000000000000;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+         style="color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:6.5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
       <g
          inkscape:export-ydpi="90"
          inkscape:export-xdpi="90"
@@ -1094,6 +1031,413 @@ QgACgGL9P+WR7BCWRrRLAAAAAElFTkSuQmCC
            id="path3906"
            inkscape:connector-curvature="0"
            sodipodi:nodetypes="cc" />
+      </g>
+    </g>
+    <g
+       id="g4005"
+       inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\asset\button-particle-iron.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <rect
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\asset\button-particle-iron.png"
+         style="color:#000000;fill:#cccccc;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:6.50000000000000000;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         id="rect3936"
+         width="48"
+         height="48"
+         x="448"
+         y="844.36218" />
+      <text
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\asset\button-particle-iron.png"
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Deutsch Gothic;-inkscape-font-specification:Deutsch Gothic"
+         x="472"
+         y="874.02673"
+         id="text3938"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan3940"
+           x="472"
+           y="874.02673"
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas">Fe</tspan></text>
+    </g>
+    <g
+       id="g3998"
+       inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\asset\button-particle-polystyrene.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <rect
+         y="844.36218"
+         x="512"
+         height="48"
+         width="48"
+         id="rect3942"
+         style="color:#000000;fill:#cccccc;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:6.50000000000000000;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text3944"
+         y="872.32471"
+         x="536"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Deutsch Gothic;-inkscape-font-specification:Deutsch Gothic"
+         xml:space="preserve"><tspan
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas"
+           y="872.32471"
+           x="536"
+           id="tspan3946"
+           sodipodi:role="line">C<tspan
+   id="tspan3980"
+   style="font-size:65.00091553%;baseline-shift:sub">8</tspan>H<tspan
+   id="tspan3982"
+   style="font-size:65.00091553%;baseline-shift:sub">8</tspan></tspan></text>
+    </g>
+    <g
+       id="g4010"
+       inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\asset\button-particle-sand.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <rect
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\asset\button-particle-funny-sand.png"
+         y="844.36218"
+         x="384"
+         height="48"
+         width="48"
+         id="rect3930"
+         style="color:#000000;fill:#cccccc;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:6.50000000000000000;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <g
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\asset\button-particle-funny-sand.png"
+         transform="translate(0,-7.5377929)"
+         id="g3991">
+        <text
+           xml:space="preserve"
+           style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Deutsch Gothic;-inkscape-font-specification:Deutsch Gothic"
+           x="408"
+           y="880.36218"
+           id="text3932"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             id="tspan3934"
+             x="408"
+             y="880.36218"
+             style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas">SiO<tspan
+   style="font-size:65.00091553%;baseline-shift:sub"
+   id="tspan3952">2</tspan></tspan></text>
+      </g>
+    </g>
+    <g
+       id="g4033"
+       inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\asset\button-particle-wood.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <rect
+         style="color:#000000;fill:#cccccc;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:6.50000000000000000;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         id="rect3968"
+         width="48"
+         height="48"
+         x="512"
+         y="908.36218" />
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Deutsch Gothic;-inkscape-font-specification:Deutsch Gothic"
+         x="536"
+         y="938.36218"
+         id="text3970"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan3972"
+           x="536"
+           y="938.36218"
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas">Wood</tspan></text>
+    </g>
+    <g
+       id="g4028"
+       inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\asset\button-particle-rubber.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <rect
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\asset\button-particle-rubber.png"
+         y="908.36218"
+         x="448"
+         height="48"
+         width="48"
+         id="rect3974"
+         style="color:#000000;fill:#cccccc;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:6.50000000000000000;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <text
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\asset\button-particle-rubber.png"
+         sodipodi:linespacing="125%"
+         id="text3976"
+         y="936.4491"
+         x="472"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Deutsch Gothic;-inkscape-font-specification:Deutsch Gothic"
+         xml:space="preserve"><tspan
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Consolas;-inkscape-font-specification:Consolas"
+           y="936.4491"
+           x="472"
+           id="tspan3978"
+           sodipodi:role="line">Rubber</tspan></text>
+    </g>
+    <g
+       id="g4286"
+       inkscape:export-filename="C:\home\dev\github\xkcd-time-catapult\asset\button-particle-snow.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <rect
+         y="844.36218"
+         x="576"
+         height="48"
+         width="48"
+         id="rect4038"
+         style="color:#000000;fill:#cccccc;fill-opacity:0;fill-rule:nonzero;stroke:none;stroke-width:6.50000000000000000;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <g
+         style="stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none"
+         transform="matrix(0.75,0,0,0.75,150,217.09055)"
+         id="g4242">
+        <g
+           style="stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none"
+           id="g4163">
+          <g
+             style="stroke-width:2.00000001;stroke-miterlimit:4;stroke-dasharray:none"
+             inkscape:transform-center-x="3.7320508"
+             transform="matrix(0.8660254,-0.5,0.5,0.8660254,-353.79633,416.33847)"
+             inkscape:transform-center-y="-6.0621861"
+             id="g4063">
+            <path
+               style="fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+               d="m 600,868.36218 0,-14"
+               id="path4042"
+               inkscape:connector-curvature="0"
+               inkscape:transform-center-y="-7.0000026" />
+            <path
+               style="color:#000000;fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+               d="m 596,860.36218 8,0"
+               id="path4044"
+               inkscape:connector-curvature="0" />
+          </g>
+          <path
+             inkscape:connector-curvature="0"
+             id="path4133"
+             d="m 600,859.36218 0,-11"
+             style="color:#000000;fill:none;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+          <path
+             inkscape:connector-curvature="0"
+             id="path4141"
+             d="m 596,848.36218 4,2 4,-2"
+             style="color:#000000;fill:none;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+          <path
+             inkscape:connector-curvature="0"
+             id="path4155"
+             d="m 592,850.36218 8,6 8,-6"
+             style="color:#000000;fill:none;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+        </g>
+        <g
+           style="stroke-width:2.00000001;stroke-miterlimit:4;stroke-dasharray:none"
+           id="g4171"
+           inkscape:transform-center-y="-5.9641052"
+           transform="matrix(0.5,-0.8660254,0.8660254,0.5,-452.02371,953.79633)"
+           inkscape:transform-center-x="9.7942368">
+          <g
+             style="stroke-width:2.00000001;stroke-miterlimit:4;stroke-dasharray:none"
+             id="g4173"
+             inkscape:transform-center-y="-6.0621861"
+             transform="matrix(0.8660254,-0.5,0.5,0.8660254,-353.79633,416.33847)"
+             inkscape:transform-center-x="3.7320508">
+            <path
+               inkscape:transform-center-y="-7.0000026"
+               inkscape:connector-curvature="0"
+               id="path4175"
+               d="m 600,868.36218 0,-14"
+               style="fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+            <path
+               inkscape:connector-curvature="0"
+               id="path4177"
+               d="m 596,860.36218 8,0"
+               style="color:#000000;fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+          </g>
+          <path
+             style="color:#000000;fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+             d="m 600,859.36218 0,-11"
+             id="path4179"
+             inkscape:connector-curvature="0" />
+          <path
+             style="color:#000000;fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+             d="m 596,848.36218 4,2 4,-2"
+             id="path4181"
+             inkscape:connector-curvature="0" />
+          <path
+             style="color:#000000;fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+             d="m 592,850.36218 8,6 8,-6"
+             id="path4183"
+             inkscape:connector-curvature="0" />
+        </g>
+        <g
+           style="stroke-width:2.00000001;stroke-miterlimit:4;stroke-dasharray:none"
+           inkscape:transform-center-x="9.7942368"
+           transform="matrix(-0.5,-0.8660254,0.8660254,-0.5,147.97629,1822.1585)"
+           inkscape:transform-center-y="7.9640909"
+           id="g4185">
+          <g
+             style="stroke-width:2.00000001;stroke-miterlimit:4;stroke-dasharray:none"
+             inkscape:transform-center-x="3.7320508"
+             transform="matrix(0.8660254,-0.5,0.5,0.8660254,-353.79633,416.33847)"
+             inkscape:transform-center-y="-6.0621861"
+             id="g4187">
+            <path
+               style="fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+               d="m 600,868.36218 0,-14"
+               id="path4189"
+               inkscape:connector-curvature="0"
+               inkscape:transform-center-y="-7.0000026" />
+            <path
+               style="color:#000000;fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+               d="m 596,860.36218 8,0"
+               id="path4191"
+               inkscape:connector-curvature="0" />
+          </g>
+          <path
+             inkscape:connector-curvature="0"
+             id="path4193"
+             d="m 600,859.36218 0,-11"
+             style="color:#000000;fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+          <path
+             inkscape:connector-curvature="0"
+             id="path4195"
+             d="m 596,848.36218 4,2 4,-2"
+             style="color:#000000;fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+          <path
+             inkscape:connector-curvature="0"
+             id="path4197"
+             d="m 592,850.36218 8,6 8,-6"
+             style="color:#000000;fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+        </g>
+        <g
+           style="stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none"
+           id="g4199"
+           inkscape:transform-center-y="10.000041"
+           transform="matrix(-1,0,0,-1,1200,1736.7244)">
+          <g
+             style="stroke-width:2.00000001;stroke-miterlimit:4;stroke-dasharray:none"
+             id="g4201"
+             inkscape:transform-center-y="-6.0621861"
+             transform="matrix(0.8660254,-0.5,0.5,0.8660254,-353.79633,416.33847)"
+             inkscape:transform-center-x="3.7320508">
+            <path
+               inkscape:transform-center-y="-7.0000026"
+               inkscape:connector-curvature="0"
+               id="path4203"
+               d="m 600,868.36218 0,-14"
+               style="fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+            <path
+               inkscape:connector-curvature="0"
+               id="path4205"
+               d="m 596,860.36218 8,0"
+               style="color:#000000;fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+          </g>
+          <path
+             style="color:#000000;fill:none;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+             d="m 600,859.36218 0,-11"
+             id="path4207"
+             inkscape:connector-curvature="0" />
+          <path
+             style="color:#000000;fill:none;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+             d="m 596,848.36218 4,2 4,-2"
+             id="path4210"
+             inkscape:connector-curvature="0" />
+          <path
+             style="color:#000000;fill:none;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+             d="m 592,850.36218 8,6 8,-6"
+             id="path4212"
+             inkscape:connector-curvature="0" />
+        </g>
+        <g
+           style="stroke-width:2.00000001;stroke-miterlimit:4;stroke-dasharray:none"
+           transform="matrix(-0.5,0.8660254,-0.8660254,-0.5,1652.0237,782.92805)"
+           inkscape:transform-center-y="5.9641212"
+           id="g4214"
+           inkscape:transform-center-x="-9.7942268">
+          <g
+             style="stroke-width:2.00000001;stroke-miterlimit:4;stroke-dasharray:none"
+             inkscape:transform-center-x="3.7320508"
+             transform="matrix(0.8660254,-0.5,0.5,0.8660254,-353.79633,416.33847)"
+             inkscape:transform-center-y="-6.0621861"
+             id="g4216">
+            <path
+               style="fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+               d="m 600,868.36218 0,-14"
+               id="path4218"
+               inkscape:connector-curvature="0"
+               inkscape:transform-center-y="-7.0000026" />
+            <path
+               style="color:#000000;fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+               d="m 596,860.36218 8,0"
+               id="path4220"
+               inkscape:connector-curvature="0" />
+          </g>
+          <path
+             inkscape:connector-curvature="0"
+             id="path4222"
+             d="m 600,859.36218 0,-11"
+             style="color:#000000;fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+          <path
+             inkscape:connector-curvature="0"
+             id="path4224"
+             d="m 596,848.36218 4,2 4,-2"
+             style="color:#000000;fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+          <path
+             inkscape:connector-curvature="0"
+             id="path4226"
+             d="m 592,850.36218 8,6 8,-6"
+             style="color:#000000;fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+        </g>
+        <g
+           style="stroke-width:2.00000001;stroke-miterlimit:4;stroke-dasharray:none"
+           inkscape:transform-center-x="-9.7942268"
+           id="g4228"
+           inkscape:transform-center-y="-7.9640889"
+           transform="matrix(0.5,0.8660254,-0.8660254,0.5,1052.0237,-85.434134)">
+          <g
+             style="stroke-width:2.00000001;stroke-miterlimit:4;stroke-dasharray:none"
+             id="g4230"
+             inkscape:transform-center-y="-6.0621861"
+             transform="matrix(0.8660254,-0.5,0.5,0.8660254,-353.79633,416.33847)"
+             inkscape:transform-center-x="3.7320508">
+            <path
+               inkscape:transform-center-y="-7.0000026"
+               inkscape:connector-curvature="0"
+               id="path4232"
+               d="m 600,868.36218 0,-14"
+               style="fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+            <path
+               inkscape:connector-curvature="0"
+               id="path4234"
+               d="m 596,860.36218 8,0"
+               style="color:#000000;fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+          </g>
+          <path
+             style="color:#000000;fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+             d="m 600,859.36218 0,-11"
+             id="path4236"
+             inkscape:connector-curvature="0" />
+          <path
+             style="color:#000000;fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+             d="m 596,848.36218 4,2 4,-2"
+             id="path4238"
+             inkscape:connector-curvature="0" />
+          <path
+             style="color:#000000;fill:none;stroke:#000000;stroke-width:2.00000001;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+             d="m 592,850.36218 8,6 8,-6"
+             id="path4240"
+             inkscape:connector-curvature="0" />
+        </g>
       </g>
     </g>
   </g>

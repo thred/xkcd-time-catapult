@@ -45,34 +45,97 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 			src: "asset/button-gravity-earth.png",
 			value: {
 				name: "Earth",
-				g: 9.81
+				g: 9.81,
+				densityAtmosphere: 1.2041
 			}
 		}, {
 			src: "asset/button-gravity-moon.png",
 			value: {
 				name: "Luna",
-				g: 1.62
+				g: 1.62,
+				densityAtmosphere: 0
 			}
 		}, {
 			src: "asset/button-gravity-mars.png",
 			value: {
 				name: "Mars",
-				g: 3.69
+				g: 3.69,
+				densityAtmosphere: 0.020
 			}
 		}, {
 			src: "asset/button-gravity-venus.png",
 			value: {
 				name: "Venus",
-				g: 8.87
+				g: 8.87,
+				densityAtmosphere: 65
 			}
 		}, {
 			src: "asset/button-gravity-jupiter.png",
 			value: {
 				name: "Jupiter",
-				g: 24.79
+				g: 24.79,
+				densityAtmosphere: 0.16
 			}
 		}], 0, function(value) {
-			require("Global").setupParticleConstants(require("Main").xkcdImage.sizeOfPixel, Global.BUTTONS.gravity.value());
+			require("Global").setupParticleConstants(require("Main").xkcdImage.sizeOfPixel, Global.BUTTONS.gravity.value(), Global.BUTTONS.particle.value());
+		}),
+
+		particle: new Button("particle-button", [{
+			src: "asset/button-particle-sand.png",
+			value: {
+				name: "Sand",
+				density: 2000,
+				friction: 0.4,
+				absorbsion: 0.15,
+				bouncyness: 0.01
+			}
+		}, {
+			src: "asset/button-particle-iron.png",
+			value: {
+				name: "Iron",
+				density: 7874,
+				friction: 0.8,
+				absorbsion: 0.01,
+				bouncyness: 0.01
+			}
+		}, {
+			src: "asset/button-particle-wood.png",
+			value: {
+				name: "Wood",
+				density: 470,
+				friction: 0.25,
+				absorbsion: 0.033,
+				bouncyness: 0.25
+			}
+		}, {
+			src: "asset/button-particle-snow.png",
+			value: {
+				name: "Snow",
+				density: 300,
+				friction: 1.05,
+				absorbsion: 0.10,
+				bouncyness: 0.00
+			}
+		}, {
+			src: "asset/button-particle-rubber.png",
+			value: {
+				name: "Rubber",
+				density: 1100,
+				friction: 0.9,
+				absorbsion: 0.05,
+				bouncyness: 0.75
+			}
+		}, {
+			src: "asset/button-particle-polystyrene.png",
+			value: {
+				name: "Polystyrene",
+				density: 105,
+				friction: 0.5,
+				absorbsion: 0.15,
+				bouncyness: 0.1
+			}
+		}], 0, function(value) {
+			require("Global").setupParticleConstants(require("Main").xkcdImage.sizeOfPixel, Global.BUTTONS.gravity.value(), Global.BUTTONS.particle.value());
 		}),
 
 		collapsing: new Button("collapsing-button", [{
@@ -105,27 +168,7 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 		}, {
 			src: "asset/button-boulder-many.png",
 			value: 8
-		}], 0),
-
-		drawMovement: new Button("draw-movement-button", [{
-			src: "asset/button-movement-off.png",
-			value: false
-		}, {
-			src: "asset/button-movement-on.png",
-			value: true
-		}], 0, function(value) {
-			require("Global").DRAW_MOVEMENT = value;
-		}),
-
-		drawProjections: new Button("draw-projections-button", [{
-			src: "asset/button-projections-off.png",
-			value: false
-		}, {
-			src: "asset/button-projections-on.png",
-			value: true
-		}], 0, function(value) {
-			require("Global").DRAW_PROJECTIONS = value;
-		})
+		}], 0)
 	};
 
 	return {
@@ -188,7 +231,7 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 			}
 		},
 
-		reload: function() {
+		reload: function(byHash) {
 			stop();
 
 			Global.clearParticles();
@@ -229,13 +272,39 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 			content.insertBefore(this.overlay, placeholder);
 			content.insertBefore(this.canvas, placeholder);
 
-			this.xkcdImage = Global.XKCD_IMAGES[parseInt(Math.random() * Global.XKCD_IMAGES.length, 10)];
+			// init the images
+			this.xkcdImage = this.findXkcdImage(byHash);
 
-			Global.setupParticleConstants(this.xkcdImage.sizeOfPixel, Global.BUTTONS.gravity.value());
+			location.hash = this.xkcdImage.name;
+
+			Global.setupParticleConstants(this.xkcdImage.sizeOfPixel, Global.BUTTONS.gravity.value(), Global.BUTTONS.particle.value());
 			this.catapult.launchVelocityPerPixel = this.xkcdImage.launchVelocityPerPixel;
 
 			this.initImage("base", this.xkcdImage.base.src);
 			this.initImage("xkcd", this.xkcdImage.src);
+		},
+
+		findXkcdImage: function(byHash) {
+			if (byHash) {
+				var hash = location.hash.replace("#", "");
+
+				if (hash) {
+					for (var i = 0; i < Global.XKCD_IMAGES.length; i += 1) {
+						if (hash == Global.XKCD_IMAGES[i].name) {
+							return Global.XKCD_IMAGES[i];
+						}
+					}
+				}
+			}
+
+			var result;
+
+			do {
+				result = Global.XKCD_IMAGES[parseInt(Math.random() * Global.XKCD_IMAGES.length, 10)];
+			}
+			while (result.secret);
+
+			return result;
 		},
 
 		initImage: function(name, src) {
@@ -271,6 +340,22 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 
 			var oneMeter = 1 / Global.PARTICLE_SIZE_OF_PIXEL;
 			var toDraw = (oneMeter > 50) ? 1 : (oneMeter > 30) ? 5 : 10;
+
+			var y = this.xkcdImage.baseOffsetY;
+
+			// Util.message(Global.XKCD_IMAGES.indexOf(this.xkcdImage) + ", " + this.findBlack(x + 3) + ", " + this.findWhite(x + 3));
+			// add the base for the catapult
+			x -= Global.IMAGES.base.width - 3;
+			this.canvasContext.drawImage(Global.IMAGES.base, x, y + this.xkcdImage.base.yOffset);
+
+			// place the catapult
+			x = 132;
+			y = this.findBlack(x);
+
+			this.catapult.position.set(x, y - 12);
+
+			// init the sand
+			Global.SAND = new Sand(this.canvasContext);
 
 			// draw the scale
 			this.canvasContext.save();
@@ -310,22 +395,6 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 
 			this.canvasContext.restore();
 
-			var y = this.xkcdImage.baseOffsetY;
-
-			// Util.message(Global.XKCD_IMAGES.indexOf(this.xkcdImage) + ", " + this.findBlack(x + 3) + ", " + this.findWhite(x + 3));
-			// add the base for the catapult
-			x -= Global.IMAGES.base.width - 3;
-			this.canvasContext.drawImage(Global.IMAGES.base, x, y + this.xkcdImage.base.yOffset);
-
-			// place the catapult
-			x = 132;
-			y = this.findBlack(x);
-
-			this.catapult.position.set(x, y - 12);
-
-			// init the sand
-			Global.SAND = new Sand(this.canvasContext);
-
 			// start the animation loop
 			start();
 		},
@@ -352,23 +421,24 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 			return y;
 		},
 
-		step: function(time, duration) {
-			this.fpsAverage = (this.fpsAverage * 3 + duration) / 4;
+		step: function(time, dt) {
+			this.fpsAverage = (this.fpsAverage * 3 + dt) / 4;
 
 			if (Math.floor(time * 10) !== this.fpsTime) {
 				Util.messageTo("fps", (1 / this.fpsAverage).toFixed(1));
 				this.fpsTime = Math.floor(time * 10);
 			}
 
-			if (duration > 0.1) {
-				duration = 0.1;
+			if (dt > 0.1) {
+				dt = 0.1;
 			}
 
-			duration *= Global.BUTTONS.speed.value();
+			dt *= Global.BUTTONS.speed.value();
 
 			Util.messageTo("pendingParticles", Global.PENDING_PARTICLES.length);
 
 			Global.activatePendingParticles();
+			Global.SAND.update(dt);
 
 			Util.messageTo("particles", Global.PARTICLES.length);
 
@@ -376,12 +446,26 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 			this.catapult.aim(this.mouseVector);
 			this.catapult.draw(this.overlayContext);
 
-			var statistics = Global.updateParticles(duration, this.overlayContext);
+			var statistics = Global.updateParticles(dt, this.overlayContext);
 
 			Util.messageTo("movingMass", statistics.movingMass.toFixed(1));
 			Util.messageTo("maxVelocity", statistics.maxVelocity.toFixed(1));
 
 			Global.removeDeadParticles();
+		},
+
+		checkboxChanged: function(checkbox) {
+			var value = checkbox.checked;
+
+			if (checkbox.id == "draw-compactness-checkbox") {
+				Global.DRAW_COMPACTNESS = value;
+			} else if (checkbox.id == "draw-movement-checkbox") {
+				Global.DRAW_MOVEMENT = value;
+			} else if (checkbox.id == "draw-projections-checkbox") {
+				Global.DRAW_PROJECTIONS = value;
+			} else if (checkbox.id == "collapsing-checkbox") {
+				Global.COLLAPSING = value;
+			}
 		}
 	};
 });

@@ -21,19 +21,58 @@ define("Sand", ["Global", "Util"], function(Global, Util) {
 	function Sand(context) {
 		this.context = context;
 		this.sand = [Global.WIDTH * Global.HEIGHT];
-
-		var data = context.getImageData(0, 0, Global.WIDTH, Global.HEIGHT).data;
+		this.projections = [Global.WIDTH * Global.HEIGHT];
+		this.imageData = context.getImageData(0, 0, Global.WIDTH, Global.HEIGHT);
+		this.data = this.imageData.data;
 
 		for (var y = 0; y < Global.HEIGHT; y += 1) {
 			for (var x = 0; x < Global.WIDTH; x += 1) {
 				var pos = x + y * Global.WIDTH;
-				this.sand[pos] = 1 - (data[pos * 4] / 255);
+				this.sand[pos] = 1 - (this.data[pos * 4] / 255);
+				this.projections[pos] = 0;
 			}
 		}
+
+		this.compact();
+		this.update();
 	}
 
 	Sand.prototype = {
 		constructor: Sand,
+
+		compact: function() {
+			var self = this;
+
+			function compactSand(x, y) {
+				var pos = x + y * Global.WIDTH;
+				var value = self.sand[pos];
+
+				if (value >= 1) {
+					var compactValue = (self.sand[pos - Global.WIDTH - 1] + 0.005 + self.sand[pos - Global.WIDTH] + 0.002 + self.sand[pos - Global.WIDTH + 1] + 0.002) / 3;
+
+					if (value < compactValue) {
+						self.sand[pos] = compactValue;
+						return true;
+					}
+				}
+
+				return false;
+			}
+
+			var modified;
+
+			do {
+				modified = false;
+
+				for (var y = 1; y < Global.HEIGHT - 1; y += 1) {
+					for (var x = 1; x < Global.WIDTH - 1; x += 1) {
+						modified |= compactSand(x, y);
+						modified |= compactSand(Global.WIDTH - 1 - x, Global.HEIGHT - 1 - x);
+					}
+				}
+			}
+			while (modified);
+		},
 
 		get: function(x, y) {
 			x = Math.round(x);
@@ -54,51 +93,115 @@ define("Sand", ["Global", "Util"], function(Global, Util) {
 			return this.sand[x + y * Global.WIDTH];
 		},
 
-		add: function(x, y, mass) {
+		getMass: function(x, y) {
+			return this.get(x, y) * Global.PARTICLE_MASS_PER_PIXEL;
+		},
+
+		addMass: function(x, y, mass) {
 			if (mass <= 0) {
 				return;
 			}
 
-			this.set(x, y, mass + this.get(x, y));
-		},
-
-		remove: function(x, y, mass) {
-			if (mass <= 0) {
-				return;
-			}
-
-			this.set(x, y, - mass - this.get(x, y));
-		},
-
-		set: function(x, y, mass) {
 			var self = this;
-
-			if (mass === 0) {
-				return;
-			}
-
-			var radius = Math.sqrt(Math.abs(mass / Math.PI));
-			var grain = (mass < 0) ? Math.max(mass, - 1) : Math.min(mass, 1);
+			var radius = 0.751501 * Math.pow(mass / Global.PARTICLE_DENSITY, 1 / 3);
+			var grain = Math.min(mass / Global.PARTICLE_DENSITY, 1);
 
 			Util.forEachPixelInCircle(x, y, radius, function(posX, posY, value) {
 				var pos = posX + posY * Global.WIDTH;
 
-				self.sand[pos] = Math.max(0, Math.min(1, self.sand[pos] + grain * value));
-
-				// draw the new value onto the canvas
-				var col = Util.toHex(255 - self.sand[pos] * 255, 2);
-
-				self.draw(posX, posY, "#" + col + col + col);
+				self.sand[pos] += value;
 			});
 		},
 
-		draw: function(x, y, style) {
-			this.context.save();
-			this.context.fillStyle = style;
-			this.context.fillRect(x, y, 1, 1);
-			this.context.restore();
+		removeMass: function(x, y, mass) {
+			if (mass <= 0) {
+				return;
+			}
+
+			if (mass <= 0) {
+				return;
+			}
+
+			var self = this;
+			var radius = 0.751501 * Math.pow(mass / Global.PARTICLE_DENSITY, 1 / 3);
+			var grain = Math.min(mass / Global.PARTICLE_DENSITY, 1);
+
+			Util.forEachPixelInCircle(x, y, radius, function(posX, posY, value) {
+				var pos = posX + posY * Global.WIDTH;
+
+				self.sand[pos] -= value;
+			});
+		},
+
+		setProjection: function(x, y) {
+			x = Math.round(x);
+			y = Math.round(y);
+
+			if ((x < 0) || (y < 0) || (x >= Global.WIDTH) || (y >= Global.HEIGHT)) {
+				return;
+			}
+
+			this.projections[x + y * Global.WIDTH] = 1;
+		},
+		
+		update: function(dt) {
+			var projectionDecrement = dt / 0.2;
+			var color = [0, 0, 0];
+			var pos = 0;
+
+			for (var i = 0; i < Global.WIDTH * Global.HEIGHT; i += 1) {
+				this.colorCode(color, i, projectionDecrement);
+
+				this.data[pos++] = color[0];
+				this.data[pos++] = color[1];
+				this.data[pos++] = color[2];
+				this.data[pos++] = 255;
+			}
+
+			this.context.putImageData(this.imageData, 0, 0);
+		},
+
+		colorCode: function(color, index, projectionDecrement) {
+			var value = this.sand[index];
+			
+			if (value <= 0) {
+				color[0] = 255;
+				color[1] = 255;
+				color[2] = 255;
+				
+				return;
+			}
+			else if (value <= 1) {
+				color[0] = color[1] = color[2] = 255 - value * 255;
+			}
+			else if (Global.DRAW_COMPACTNESS) {
+				value = 1 / value;
+				value *= value;
+
+				color[0] = (1 - value) * 255;
+				color[1] = 0;
+				color[2] = 0;
+			}
+			else {
+				color[0] = 0;
+				color[1] = 0;
+				color[2] = 0;
+			}
+			
+			if (Global.DRAW_PROJECTIONS) {
+				var projection = this.projections[index];
+				
+				if (projection > 0) {
+					this.projections[index] = Math.max(projection - projectionDecrement, 0);
+					
+					color[0] = 0xff * projection + color[0] * (1 - projection);
+					color[1] = 0xff * projection + color[1] * (1 - projection);
+				}
+			}
+
+			return color;
 		}
 	};
-	
+
 	return Sand;
 });
