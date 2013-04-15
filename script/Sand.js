@@ -143,63 +143,50 @@ define("Sand", ["Global", "Util"], function(Global, Util) {
 
 			this.projections[x + y * Global.WIDTH] = 1;
 		},
-		
+
 		update: function(dt) {
+			var time = new Date().getTime();
 			var projectionDecrement = dt / 0.2;
 			var color = [0, 0, 0];
 			var pos = 0;
 
 			for (var i = 0; i < Global.WIDTH * Global.HEIGHT; i += 1) {
-				this.colorCode(color, i, projectionDecrement);
+				//this.colorCode(color, i, projectionDecrement);
+				var value = this.sand[i];
 
-				this.data[pos++] = color[0];
-				this.data[pos++] = color[1];
-				this.data[pos++] = color[2];
+				if (value <= 0) {
+					this.data[pos++] = 255;
+					this.data[pos++] = 255;
+					this.data[pos++] = 255;
+					this.data[pos++] = 255;
+					continue;
+				} else if (value <= 1) {
+					this.data[pos++] = this.data[pos++] = this.data[pos++] = 255 - value * 255;
+				} else if (Global.DRAW_COMPACTNESS) {
+					value = 1 / value;
+					value *= value;
+
+					this.data[pos++] = (1 - value) * 255;
+					this.data[pos++] = this.data[pos++] = 0;
+				} else {
+					this.data[pos++] = this.data[pos++] = this.data[pos++] = 0;
+				}
+
+				if (Global.DRAW_PROJECTIONS) {
+					var projection = this.projections[i];
+
+					if (projection > 0) {
+						this.projections[i] = Math.max(projection - projectionDecrement, 0);
+
+						this.data[pos - 3] = 0xff * projection + this.data[pos - 3] * (1 - projection);
+						this.data[pos - 2] = 0xff * projection + this.data[pos - 2] * (1 - projection);
+					}
+				}
+
 				this.data[pos++] = 255;
 			}
 
 			this.context.putImageData(this.imageData, 0, 0);
-		},
-
-		colorCode: function(color, index, projectionDecrement) {
-			var value = this.sand[index];
-			
-			if (value <= 0) {
-				color[0] = 255;
-				color[1] = 255;
-				color[2] = 255;
-				
-				return;
-			}
-			else if (value <= 1) {
-				color[0] = color[1] = color[2] = 255 - value * 255;
-			}
-			else if (Global.DRAW_COMPACTNESS) {
-				value = 1 / value;
-				value *= value;
-
-				color[0] = (1 - value) * 255;
-				color[1] = 0;
-				color[2] = 0;
-			}
-			else {
-				color[0] = 0;
-				color[1] = 0;
-				color[2] = 0;
-			}
-			
-			if (Global.DRAW_PROJECTIONS) {
-				var projection = this.projections[index];
-				
-				if (projection > 0) {
-					this.projections[index] = Math.max(projection - projectionDecrement, 0);
-					
-					color[0] = 0xff * projection + color[0] * (1 - projection);
-					color[1] = 0xff * projection + color[1] * (1 - projection);
-				}
-			}
-
-			return color;
 		}
 	};
 

@@ -177,8 +177,6 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 		canvasContext: null,
 		overlayContext: null,
 		catapult: null,
-		collapseCheck: [],
-		mouseVector: null,
 		imageLoading: 0,
 		imageReady: 0,
 
@@ -193,31 +191,91 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 			placeholder.style.width = Global.WIDTH + "px";
 			placeholder.style.height = Global.HEIGHT + "px";
 
-			document.addEventListener("mousedown", function(event) {
+			function onMouseDown(event) {
 				var offset = Util.getOffset(self.canvas);
-				var vector = new Vector(event.clientX - offset.left - self.catapult.position.x, event.clientY - offset.top - self.catapult.position.y);
 
-				if (vector.length() < 30) {
-					self.mouseVector = vector;
-				}
-			}, false);
-			document.addEventListener("mousemove", function(event) {
-				if (self.mouseVector) {
-					var offset = Util.getOffset(self.canvas);
-
+				if (self.catapult.start("mouse", event.clientX - offset.left, event.clientY - offset.top)) {
 					event.preventDefault();
-					self.mouseVector.set(event.clientX - offset.left - self.catapult.position.x, event.clientY - offset.top - self.catapult.position.y);
 				}
-			}, false);
-			document.addEventListener("mouseup", function(event) {
-				if (self.mouseVector) {
+			}
+
+			function onMouseMove(event) {
+				var offset = Util.getOffset(self.canvas);
+
+				if (self.catapult.move("mouse", event.clientX - offset.left, event.clientY - offset.top)) {
 					event.preventDefault();
-					self.catapult.fire(self.mouseVector);
 				}
+			}
 
-				self.mouseVector = null;
-			}, false);
+			function onMouseUp(event) {
+				var offset = Util.getOffset(self.canvas);
 
+				if (self.catapult.release("mouse", event.clientX - offset.left, event.clientY - offset.top)) {
+					event.preventDefault();
+				}
+			}
+
+			document.addEventListener("mousedown", onMouseDown, false);
+			document.addEventListener("mousemove", onMouseMove, false);
+			document.addEventListener("mouseup", onMouseUp, false);
+
+			function onTouchStart(event) {
+				var offset = Util.getOffset(self.canvas);
+				var touches = event.changedTouches;
+
+				for (var i = 0; i < touches.length; i += 1) {
+					if (self.catapult.start(touches[i].identifier, touches[i].pageX - offset.left, touches[i].pageY - offset.top)) {
+						event.preventDefault();
+					}
+				}
+			}
+
+			function onTouchMove(event) {
+				var offset = Util.getOffset(self.canvas);
+				var touches = event.changedTouches;
+
+				for (var i = 0; i < touches.length; i += 1) {
+					if (self.catapult.move(touches[i].identifier, touches[i].pageX - offset.left, touches[i].pageY - offset.top)) {
+						event.preventDefault();
+					}
+				}
+			}
+
+			function onTouchEnd(event) {
+				var offset = Util.getOffset(self.canvas);
+				var touches = event.changedTouches;
+
+				for (var i = 0; i < touches.length; i += 1) {
+					if (self.catapult.release(touches[i].identifier, touches[i].pageX - offset.left, touches[i].pageY - offset.top)) {
+						event.preventDefault();
+					}
+				}
+			}
+			
+			function onTouchCancel(event) {
+				var touches = event.changedTouches;
+
+				for (var i = 0; i < touches.length; i += 1) {
+					self.catapult.cancel(touches[i].identifier);
+				}
+			}
+
+			document.addEventListener("touchstart", onTouchStart, false);
+			document.addEventListener("touchmove", onTouchMove, false);
+			document.addEventListener("touchend", onTouchEnd, false);
+			document.addEventListener("touchcancel", onTouchCancel, false);
+			document.addEventListener("touchleave", onTouchCancel, false);
+
+			function onHashChange(event) {
+				var hash = location.hash.replace("#", "");
+				
+				if ((!self.xkcdImage) || (self.xkcdImage.name != hash)) {
+					self.reload(true);
+				}
+			}
+			
+			window.addEventListener("hashchange", onHashChange, false);
+			
 			// create the catapult
 			this.catapult = new Catapult();
 
@@ -443,7 +501,6 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 			Util.messageTo("particles", Global.PARTICLES.length);
 
 			this.overlayContext.clearRect(0, 0, Global.WIDTH, Global.HEIGHT);
-			this.catapult.aim(this.mouseVector);
 			this.catapult.draw(this.overlayContext);
 
 			var statistics = Global.updateParticles(dt, this.overlayContext);

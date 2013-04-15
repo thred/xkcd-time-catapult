@@ -276,7 +276,7 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 					this.movement.mirror(mirrorNormal);
 				} else {
 					// the particle lost all its momentum
-					this.movement.setLength(0);
+					this.setVelocity(0);
 				}
 
 				this.mass -= lostMass;
@@ -373,7 +373,7 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 			// prepare the particle (the grain will be added on creation)
 			var particle = new Particle(position, movement, (!projected) ? info.additionalMass : 0);
 
-			particle.setVelocity(Math.max(useableMomentum / mass, 0));
+			particle.setVelocity(Math.min(Math.max(useableMomentum / mass, 0), velocity));
 			Global.prepareParticle(particle);
 
 			return momentum;

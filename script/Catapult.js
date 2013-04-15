@@ -22,15 +22,58 @@ define("Catapult", ["Global", "Util", "Vector", "Particle"], function(Global, Ut
 		this.particles = [];
 		this.position = new Vector();
 		this.theta = -Math.PI / 3;
+		this.aimingBy = null;
 	}
 
 	Catapult.prototype = {
-		aim: function(vector) {
-			this.fireVector = vector;
-
-			if (vector) {
-				this.computeVelocity(vector);
+		start: function(id, x, y) {
+			if (this.aimingBy) {
+				return true;
 			}
+
+			var vector = new Vector(x - this.position.x, y - this.position.y);
+
+			if (vector.length() < 30) {
+				this.aimingBy = id;
+				this.vector = vector;
+
+				return true;
+			}
+
+			return false;
+		},
+
+		move: function(id, x, y) {
+			if (this.aimingBy != id) {
+				return false;
+			}
+
+			this.vector.set(x - this.position.x, y - this.position.y);
+
+			return true;
+		},
+
+		release: function(id, x, y) {
+			if (this.aimingBy != id) {
+				return false;
+			}
+
+			this.fire(this.vector);
+			this.vector = null;
+			this.aimingBy = null;
+
+			return true;
+		},
+
+		cancel: function(id) {
+			if (this.aimingBy != id) {
+				return false;
+			}
+
+			this.vector = null;
+			this.aimingBy = null;
+
+			return true;
 		},
 
 		computeVelocity: function(vector) {
@@ -70,12 +113,12 @@ define("Catapult", ["Global", "Util", "Vector", "Particle"], function(Global, Ut
 			context.drawImage(Global.IMAGES.arm, - 14, - 3);
 			context.restore();
 
-			if (this.fireVector) {
+			if (this.vector) {
 				context.save();
 
-				var direction = this.fireVector.direction();
+				var direction = this.vector.direction();
 
-				context.rotate(this.fireVector.direction());
+				context.rotate(this.vector.direction());
 
 				context.lineCap = "round";
 
@@ -83,14 +126,14 @@ define("Catapult", ["Global", "Util", "Vector", "Particle"], function(Global, Ut
 				context.lineWidth = 4;
 				context.beginPath();
 				context.moveTo(0, 0);
-				context.lineTo(this.fireVector.length(), 0);
+				context.lineTo(this.vector.length(), 0);
 				context.stroke();
 
 				context.strokeStyle = "#ff8844";
 				context.lineWidth = 3;
 				context.beginPath();
 				context.moveTo(0, 0);
-				context.lineTo(this.fireVector.length(), 0);
+				context.lineTo(this.vector.length(), 0);
 				context.stroke();
 
 				context.font = "bold 16px Lucida,Helvetica,sans-serif";
@@ -103,14 +146,13 @@ define("Catapult", ["Global", "Util", "Vector", "Particle"], function(Global, Ut
 				context.save();
 				context.translate(50, 0);
 
-				var speed = this.computeVelocity(this.fireVector).toFixed(1) + " m/s";
+				var speed = this.computeVelocity(this.vector).toFixed(1) + " m/s";
 				var dir;
 
 				if (direction >= Math.PI / 2) {
 					dir = (-(direction - Math.PI) / Math.PI * 180).toFixed(1) + "°";
 					context.rotate(Math.PI);
-				}
-				else {
+				} else {
 					dir = (direction / Math.PI * 180).toFixed(1) + "°";
 				}
 
