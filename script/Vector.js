@@ -118,6 +118,13 @@ define("Vector", [], function() {
 		dot: function(v) {
 			return this.x * v.x + this.y * v.y;
 		},
+		
+		average: function(x, y) {
+			this.x = (this.x + x) * 0.5;
+			this.y = (this.y + y) * 0.5;
+			
+			return this;
+		},
 
 		clone: function() {
 			return new Vector(this.x, this.y);

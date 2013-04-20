@@ -24,21 +24,28 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 	Global.PARTICLE_IMPACT_SPREAD = Math.PI;
 	Global.PARTICLE_PROJECTION_DEFLECTION = Math.PI * 0.2;
 
-	Global.setupParticleConstants = function(sizeOfPixel) {
-		Global.G = 9.81, // Earth
+	Global.setupParticleConstants = function(sizeOfPixel, planet, material) {
+
+		Global.G = planet.g;
+		Global.DENSITY_ATMOSPHERE = planet.densityAtmosphere;
+
+		Global.PARTICLE_DENSITY = material.density;
 		Global.PARTICLE_SIZE_OF_PIXEL = sizeOfPixel; // 1.8 / 34; // 34 pixel are 1.8m, this may differ per image
-		Global.PARTICLE_DENSITY = 2000; // density of sand in kg/m³
 		Global.PARTICLE_MASS_PER_PIXEL = Math.pow(Global.PARTICLE_SIZE_OF_PIXEL, 3) * Global.PARTICLE_DENSITY; // in kg
-		Global.PARTICLE_FRICTION = 0.4; // Brick Masonry on sand, in µ
+
+		Global.PARTICLE_FRICTION = material.friction; // in µs
 		Global.PARTICLE_THRESHOLD = 0.1; // when a pixel is considered (0 is white, 0.5 is gray, 1 is black)
 
-		// these two variables define the absorbsion and bouncyness of the sand
-		// these values are incorrect. Sand absorbes a lot of momentum, and does not bounce. But wheres the fun?
-		Global.PARTICLE_ABSORBSION = 5 / 100; // momentum absorbed on impact in %
-		Global.PARTICLE_BOUNCYNESS = 50 / 100; // momentum bouncing back on impact in %.
+		// these two variables define the absorbsion and bouncyness of the material
+		Global.PARTICLE_ABSORBSION = material.absorbsion; // momentum absorbed on impact in %
+		Global.PARTICLE_BOUNCYNESS = material.bouncyness; // momentum bouncing back on impact in %.
 
+		Global.K = 0.9;
 
+		Util.messageTo("planet", planet.name);
 		Util.messageTo("g", Global.G.toFixed(2));
+		Util.messageTo("densityAtmosphere", Global.DENSITY_ATMOSPHERE.toFixed(2));
+		Util.messageTo("material", material.name);
 		Util.messageTo("particle_density", Math.round(Global.PARTICLE_DENSITY));
 		Util.messageTo("size_of_pixel", (Global.PARTICLE_SIZE_OF_PIXEL * 100).toFixed(2));
 		Util.messageTo("mass_per_pixel", Global.PARTICLE_MASS_PER_PIXEL.toFixed(2));
@@ -57,22 +64,22 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 	//     |
 	// If bit is set, there is sand!
 	Global.PARTICLE_MIRROR_NORMALS = [
-	new Vector(0, - 1).normalize(), // 0
-	new Vector(0, - 1).normalize(), // 1
-	new Vector(-1, 0).normalize(), // 2
-	new Vector(-1, - 1).normalize(), // 3
-	new Vector(0, 1).normalize(), // 4
-	new Vector(0, 1).normalize(), // 5
-	new Vector(-1, 1).normalize(), // 6
-	new Vector(-1, 0).normalize(), // 7
-	new Vector(1, 0).normalize(), // 8
-	new Vector(1, - 1).normalize(), // 9
-	new Vector(0, 1).normalize(), // 10
-	new Vector(0, - 1).normalize(), // 11
-	new Vector(1, 1).normalize(), // 12
-	new Vector(1, 0).normalize(), // 13
-	new Vector(0, - 1).normalize(), // 14
-	new Vector(1, 0).normalize()]; // 15
+	new Vector(0, 0).normalize(), // 0
+	new Vector(0, 1).normalize(), // 1
+	new Vector(1, 0).normalize(), // 2
+	new Vector(1, 1).normalize(), // 3
+	new Vector(0, - 1).normalize(), // 4
+	new Vector(0, 0).normalize(), // 5
+	new Vector(1, -1).normalize(), // 6
+	new Vector(1, 0).normalize(), // 7
+	new Vector(-1, 0).normalize(), // 8
+	new Vector(-1, 1).normalize(), // 9
+	new Vector(0, 0).normalize(), // 10
+	new Vector(0, 1).normalize(), // 11
+	new Vector(-1, -1).normalize(), // 12
+	new Vector(-1, 0).normalize(), // 13
+	new Vector(0, -1).normalize(), // 14
+	new Vector(0, 0).normalize()]; // 15
 
 	function Particle(position, movement, mass) {
 		this.position = position;
@@ -92,7 +99,7 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 		 * Returns the radius in m
 		 */
 		radius: function() {
-			return 0.751501 * Math.pow(this.mass / Global.PARTICLE_DENSITY, 1 / 3);
+			return (this.mass > 0) ? 0.751501 * Math.pow(this.mass / Global.PARTICLE_DENSITY, 1 / 3) : 0;
 		},
 
 		direction: function() {
@@ -119,7 +126,7 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 
 			// apply air drag
 			// the drag of a ball (Cw=0.45) in air (density=1.2041 kg/m³, at 20°C)
-			var drag = 0.5 * 0.45 * 1.2041 * (Math.pow(this.radius(), 2) * Math.PI);
+			var drag = 0.5 * 0.45 * Global.DENSITY_ATMOSPHERE * (Math.pow(this.radius(), 2) * Math.PI);
 			this.setVelocity(1 / ((drag / this.mass) * dt + 1 / this.velocity()));
 
 			// calculate the movement of the particle
@@ -271,7 +278,7 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 					this.movement.mirror(mirrorNormal);
 				} else {
 					// the particle lost all its momentum
-					this.movement.setLength(0);
+					this.setVelocity(0);
 				}
 
 				this.mass -= lostMass;
@@ -316,7 +323,7 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 
 			if (nextGrain > Global.PARTICLE_THRESHOLD) {
 				if (Global.DRAW_PROJECTIONS) {
-					Global.SAND.draw(position.x, position.y, "red");
+					Global.SAND.setProjection(position.x, position.y);
 				}
 
 				// there is a particle in the way, project the momentum
@@ -365,10 +372,11 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 
 			position.set(x, y);
 
-			var particle = new Particle(position, movement, mass);
+			// prepare the particle (the grain will be added on creation)
+			var particle = new Particle(position, movement, (!projected) ? info.additionalMass : 0);
 
-			particle.setVelocity(Math.max(useableMomentum / mass, 0));
-			Global.addParticle(particle);
+			particle.setVelocity(Math.min(Math.max(useableMomentum / mass, 0), velocity));
+			Global.prepareParticle(particle);
 
 			return momentum;
 		},
@@ -401,9 +409,10 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 
 		kill: function() {
 			// HELLO SANDGRAIN. THOU SHALT REST!
-			Global.SAND.add(this.position.x, this.position.y, this.mass);
-			this.alive = false;
+			Global.SAND.addMass(this.position.x, this.position.y, this.mass);
+			Global.unstableParticle(this.position.x, this.position.y);
 
+			this.alive = false;
 			return true;
 		},
 

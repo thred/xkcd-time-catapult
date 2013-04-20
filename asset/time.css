@@ -29,7 +29,7 @@ div.box {
 	position: relative;
 }
 
-h1, h2, h3, h4, div.main {
+h1, h2, h3, h4, .main {
 	margin: 16px 26px;
 }
 
@@ -63,16 +63,21 @@ div#placeholder {
 	text-align: center;
 }
 
-div#statistics {
+.statistics {
 	font-size: 60%;
 }
 
-div#statistics span {
+.statistics span {
 	font-weight: bold;
 }
 
-div#statistics span.unit {
+.statistics span.unit {
 	font-variant: normal;
+}
+
+table.statistics th {
+	font-weight: normal;
+	text-align: right;
 }
 
 canvas {

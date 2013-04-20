@@ -49,7 +49,8 @@ along with xkcd Time Catapult. If not, see <http://www.gnu.org/licenses/>.
 
 	<div class="box">
 		<div class="main" style="float: right">
- 			Version 1.4
+ 			Version 1.5<br/>
+ 			<sub>2013-04-20</sub>
  		</div>
 		<h1><span style="font-variant: normal;">xkcd</span> Time Catapult</h1>
 		<div class="main">
@@ -93,34 +94,87 @@ along with xkcd Time Catapult. If not, see <http://www.gnu.org/licenses/>.
 			<a class="button" href="javascript:require('Global').BUTTONS.reload.click();" title="Reload"><img id="reload-button" src="asset/button.png" alt="Reload"/></a>			
 			<a class="button" href="javascript:require('Global').BUTTONS.speed.click();" title="Speed"><img id="speed-button" src="asset/button.png" alt="Speed"/></a>		
 			<br/>
+			<a class="button" href="javascript:require('Global').BUTTONS.gravity.click();" title="Gravity and Atmosphere"><img id="gravity-button" src="asset/button.png" alt="Gravity and Atmosphere"/></a>			
+			<a class="button" href="javascript:require('Global').BUTTONS.particle.click();" title="Partcle Material"><img id="particle-button" src="asset/button.png" alt="Partcle Material"/></a>			
 			<a class="button" href="javascript:require('Global').BUTTONS.boulderSize.click();" title="Boulder Size"><img id="boulder-size-button" src="asset/button.png" alt="Boulder Size"/></a>			
 			<a class="button" href="javascript:require('Global').BUTTONS.boulderCount.click();" title="Boulder Count"><img id="boulder-count-button" src="asset/button.png" alt="Boulder Count"/></a>			
-			<br/>
-			<a class="button" href="javascript:require('Global').BUTTONS.drawMovement.click();" title="Draw Movement"><img id="draw-movement-button" src="asset/button.png" alt="Draw Movement"/></a>			
-			<a class="button" href="javascript:require('Global').BUTTONS.drawProjections.click();" title="Draw Projections"><img id="draw-projections-button" src="asset/button.png" alt="Draw Projections"/></a>			
 			
-			<div id="statistics">
-				Particle Count: <span id="particles">0</span><br/>
-				Pending Particles: <span id="pendingParticles">0</span><br/>
-				<br/>
-				Launch Mass: <span id="launchMass">0.0</span> <span class="unit">kg</span><br/>
-				Moving Mass: <span id="movingMass">0.0</span> <span class="unit">kg</span><br/>
-				max. Velocity: <span id="maxVelocity">0.0</span> <span class="unit">m/s</span><br/>
-				<br/>
-				g: <span id="g">0.00</span> <span class="unit">m/s&sup2;</span><br/>
-				Density: <span id="particle_density">0</span> <span class="unit">kg/m&sup3;</span><br/>
-				Size of Pixel: <span id="size_of_pixel">0.00</span> <span class="unit">cm</span><br/>
-				Mass/Pixel: <span id="mass_per_pixel">0.00</span> <span class="unit">kg</span><br/>
-				Friction: <span id="particle_friction">0.00</span> <span class="unit">&micro;<sub>s</sub></span><br/>
-				Absorbsion: <span id="particle_absorbsion">0</span> <span class="unit">%</span><br/>
-				Bouncyness: <span id="particle_bouncyness">0</span> <span class="unit">%</span><br/>
-				<br/>
-				FPS: <span id="fps">0</span><br/>
+			<table class="statistics small-table">
+				<tbody>
+					<tr>
+						<th style="width: 5em;">Planet:</th>
+						<td><span id="planet"></span></td>
+					</tr>
+					
+					<tr>
+						<th style="width: 5em;">Granulate:</th>
+						<td><span id="material">Bouncy Sand</span></td>
+					</tr>
+
+					<tr>
+						<th style="width: 5em;">FPS:</th>
+						<td><span id="fps">0</span></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div class="statistics">			
+				<input type="checkbox" name="debug" id="draw-compactness-checkbox" value="draw-compactness" onchange="require('Main').checkboxChanged(this)" /><label for="draw-compactness-checkbox">Show Density</label><br/>
+				<input type="checkbox" name="debug" id="draw-movement-checkbox" value="draw-movement" onchange="require('Main').checkboxChanged(this)" /><label for="draw-movement-checkbox">Show Movement</label><br/>
+				<input type="checkbox" name="debug" id="draw-projections-checkbox" value="draw-projections" onchange="require('Main').checkboxChanged(this)" /><label for="draw-projections-checkbox">Show Projections</label><br/>
+				<input type="checkbox" name="debug" id="collapsing-checkbox" value="draw-projections" checked="true" onchange="require('Main').checkboxChanged(this)" /><label for="collapsing-checkbox">Collapsing</label><br/>
 			</div>
 		</div>
 		
-		<div style="clear: both;"></div>
+		<table class="statistics main" style="clear: both;">
+			<tbody>
+				<tr>
+					<th>Particle Count:</th>
+					<td style="width: 4em;"><span id="particles">0</span></td>
+					
+					<th>Launch Mass:</th>
+					<td style="width: 7em;"><span id="launchMass">0.0</span> <span class="unit">kg</span></td>
+					
+					<th>max. Velocity:</th>
+					<td style="width: 7em;"><span id="maxVelocity">0.0</span> <span class="unit">m/s</span></td>
+					
+					<th>Size of Pixel:</th>
+					<td style="width: 7em;"><span id="size_of_pixel">0.00</span> <span class="unit">cm</span></td>
+					
+					<th>g:</th>
+					<td style="width: 7em;"><span id="g">0.00</span> <span class="unit">m/s&sup2;</span></td>
 
+					<th>Density:</th>
+					<td style="width: 7em;"><span id="particle_density">0</span> <span class="unit">kg/m&sup3;</span></td>
+
+					<th>Absorbsion:</th>
+					<td style="width: 7em;"><span id="particle_absorbsion">0</span> <span class="unit">%</span></td>
+				</tr>
+				<tr>
+					<th>Pending Particles:</th>
+					<td style="width: 4em;"><span id="pendingParticles">0</span></td>
+					
+					<th>Moving Mass:</th>
+					<td style="width: 7em;"><span id="movingMass">0.0</span> <span class="unit">kg</span></td>
+					
+					<th></th>
+					<td style="width: 7em;"></td>
+					
+					<th>Mass/Pixel:</th>
+					<td style="width: 7em;"><span id="mass_per_pixel">0.00</span> <span class="unit">kg</span></td>
+
+					<th>Medium:</th>
+					<td style="width: 7em;"><span id="densityAtmosphere">0.00</span> <span class="unit">kg/m&sup3;</span></td>
+
+					<th>Friction:</th>
+					<td style="width: 7em;"><span id="particle_friction">0.00</span> <span class="unit">&micro;<sub>s</sub></span></td>
+
+					<th>Bouncyness:</th>
+					<td style="width: 7em;"><span id="particle_bouncyness">0</span> <span class="unit">%</span></td>
+				</tr>
+			</tbody>
+		</table>
+		
 		<div id="message" class="main"></div>
 	</div>
 	
@@ -155,6 +209,7 @@ along with xkcd Time Catapult. If not, see <http://www.gnu.org/licenses/>.
 		<h2>Changelog</h2>
 		<div id="changelog" class="main">
 			<ul>
+				<li>1.5 - Added planets and materials, activated collapsing</li>
 				<li>1.4 - Added visual sugar, physics now use real world values</li>
 				<li>1.3 - Integrated RequireJS, splitted into multiple files</li>
 				<li>1.2 - Fixed physics and speeding issues, added buttons</li>

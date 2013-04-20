@@ -77,5 +77,5 @@ function run() {
 
 require(["Main"], function(Main) {
 	Main.init();
-	Main.reload();
+	Main.reload(true);
 });
