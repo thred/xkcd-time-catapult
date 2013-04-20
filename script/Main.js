@@ -412,9 +412,6 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 
 			this.catapult.position.set(x, y - 12);
 
-			// init the sand
-			Global.SAND = new Sand(this.canvasContext);
-
 			// draw the scale
 			this.canvasContext.save();
 			this.canvasContext.translate(Global.WIDTH - 80 - oneMeter * toDraw, Global.HEIGHT - 32);
@@ -452,6 +449,9 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 			}
 
 			this.canvasContext.restore();
+
+			// init the sand
+			Global.SAND = new Sand(this.canvasContext);
 
 			// start the animation loop
 			start();
