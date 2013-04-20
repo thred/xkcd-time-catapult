@@ -174,10 +174,32 @@ define("Global", [], function() {
 			sizeOfPixel: 1.8 / 33,
 			launchVelocityPerPixel: 0.094
 		}, {
+			name: "aa5d",
+			src: "asset/aa5d15892c425add3d41defc307d3bfad2aca954bb74ab4986613dd5277f7437.png",
+			base: BASES.def,
+			baseOffsetY: 271,
+			sizeOfPixel: 1.8 / 33,
+			launchVelocityPerPixel: 0.094
+		}, {
+			name: "0033",
+			src: "asset/00332108bd7beb8897dce3a3ebaa403bdc20150927898fa1f2a8d8809da03000.png",
+			base: BASES.def,
+			baseOffsetY: 271,
+			sizeOfPixel: 1.8 / 33,
+			launchVelocityPerPixel: 0.094
+		}, {
 			name: "gorillas",
 			src: "asset/gorillas.png",
 			base: BASES.gorillas,
 			baseOffsetY: 270,
+			sizeOfPixel: 10 / 52, // 52 pixel are 10 m
+			launchVelocityPerPixel: 0.2,
+			secret: true
+		}, {
+			name: "test",
+			src: "asset/test.png",
+			base: BASES.def,
+			baseOffsetY: 286,
 			sizeOfPixel: 10 / 52, // 52 pixel are 10 m
 			launchVelocityPerPixel: 0.2,
 			secret: true

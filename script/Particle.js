@@ -25,20 +25,22 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 	Global.PARTICLE_PROJECTION_DEFLECTION = Math.PI * 0.2;
 
 	Global.setupParticleConstants = function(sizeOfPixel, planet, material) {
-		
+
 		Global.G = planet.g;
 		Global.DENSITY_ATMOSPHERE = planet.densityAtmosphere;
-		
+
 		Global.PARTICLE_DENSITY = material.density;
 		Global.PARTICLE_SIZE_OF_PIXEL = sizeOfPixel; // 1.8 / 34; // 34 pixel are 1.8m, this may differ per image
 		Global.PARTICLE_MASS_PER_PIXEL = Math.pow(Global.PARTICLE_SIZE_OF_PIXEL, 3) * Global.PARTICLE_DENSITY; // in kg
-		
+
 		Global.PARTICLE_FRICTION = material.friction; // in µs
 		Global.PARTICLE_THRESHOLD = 0.1; // when a pixel is considered (0 is white, 0.5 is gray, 1 is black)
 
 		// these two variables define the absorbsion and bouncyness of the material
 		Global.PARTICLE_ABSORBSION = material.absorbsion; // momentum absorbed on impact in %
 		Global.PARTICLE_BOUNCYNESS = material.bouncyness; // momentum bouncing back on impact in %.
+
+		Global.K = 0.9;
 
 		Util.messageTo("planet", planet.name);
 		Util.messageTo("g", Global.G.toFixed(2));
@@ -62,22 +64,22 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 	//     |
 	// If bit is set, there is sand!
 	Global.PARTICLE_MIRROR_NORMALS = [
-	new Vector(0, - 1).normalize(), // 0
-	new Vector(0, - 1).normalize(), // 1
-	new Vector(-1, 0).normalize(), // 2
-	new Vector(-1, - 1).normalize(), // 3
-	new Vector(0, 1).normalize(), // 4
-	new Vector(0, 1).normalize(), // 5
-	new Vector(-1, 1).normalize(), // 6
-	new Vector(-1, 0).normalize(), // 7
-	new Vector(1, 0).normalize(), // 8
-	new Vector(1, - 1).normalize(), // 9
-	new Vector(0, 1).normalize(), // 10
-	new Vector(0, - 1).normalize(), // 11
-	new Vector(1, 1).normalize(), // 12
-	new Vector(1, 0).normalize(), // 13
-	new Vector(0, - 1).normalize(), // 14
-	new Vector(1, 0).normalize()]; // 15
+	new Vector(0, 0).normalize(), // 0
+	new Vector(0, 1).normalize(), // 1
+	new Vector(1, 0).normalize(), // 2
+	new Vector(1, 1).normalize(), // 3
+	new Vector(0, - 1).normalize(), // 4
+	new Vector(0, 0).normalize(), // 5
+	new Vector(1, -1).normalize(), // 6
+	new Vector(1, 0).normalize(), // 7
+	new Vector(-1, 0).normalize(), // 8
+	new Vector(-1, 1).normalize(), // 9
+	new Vector(0, 0).normalize(), // 10
+	new Vector(0, 1).normalize(), // 11
+	new Vector(-1, -1).normalize(), // 12
+	new Vector(-1, 0).normalize(), // 13
+	new Vector(0, -1).normalize(), // 14
+	new Vector(0, 0).normalize()]; // 15
 
 	function Particle(position, movement, mass) {
 		this.position = position;
@@ -97,7 +99,7 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 		 * Returns the radius in m
 		 */
 		radius: function() {
-			return 0.751501 * Math.pow(this.mass / Global.PARTICLE_DENSITY, 1 / 3);
+			return (this.mass > 0) ? 0.751501 * Math.pow(this.mass / Global.PARTICLE_DENSITY, 1 / 3) : 0;
 		},
 
 		direction: function() {
@@ -369,7 +371,7 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 			}
 
 			position.set(x, y);
-			
+
 			// prepare the particle (the grain will be added on creation)
 			var particle = new Particle(position, movement, (!projected) ? info.additionalMass : 0);
 
@@ -409,7 +411,7 @@ define("Particle", ["Global", "Util", "Vector"], function(Global, Util, Vector) 
 			// HELLO SANDGRAIN. THOU SHALT REST!
 			Global.SAND.addMass(this.position.x, this.position.y, this.mass);
 			Global.unstableParticle(this.position.x, this.position.y);
-			
+
 			this.alive = false;
 			return true;
 		},

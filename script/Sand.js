@@ -48,7 +48,7 @@ define("Sand", ["Global", "Util"], function(Global, Util) {
 				var value = self.sand[pos];
 
 				if (value >= 1) {
-					var compactValue = (self.sand[pos - Global.WIDTH - 1] + 0.005 + self.sand[pos - Global.WIDTH] + 0.002 + self.sand[pos - Global.WIDTH + 1] + 0.002) / 3;
+					var compactValue = (self.sand[pos - Global.WIDTH - 1] + 0.003 + self.sand[pos - Global.WIDTH] + 0.003 + self.sand[pos - Global.WIDTH + 1] + 0.003) / 3;
 
 					if (value < compactValue) {
 						self.sand[pos] = compactValue;
@@ -103,7 +103,7 @@ define("Sand", ["Global", "Util"], function(Global, Util) {
 			}
 
 			var self = this;
-			var radius = 0.751501 * Math.pow(mass / Global.PARTICLE_DENSITY, 1 / 3);
+			var radius = 0.751501 * Math.pow(mass / Global.PARTICLE_DENSITY, 1 / 3) / Global.PARTICLE_SIZE_OF_PIXEL;
 			var grain = Math.min(mass / Global.PARTICLE_DENSITY, 1);
 
 			Util.forEachPixelInCircle(x, y, radius, function(posX, posY, value) {
@@ -118,12 +118,8 @@ define("Sand", ["Global", "Util"], function(Global, Util) {
 				return;
 			}
 
-			if (mass <= 0) {
-				return;
-			}
-
 			var self = this;
-			var radius = 0.751501 * Math.pow(mass / Global.PARTICLE_DENSITY, 1 / 3);
+			var radius = 0.751501 * Math.pow(mass / Global.PARTICLE_DENSITY, 1 / 3) / Global.PARTICLE_SIZE_OF_PIXEL;
 			var grain = Math.min(mass / Global.PARTICLE_DENSITY, 1);
 
 			Util.forEachPixelInCircle(x, y, radius, function(posX, posY, value) {
