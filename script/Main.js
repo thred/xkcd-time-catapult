@@ -328,7 +328,7 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 			// put the canvases on the document and place the mouse listeners
 			var placeholder = document.getElementById("placeholder");
 			content.insertBefore(this.overlay, placeholder);
-			content.insertBefore(this.canvas, placeholder);
+			content.insertBefore(this.canvas, this.overlay);
 
 			// init the images
 			this.xkcdImage = this.findXkcdImage(byHash);
@@ -451,7 +451,7 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 			this.canvasContext.restore();
 
 			// init the sand
-			Global.SAND = new Sand(this.canvasContext);
+			Global.SAND = new Sand(this.canvasContext, Global.WIDTH, Global.HEIGHT);
 
 			// start the animation loop
 			start();
@@ -516,10 +516,12 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 
 			if (checkbox.id == "draw-compactness-checkbox") {
 				Global.DRAW_COMPACTNESS = value;
+				Global.SAND.allUpdated();
 			} else if (checkbox.id == "draw-movement-checkbox") {
 				Global.DRAW_MOVEMENT = value;
 			} else if (checkbox.id == "draw-projections-checkbox") {
 				Global.DRAW_PROJECTIONS = value;
+				Global.SAND.clearProjections();
 			} else if (checkbox.id == "collapsing-checkbox") {
 				Global.COLLAPSING = value;
 			}
