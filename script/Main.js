@@ -292,6 +292,7 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 		reload: function(byHash) {
 			stop();
 
+			document.getElementById("loading").style.visibility = "visible";
 			Global.clearParticles();
 
 			this.isMouseDown = false;
@@ -452,6 +453,8 @@ define("Main", ["Global", "Util", "Button", "Vector", "Catapult", "Sand", "Parti
 
 			// init the sand
 			Global.SAND = new Sand(this.canvasContext, Global.WIDTH, Global.HEIGHT);
+
+			document.getElementById("loading").style.visibility = "hidden";
 
 			// start the animation loop
 			start();
