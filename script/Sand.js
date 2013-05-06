@@ -18,21 +18,25 @@
  */
 
 define("Sand", ["Global", "Util"], function(Global, Util) {
-	function Sand(context) {
+	function Sand(context, width, height) {
 		this.context = context;
-		this.sand = [Global.WIDTH * Global.HEIGHT];
-		this.projections = [Global.WIDTH * Global.HEIGHT];
-		this.imageData = context.getImageData(0, 0, Global.WIDTH, Global.HEIGHT);
+		this.width = width;
+		this.height = height;
+
+		this.sand = [this.width * this.height];
+		this.projections = [this.width * this.height];
+		this.imageData = context.getImageData(0, 0, this.width, this.height);
 		this.data = this.imageData.data;
 
-		for (var y = 0; y < Global.HEIGHT; y += 1) {
-			for (var x = 0; x < Global.WIDTH; x += 1) {
-				var pos = x + y * Global.WIDTH;
+		for (var y = 0; y < this.height; y += 1) {
+			for (var x = 0; x < this.width; x += 1) {
+				var pos = x + y * this.width;
 				this.sand[pos] = 1 - (this.data[pos * 4] / 255);
 				this.projections[pos] = 0;
 			}
 		}
 
+		this.allUpdated();
 		this.compact();
 		this.update();
 	}
@@ -44,11 +48,11 @@ define("Sand", ["Global", "Util"], function(Global, Util) {
 			var self = this;
 
 			function compactSand(x, y) {
-				var pos = x + y * Global.WIDTH;
+				var pos = x + y * self.width;
 				var value = self.sand[pos];
 
 				if (value >= 1) {
-					var compactValue = (self.sand[pos - Global.WIDTH - 1] + 0.003 + self.sand[pos - Global.WIDTH] + 0.003 + self.sand[pos - Global.WIDTH + 1] + 0.003) / 3;
+					var compactValue = (self.sand[pos - self.width - 1] + 0.003 + self.sand[pos - self.width] + 0.003 + self.sand[pos - self.width + 1] + 0.003) / 3;
 
 					if (value < compactValue) {
 						self.sand[pos] = compactValue;
@@ -64,14 +68,16 @@ define("Sand", ["Global", "Util"], function(Global, Util) {
 			do {
 				modified = false;
 
-				for (var y = 1; y < Global.HEIGHT - 1; y += 1) {
-					for (var x = 1; x < Global.WIDTH - 1; x += 1) {
+				for (var y = 1; y < this.height - 1; y += 1) {
+					for (var x = 1; x < this.width - 1; x += 1) {
 						modified |= compactSand(x, y);
-						modified |= compactSand(Global.WIDTH - 1 - x, Global.HEIGHT - 1 - x);
+						modified |= compactSand(this.width - 1 - x, this.height - 1 - x);
 					}
 				}
 			}
 			while (modified);
+
+			this.allUpdated();
 		},
 
 		get: function(x, y) {
@@ -80,17 +86,17 @@ define("Sand", ["Global", "Util"], function(Global, Util) {
 
 			if (x < 0) {
 				x = 0;
-			} else if (x >= Global.WIDTH) {
-				x = Global.WIDTH - 1;
+			} else if (x >= this.width) {
+				x = this.width - 1;
 			}
 
 			if (y < 0) {
 				y = 0;
-			} else if (y >= Global.HEIGHT) {
-				y = Global.HEIGHT - 1;
+			} else if (y >= this.height) {
+				y = this.height - 1;
 			}
 
-			return this.sand[x + y * Global.WIDTH];
+			return this.sand[x + y * this.width];
 		},
 
 		getMass: function(x, y) {
@@ -107,10 +113,12 @@ define("Sand", ["Global", "Util"], function(Global, Util) {
 			var grain = Math.min(mass / Global.PARTICLE_DENSITY, 1);
 
 			Util.forEachPixelInCircle(x, y, radius, function(posX, posY, value) {
-				var pos = posX + posY * Global.WIDTH;
+				var pos = posX + posY * self.width;
 
 				self.sand[pos] += value;
 			});
+
+			this.updated(Math.floor(x - radius), Math.floor(y - radius), Math.ceil(x + radius), Math.ceil(y + radius));
 		},
 
 		removeMass: function(x, y, mass) {
@@ -123,66 +131,117 @@ define("Sand", ["Global", "Util"], function(Global, Util) {
 			var grain = Math.min(mass / Global.PARTICLE_DENSITY, 1);
 
 			Util.forEachPixelInCircle(x, y, radius, function(posX, posY, value) {
-				var pos = posX + posY * Global.WIDTH;
+				var pos = posX + posY * self.width;
 
 				self.sand[pos] -= value;
 			});
+
+			this.updated(Math.floor(x - radius), Math.floor(y - radius), Math.ceil(x + radius), Math.ceil(y + radius));
 		},
 
 		setProjection: function(x, y) {
 			x = Math.round(x);
 			y = Math.round(y);
 
-			if ((x < 0) || (y < 0) || (x >= Global.WIDTH) || (y >= Global.HEIGHT)) {
+			if ((x < 0) || (y < 0) || (x >= this.width) || (y >= this.height)) {
 				return;
 			}
 
-			this.projections[x + y * Global.WIDTH] = 1;
+			this.projections[x + y * this.width] = 1;
+			this.updated(x, y, x, y);
+		},
+
+		clearProjections: function() {
+			for (var i = 0; i < this.width * this.height; i += 1) {
+				this.projections[i] = 0;
+			}
+
+			this.allUpdated();
+		},
+
+		updated: function(minX, minY, maxX, maxY) {
+			this.minX = Math.min(minX, this.minX);
+			this.minY = Math.min(minY, this.minY);
+			this.maxX = Math.max(maxX, this.maxX);
+			this.maxY = Math.max(maxY, this.maxY);
+		},
+
+		allUpdated: function() {
+			this.minX = 0;
+			this.minY = 0;
+			this.maxX = this.width;
+			this.maxY = this.height;
+		},
+
+		resetUpdated: function() {
+			this.minX = this.width;
+			this.minY = this.height;
+			this.maxX = 0;
+			this.maxY = 0;
 		},
 
 		update: function(dt) {
 			var time = new Date().getTime();
-			var projectionDecrement = dt / 0.2;
-			var color = [0, 0, 0];
-			var pos = 0;
 
-			for (var i = 0; i < Global.WIDTH * Global.HEIGHT; i += 1) {
-				//this.colorCode(color, i, projectionDecrement);
-				var value = this.sand[i];
+			var minX = Math.max(0, this.minX);
+			var minY = Math.max(0, this.minY);
+			var maxX = Math.min(this.width, this.maxX + 1);
+			var maxY = Math.min(this.height, this.maxY + 1);
+			var width = maxX - minX;
+			var height = maxY - minY;
 
-				if (value <= 0) {
-					this.data[pos++] = 255;
-					this.data[pos++] = 255;
-					this.data[pos++] = 255;
-					this.data[pos++] = 255;
-					continue;
-				} else if (value <= 1) {
-					this.data[pos++] = this.data[pos++] = this.data[pos++] = 255 - value * 255;
-				} else if (Global.DRAW_COMPACTNESS) {
-					value = 1 / value;
-					value *= value;
+			this.resetUpdated();
 
-					this.data[pos++] = (1 - value) * 255;
-					this.data[pos++] = this.data[pos++] = 0;
-				} else {
-					this.data[pos++] = this.data[pos++] = this.data[pos++] = 0;
-				}
+			if ((width > 0) && (height > 0)) {
+				var updateAll = (width >= this.width) && (height >= this.height);
+				var projectionDecrement = dt / 0.25;
 
-				if (Global.DRAW_PROJECTIONS) {
-					var projection = this.projections[i];
+				for (var y = minY; y < maxY; y += 1) {
+					var i = y * this.width + minX;
+					var pos = i * 4 + 3;
 
-					if (projection > 0) {
-						this.projections[i] = Math.max(projection - projectionDecrement, 0);
+					for (var x = minX; x < maxX; x += 1) {
+						var value = this.sand[i];
 
-						this.data[pos - 3] = 0xff * projection + this.data[pos - 3] * (1 - projection);
-						this.data[pos - 2] = 0xff * projection + this.data[pos - 2] * (1 - projection);
+						if (updateAll) {
+							this.data[pos - 3] = 0;
+							this.data[pos - 2] = 0;
+							this.data[pos - 1] = 0;
+						}
+
+						if (Global.DRAW_COMPACTNESS) {
+							this.data[pos - 3] = (value > 1) ? (1 - 1 / (value * value)) * 0xff : 0;
+						}
+
+						if (Global.DRAW_PROJECTIONS) {
+							var projection = this.projections[i];
+
+							if (projection > 0) {
+								projection = this.projections[i] = Math.max(projection - projectionDecrement, 0);
+
+								if (Global.DRAW_COMPACTNESS) {
+									this.data[pos - 3] = 0xff * projection + this.data[pos - 3] * (1 - projection);
+								} else {
+									this.data[pos - 3] = 0xff * projection;
+								}
+								this.data[pos - 2] = 0xff * projection;
+								this.updated(x, y, x, y);
+							}
+						}
+
+						this.data[pos] = Math.max(0, Math.min(1, value)) * 0xff;
+
+						i += 1;
+						pos += 4;
 					}
 				}
 
-				this.data[pos++] = 255;
+				this.context.putImageData(this.imageData, 0, 0, minX, minY, width, height);
+
+				//Util.message(minX + ", "+  minY + ", " + width + ", " + height);
 			}
 
-			this.context.putImageData(this.imageData, 0, 0);
+			//Util.message(new Date().getTime() - time);
 		}
 	};
 
